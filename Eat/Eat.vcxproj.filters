@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="eat.h" />
+    <ClInclude Include="ChunkHeader.h" />
+    <ClInclude Include="PackageHeader.h" />
+    <ClInclude Include="..\ExternLibs\FileSystem\include\File.h">
+      <Filter>_Libs\File_System\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="eat.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="_Libs">
+      <UniqueIdentifier>{4c850a46-70e7-473b-b053-54271cd5c5e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System">
+      <UniqueIdentifier>{2972c8aa-de5c-4e6a-89bf-9314b90dfa84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System\include">
+      <UniqueIdentifier>{7028ba3c-d0da-4ec5-bb18-397c7e1113b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System\lib">
+      <UniqueIdentifier>{e8a9a4a8-c135-434f-bdf3-7d5b357e5da0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
+      <Filter>_Libs\File_System\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
+      <Filter>_Libs\File_System\lib</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

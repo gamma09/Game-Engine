@@ -1,0 +1,476 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Actor.cpp">
+      <Filter>Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraManager.cpp">
+      <Filter>Cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderFactory.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\WireframeMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Materials\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Materials\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ActorManager.cpp">
+      <Filter>Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlobalHeaps.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReferencedObject.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LightingTextureMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionLightManager.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyBinding.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyBindingManager.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StationaryStrategy.cpp">
+      <Filter>Actors\Strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HierarchyElement.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bone.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelBase.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelBaseManager.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DrawStrategy.cpp">
+      <Filter>Base\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moveable.cpp">
+      <Filter>Base\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MoveAction.cpp">
+      <Filter>Input\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyFrame.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimatingStrategy.cpp">
+      <Filter>Actors\Strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoneManager.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="_Libs">
+      <UniqueIdentifier>{f642b1aa-04f2-4c18-b6a0-6c1edc278c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System">
+      <UniqueIdentifier>{ba17905a-73f9-4e44-87b3-983b15165710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System\include">
+      <UniqueIdentifier>{b8848ae7-e211-4c94-ab2c-441a27e67ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\File_System\lib">
+      <UniqueIdentifier>{e8043f6a-82c2-4bc5-8d74-454e7bea67a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GL3W">
+      <UniqueIdentifier>{7c359994-5d28-4740-a315-b5c153ed9b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GL3W\include">
+      <UniqueIdentifier>{f491a322-5d7c-487b-baa2-f774a380cfb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GL3W\lib">
+      <UniqueIdentifier>{7c37539b-4810-4abe-8cfc-b8470f9809b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GLFW">
+      <UniqueIdentifier>{d1e99522-f419-4132-b372-6218cfbf1410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GLFW\lib">
+      <UniqueIdentifier>{a836f45b-11c9-4492-9c60-f8dd52985ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GLFW\include">
+      <UniqueIdentifier>{49489779-46e9-4d54-b45e-93e51ba56c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Memory_System">
+      <UniqueIdentifier>{02e6e874-5e47-4528-a29c-6d27a8c9b505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Memory_System\include">
+      <UniqueIdentifier>{11f6c75a-4319-4bce-9c4b-a072bf7ee811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Memory_System\lib">
+      <UniqueIdentifier>{31759427-6f6c-4671-b1bc-28a01a9a7dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\PCS_Tree">
+      <UniqueIdentifier>{7b6fc9db-5b21-48b6-a6d3-ad1e5a5eba79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\PCS_Tree\include">
+      <UniqueIdentifier>{7cd93741-bb08-40d8-9112-975656c505e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\PCS_Tree\lib">
+      <UniqueIdentifier>{ba999a8b-30a0-41f0-9f6f-f4342e3a81ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Math_Engine">
+      <UniqueIdentifier>{84ebef71-2d32-45ea-a744-fee501a14e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Math_Engine\lib">
+      <UniqueIdentifier>{e350e5bc-8ac1-4af1-8df5-1a4ce448acb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Math_Engine\include">
+      <UniqueIdentifier>{047e1208-df33-4eb6-b0af-325bff758686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{1e424936-e08a-48fb-881d-a267403a7d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Object_Management">
+      <UniqueIdentifier>{f8106f9d-754e-4a33-9705-04d6af388e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Object_Management\include">
+      <UniqueIdentifier>{51bc927a-d66a-4137-88ca-1131b95bc14c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Object_Management\lib">
+      <UniqueIdentifier>{d46a0742-25fd-4abc-b23d-c5dc909f836a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actors">
+      <UniqueIdentifier>{a87c0d0c-52b5-470a-8704-a757e879ec2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actors\Strategies">
+      <UniqueIdentifier>{d08ac1df-4886-4756-b41c-c4f54b5e7d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cameras">
+      <UniqueIdentifier>{77107da4-b3a2-477f-87d8-7abd5c6c062f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GL3W\include\GL">
+      <UniqueIdentifier>{9d73adf9-3d5e-4302-8c1b-8b2aca66c248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\GLFW\include\GL">
+      <UniqueIdentifier>{b254f0e0-d345-4867-a846-56a6b9ebb595}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{c6cdb873-ccd5-4097-b887-4eaf75e015b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lights">
+      <UniqueIdentifier>{212cd640-049d-43fa-a9c4-5b46aeba230b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Eat">
+      <UniqueIdentifier>{71de4a5b-aafd-4e36-997d-764daef0761b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Eat\include">
+      <UniqueIdentifier>{aff477a3-e4c6-48d6-ab22-e83c847fddb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Eat\lib">
+      <UniqueIdentifier>{b6b2a832-2baf-4edc-8faf-9759ed7031a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{b8320887-3da3-409e-90f6-256bcf29be6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{bcb5d27a-4aca-42b2-a97f-2ceaa6d2e964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Time">
+      <UniqueIdentifier>{5df76c73-1d2c-47a6-9530-bfeb42e59738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Time\include">
+      <UniqueIdentifier>{cd9b25b4-a60a-4213-bc01-836b96627c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Libs\Time\lib">
+      <UniqueIdentifier>{c11747bf-4210-4e6a-89bf-44e90372dff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{b6f686f5-e9c1-4f4d-a71e-e20fe8191325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\Textures">
+      <UniqueIdentifier>{611b3f79-6913-48e7-bac0-50f088870645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{8cfa8487-23e8-43d4-9c31-fdee14659a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Draw">
+      <UniqueIdentifier>{f11abb4b-045a-45cd-94e4-d870111eec68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Update">
+      <UniqueIdentifier>{aeb183c0-fc4f-402f-b0d1-83f47b60a894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Actions">
+      <UniqueIdentifier>{77f54d0d-34ff-45c5-b396-a8e1aebe19a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
+      <Filter>_Libs\File_System\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
+      <Filter>_Libs\File_System\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Debug.lib">
+      <Filter>_Libs\GL3W\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Release.lib">
+      <Filter>_Libs\GL3W\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Debug.lib">
+      <Filter>_Libs\GLFW\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Release.lib">
+      <Filter>_Libs\GLFW\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
+      <Filter>_Libs\Math_Engine\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
+      <Filter>_Libs\Math_Engine\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Memory\lib\Memory_Debug.lib">
+      <Filter>_Libs\Memory_System\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Memory\lib\Memory_Release.lib">
+      <Filter>_Libs\Memory_System\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Debug.lib">
+      <Filter>_Libs\Object_Management\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Release.lib">
+      <Filter>_Libs\Object_Management\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
+      <Filter>_Libs\PCS_Tree\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
+      <Filter>_Libs\PCS_Tree\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Eat\lib\Eat_Debug.lib">
+      <Filter>_Libs\Eat\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Eat\lib\Eat_Release.lib">
+      <Filter>_Libs\Eat\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Time\lib\Time_Debug.lib">
+      <Filter>_Libs\Time\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Time\lib\Time_Release.lib">
+      <Filter>_Libs\Time\lib</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ExternLibs\FileSystem\include\File.h">
+      <Filter>_Libs\File_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\gl3w.h">
+      <Filter>_Libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glcorearb.h">
+      <Filter>_Libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glext.h">
+      <Filter>_Libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glxext.h">
+      <Filter>_Libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\wglext.h">
+      <Filter>_Libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GLFW\include\GL\glfw.h">
+      <Filter>_Libs\GLFW\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h">
+      <Filter>_Libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\MemoryEngine.h">
+      <Filter>_Libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObject.h">
+      <Filter>_Libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObjectCondition.h">
+      <Filter>_Libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\Manager.h">
+      <Filter>_Libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSNode.h">
+      <Filter>_Libs\PCS_Tree\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h">
+      <Filter>_Libs\PCS_Tree\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Actor.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraManager.h">
+      <Filter>Cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderFactory.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderManager.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\LibrarySetup.h" />
+    <ClInclude Include="src\WireframeMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Materials\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureManager.h">
+      <Filter>Materials\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemorySetup.h" />
+    <ClInclude Include="src\ActorManager.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlobalHeaps.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReferencedObject.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LightingTextureMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectionLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectionLightManager.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Eat\include\eat.h">
+      <Filter>_Libs\Eat\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyBinding.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyBindingManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyAction.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StationaryStrategy.h">
+      <Filter>Actors\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Time\include\Time.h">
+      <Filter>_Libs\Time\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Time\include\Timer.h">
+      <Filter>_Libs\Time\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HierarchyElement.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bone.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModelBase.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModelBaseManager.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DrawInfo.h">
+      <Filter>Base\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DrawStrategy.h">
+      <Filter>Base\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moveable.h">
+      <Filter>Base\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebuggerSetup.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MoveAction.h">
+      <Filter>Input\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UpdateStrategy.h">
+      <Filter>Base\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Animation.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyFrame.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AnimatingStrategy.h">
+      <Filter>Actors\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BoneManager.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Wireframe.fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\Wireframe.vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\Texture.fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\Texture.vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\LightingTexture.fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\LightingTexture.vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

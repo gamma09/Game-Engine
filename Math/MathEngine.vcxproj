@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5122B556-8547-48D7-ACF6-1466C0180FF4}</ProjectGuid>
+    <RootNamespace>PhysicsMath</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectName)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;MATH_NO_SIMD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+      <StringPooling>false</StringPooling>
+      <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(ProjectName)_$(Configuration).pdb"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(OutputPath)$(ProjectName)_$(Configuration).pdb" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+
+SET config_file=$(SolutionDir)ExternLibs\$(ProjectName)\include\MathEngineConfig.h
+
+ECHO #pragma comment(lib, "$(TargetFileName)") &gt;&gt; "%config_file%"
+ECHO #define MATH_NO_SIMD &gt;&gt; "%config_file%"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;MATH_NO_SIMD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+
+SET config_file=$(SolutionDir)ExternLibs\$(ProjectName)\include\MathEngineConfig.h
+
+ECHO #pragma comment(lib, "$(TargetFileName)") &gt;&gt; "%config_file%"
+ECHO #define MATH_NO_SIMD &gt;&gt; "%config_file%"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\Enum.h" />
+    <ClInclude Include="src\MathEngine.h" />
+    <ClInclude Include="src\MathEngineConfig.h" />
+    <ClInclude Include="src\MathEngineDefs.h" />
+    <ClInclude Include="src\Matrix.h" />
+    <ClInclude Include="src\Quat.h" />
+    <ClInclude Include="src\QuatApp.h" />
+    <ClInclude Include="src\Util.h" />
+    <ClInclude Include="src\Vect.h" />
+    <ClInclude Include="src\VectApp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\MathEngineDefs.cpp" />
+    <ClCompile Include="src\Matrix.cpp" />
+    <ClCompile Include="src\Quat.cpp" />
+    <ClCompile Include="src\QuatApp.cpp" />
+    <ClCompile Include="src\Util.cpp" />
+    <ClCompile Include="src\Vect.cpp" />
+    <ClCompile Include="src\VectApp.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

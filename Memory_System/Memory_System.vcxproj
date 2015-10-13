@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1E0C6240-1FED-472F-B8BE-3D9000CD2E03}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PA1</RootNamespace>
+    <ProjectName>Memory</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+      <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(ProjectName)_$(Configuration).pdb"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(OutputPath)$(ProjectName)_$(Configuration).pdb" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <OpenMPSupport>false</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\block.h" />
+    <ClInclude Include="src\Enums.h" />
+    <ClInclude Include="src\global.h" />
+    <ClInclude Include="src\heap.h" />
+    <ClInclude Include="src\mem.h" />
+    <ClInclude Include="src\MemoryEngine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\block.cpp" />
+    <ClCompile Include="src\global.cpp" />
+    <ClCompile Include="src\heap.cpp" />
+    <ClCompile Include="src\mem.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Mem">
+      <UniqueIdentifier>{e75368e5-bde4-4b0f-9f1e-5a3191c308f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mem\Includes">
+      <UniqueIdentifier>{ec0ccb2b-cf44-46ed-928d-27eef1c6f2e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mem\src">
+      <UniqueIdentifier>{f549ef7c-0974-4967-8a70-180eb6ad285e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\block.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Enums.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\heap.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemoryEngine.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\block.cpp">
+      <Filter>Mem\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global.cpp">
+      <Filter>Mem\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\heap.cpp">
+      <Filter>Mem\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem.cpp">
+      <Filter>Mem\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
