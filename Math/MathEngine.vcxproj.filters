@@ -7,6 +7,15 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{9e005c5a-8545-4803-9b4a-fbe1f32b8bc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs">
+      <UniqueIdentifier>{4cbbac90-642c-4265-ae1f-5cbcf42ca0d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared">
+      <UniqueIdentifier>{2021c56e-7024-44aa-b149-fc72606d3d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\include">
+      <UniqueIdentifier>{e897ef1d-0415-4687-a70c-b4a5c8c71719}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.h">
@@ -41,6 +50,15 @@
     </ClInclude>
     <ClInclude Include="src\QuatApp.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,15 @@
     <Filter Include="Mem\src">
       <UniqueIdentifier>{f549ef7c-0974-4967-8a70-180eb6ad285e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs">
+      <UniqueIdentifier>{7d11d449-83da-4499-a00b-fc7f52009c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared">
+      <UniqueIdentifier>{8b9314c0-c978-4527-abab-e04468f6fbb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\include">
+      <UniqueIdentifier>{001fea32-e32b-40ce-8fb1-7a731954f694}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\block.h">
@@ -29,6 +38,15 @@
     </ClInclude>
     <ClInclude Include="src\MemoryEngine.h">
       <Filter>Mem\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

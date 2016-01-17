@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\ManagedObject.h" />
     <ClInclude Include="src\ManagedObjectCondition.h" />
     <ClInclude Include="src\Manager.h" />
@@ -52,11 +55,13 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

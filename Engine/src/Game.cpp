@@ -1,5 +1,5 @@
 #include <cmath>
-#include <cassert>
+#include <GameAssert.h>
 
 #include <Timer.h>
 
@@ -53,16 +53,12 @@ Game::Game( const char* windowName, const int Width,const int Height) :
 //-----------------------------------------------------------------------------
 void Game::Initialize()
 {
-	MemReturnCode status = Mem::initialize();
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::initialize() );
 	
 	TemporaryHeap::Create();
 
-	status = Mem::createHeap(this->managerHeap, 4096, "Manager Heap");
-	assert(status == Mem_OK);
-
-	status = Mem::createHeap(this->materialHeap, 4096, "Material Heap");
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap( this->managerHeap, 4096, "Manager Heap" ) );
+	GameVerify( Mem_OK == Mem::createHeap( this->materialHeap, 4096, "Material Heap" ) );
 
 	ShaderManager::Create(this->managerHeap, 4, 1);
 	ModelBaseManager::Create(this->managerHeap, 7, 1);
@@ -234,16 +230,12 @@ void Game::UnLoadContent()
 	BoneManager::Destroy();
 	ShaderManager::Destroy();
 
-	MemReturnCode status = Mem::destroyHeap(this->managerHeap);
-	assert(status == Mem_OK);
-
-	status = Mem::destroyHeap(this->materialHeap);
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap( this->managerHeap ) );
+	GameVerify( Mem_OK == Mem::destroyHeap( this->materialHeap ) );
 
 	TemporaryHeap::Destroy();
 
-	status = Mem::destroy();
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroy() );
 }
 
 

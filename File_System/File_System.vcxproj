@@ -15,6 +15,9 @@
     <ClCompile Include="src\WinFileWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\File.h" />
     <ClInclude Include="src\WinFileWrapper.h" />
   </ItemGroup>
@@ -54,6 +57,7 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -61,6 +65,7 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

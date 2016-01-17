@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "ManagedObject.h"
 
@@ -34,7 +34,7 @@ ManagedObject::~ManagedObject()
 
 void ManagedObject::Reset()
 {
-	assert(this->isActive);
+	GameAssert(this->isActive);
 
 	this->isActive = false;
 	this->next = 0;

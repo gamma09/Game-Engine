@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{117caadf-3ee6-4f13-87f3-0b967e1e8c38}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ChunkHeader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PackageHeader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameAssert.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

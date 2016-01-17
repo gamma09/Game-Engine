@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -71,7 +71,7 @@ Manager::Manager(uint32_t refill) :
 	reserveHead(0)
 {
 	// must be able to grow the reserve
-	assert(refill > 0);
+	GameAssert(refill > 0);
 }
 
 void Manager::Init(uint32_t initial)
@@ -110,7 +110,7 @@ void Manager::Destroy_Objects()
 
 void Manager::Print_Statistics(const char* preamble) const
 {
-	assert(preamble != 0);
+	GameAssert(preamble != 0);
 
 	fprintf(stdout, "%s\n", preamble);
 	fprintf(stdout, "  Current active count: %d\n", this->activeCount);
@@ -161,7 +161,7 @@ ManagedObject* Manager::Find_Object(const ManagedObjectCondition& condition) con
 
 void Manager::Remove(ManagedObject* const obj)
 {
-	assert(obj != 0);
+	GameAssert(obj != 0);
 
 	if (obj->prev == 0)
 		this->activeHead = obj->next;

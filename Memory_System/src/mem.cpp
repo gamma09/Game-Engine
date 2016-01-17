@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <assert.h>
+#include <GameAssert.h>
 #include <string.h>
 #include <new>
 
@@ -140,8 +140,8 @@ Mem& Mem::instance()
 
 MemReturnCode Mem::privCreateHeap(Heap *&newHeap, int heapSize, const char * const heapName)
 {
-	assert(heapSize > 0);
-	assert(heapName != 0);
+	GameAssert(heapSize > 0);
+	GameAssert(heapName != 0);
 
 	if (!this->initialized)
 		return Mem_ERROR_Mem_Not_Initialized;
@@ -167,9 +167,9 @@ MemReturnCode Mem::privCreateHeap(Heap *&newHeap, int heapSize, const char * con
 
 MemReturnCode Mem::privCreateFixedBlockHeap(Heap*& newHeap, int numBlocks, int sizePerBlock, const char * const heapName)
 {
-	assert(numBlocks > 0);
-	assert(sizePerBlock > 0);
-	assert(heapName != 0);
+	GameAssert(numBlocks > 0);
+	GameAssert(sizePerBlock > 0);
+	GameAssert(heapName != 0);
 
 	if (!this->initialized)
 		return Mem_ERROR_Mem_Not_Initialized;
@@ -195,7 +195,7 @@ MemReturnCode Mem::privCreateFixedBlockHeap(Heap*& newHeap, int numBlocks, int s
 
 MemReturnCode Mem::privDestroyHeap(Heap* inHeap)
 {
-	assert(inHeap != 0);
+	GameAssert(inHeap != 0);
 
 	if (!this->initialized)
 		return Mem_ERROR_Mem_Not_Initialized;

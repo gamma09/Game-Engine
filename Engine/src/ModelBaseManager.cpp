@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "MemorySetup.h"
 #include "ModelBaseManager.h"
@@ -13,7 +13,7 @@ ModelBaseManager* ModelBaseManager::instance;
 
 ModelBaseManager* ModelBaseManager::Instance()
 {
-	assert(ModelBaseManager::instance != 0);
+	GameAssert(ModelBaseManager::instance != 0);
 
 	return instance;
 }
@@ -22,19 +22,17 @@ void ModelBaseManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) ModelBaseManager(initialReserve, refillSize);
 }
 
 void ModelBaseManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap(instance->heap) );
 	delete instance;
 	ModelBaseManager::instance = 0;
 }
@@ -42,9 +40,7 @@ void ModelBaseManager::Destroy()
 ModelBaseManager::ModelBaseManager(uint32_t initialReserve, uint32_t refillSize) :
 	Manager(refillSize)
 {
-	MemReturnCode status = Mem::createFixBlockHeap(this->heap, MAX_MODEL_BASES_CREATED, sizeof(ModelBase), "Model Base Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createFixBlockHeap(this->heap, MAX_MODEL_BASES_CREATED, sizeof(ModelBase), "Model Base Heap") );
 	this->Init(initialReserve);
 }
 

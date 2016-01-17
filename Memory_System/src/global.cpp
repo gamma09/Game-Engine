@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "global.h"
 #include "heap.h"
@@ -6,9 +6,9 @@
 // operator new
 void* operator new(size_t inSize, Heap *pHeap, Align align, const char * const inName, int lineNum)
 {
-	assert(pHeap != 0);
-	assert(inName != 0);
-	assert(lineNum > 0);
+	GameAssert(pHeap != 0);
+	GameAssert(inName != 0);
+	GameAssert(lineNum > 0);
 
 	return pHeap->alloc(inSize, align, inName, lineNum);
 }
@@ -31,9 +31,9 @@ void operator delete(void *p)
 
 void* operator new[](size_t inSize, Heap* pHeap, Align align, const char* const inName, int lineNum)
 {
-	assert(pHeap != 0);
-	assert(inName != 0);
-	assert(lineNum > 0);
+	GameAssert(pHeap != 0);
+	GameAssert(inName != 0);
+	GameAssert(lineNum > 0);
 
 	return pHeap->alloc(inSize, align, inName, lineNum);
 }

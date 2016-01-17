@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 
 #include "TextureManager.h"
@@ -12,7 +12,7 @@ TextureManager* TextureManager::instance;
 
 TextureManager* TextureManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -21,19 +21,18 @@ void TextureManager::Create(Heap* managerHeap, const uint32_t initialReserve, co
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) TextureManager(initialReserve, refillSize);
 }
 
 void TextureManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap(instance->heap) );
+
 	delete instance;
 	instance = 0;
 }
@@ -47,14 +46,14 @@ Texture* TextureManager::Add(const char* archiveFile, const char* textureName)
 
 const Texture* TextureManager::Default_Texture() const
 {
-	assert(this->defaultTexture != 0);
+	GameAssert(this->defaultTexture != 0);
 
 	return this->defaultTexture;
 }
 
 void TextureManager::Create_Default_Texture()
 {
-	assert(this->defaultTexture == 0);
+	GameAssert(this->defaultTexture == 0);
 	this->defaultTexture = new(this->heap, ALIGN_4) Texture("../resources/Default_Texture.spu", "default");
 }
 
@@ -74,9 +73,7 @@ TextureManager::TextureManager(const uint32_t initialReserve, const uint32_t ref
 	Manager(refillSize),
 	defaultTexture(0)
 {
-	MemReturnCode status = Mem::createFixBlockHeap(this->heap, MAX_TEXTURES_CREATED, sizeof(Texture), "Texture Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createFixBlockHeap(this->heap, MAX_TEXTURES_CREATED, sizeof(Texture), "Texture Heap") );
 	this->Init(initialReserve);
 }
 

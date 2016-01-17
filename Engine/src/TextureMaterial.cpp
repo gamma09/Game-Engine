@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include <MathEngine.h>
 #include "DebuggerSetup.h"
@@ -19,21 +19,21 @@ void TextureMaterial::Create_Material(Heap* materialHeap)
 {
 	materialHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(materialHeap, ALIGN_4) TextureMaterial();
 }
 
 void TextureMaterial::Destroy_Material()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	delete instance;
 }
 
 void TextureMaterial::Draw(const DrawInfo& info)
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);

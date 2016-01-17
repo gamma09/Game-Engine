@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "ShaderManager.h"
 #include "MemorySetup.h"
@@ -35,7 +35,7 @@ ShaderManager* ShaderManager::instance;
 
 ShaderManager* ShaderManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -44,19 +44,17 @@ void ShaderManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32_t 
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) ShaderManager(initialReserve, refillSize);
 }
 
 void ShaderManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap(instance->heap) );
 	delete instance;
 	instance = 0;
 }
@@ -64,9 +62,7 @@ void ShaderManager::Destroy()
 ShaderManager::ShaderManager(uint32_t initialReserve, uint32_t refillSize) :
 	Manager(refillSize)
 {
-	MemReturnCode status = Mem::createFixBlockHeap(this->heap, MAX_SHADERS_CREATED, sizeof(Shader), "Shader Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createFixBlockHeap(this->heap, MAX_SHADERS_CREATED, sizeof(Shader), "Shader Heap") );
 	this->Init(initialReserve);
 }
 

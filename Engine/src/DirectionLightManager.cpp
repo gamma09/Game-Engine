@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "MemorySetup.h"
 #include "DirectionLightManager.h"
@@ -9,7 +9,7 @@ DirectionLightManager* DirectionLightManager::instance;
 
 DirectionLightManager* DirectionLightManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -18,19 +18,17 @@ void DirectionLightManager::Create(Heap* managerHeap, uint32_t initialReserve, u
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) DirectionLightManager(initialReserve, refillSize);
 }
 
 void DirectionLightManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -59,9 +57,7 @@ DirectionLightManager::DirectionLightManager(uint32_t initialReserve, uint32_t r
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! DirectionLight needs to be 16-byte aligned...
-	MemReturnCode status = Mem::createHeap(this->heap, 4096, "Direction Light Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Direction Light Heap" ) );
 
 	this->Init(initialReserve);
 }

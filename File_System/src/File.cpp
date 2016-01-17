@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 #include <stdio.h>
 
 #include "File.h"
@@ -40,7 +40,7 @@ FileError File::open(FileHandle &fh, const char * const fileName, FileMode mode)
 		default:
 			// Should never happen
 			// Did you add an additional FileMode to the enum, but forget to add it to this switch statement?
-			assert(0);
+			GameAssert(0);
 	}
 
 
@@ -97,7 +97,7 @@ FileError File::seek(FileHandle fh, FileSeek seek, int offset)
 		default:
 			// Should never happen
 			// Did you add an additional seek method without updating this switch statement?
-			assert(0);
+			GameAssert(0);
 	}
 
 	if (!Is_Open(fh) || !Seek_Position(fh, offset, moveMethod))

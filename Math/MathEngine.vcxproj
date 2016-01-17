@@ -46,9 +46,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,6 +125,9 @@ ECHO #define MATH_NO_SIMD &gt;&gt; "%config_file%"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Enum.h" />
     <ClInclude Include="src\MathEngine.h" />

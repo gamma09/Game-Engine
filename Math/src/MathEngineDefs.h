@@ -19,7 +19,7 @@
 
 	#define M128_TYPE __m128
 
-	#define CHECK_ALIGNMENT_16(ptr) assert(((unsigned long) (ptr) & (16-1)) == 0)
+	#define CHECK_ALIGNMENT_16(ptr) GameAssert(((unsigned long) (ptr) & (16-1)) == 0)
 
 	inline const M128_TYPE operator+(const M128_TYPE& lhs, const M128_TYPE& rhs)
 	{

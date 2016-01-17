@@ -1,5 +1,5 @@
 #include <math.h>
-#include <assert.h>
+#include <GameAssert.h>
 
 #include <GL/gl3w.h>
 #include <Quat.h>
@@ -60,7 +60,7 @@ void Camera::Reset()
 {
 	ManagedObject::Reset();
 
-	assert(this->Get_Reference_Count() == 0);
+	GameAssert(this->Get_Reference_Count() == 0);
 }
 
 void Camera::Free_Me()

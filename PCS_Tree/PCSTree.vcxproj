@@ -15,6 +15,9 @@
     <ClCompile Include="src\PCSTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\PCSConfig.h" />
     <ClInclude Include="src\PCSNode.h" />
     <ClInclude Include="src\PCSTree.h" />
@@ -55,12 +58,14 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 #include <Windows.h>
 
 #include <File.h>
@@ -31,8 +31,8 @@ Shader::~Shader()
 
 void Shader::Set(const Name& name, const char* const shaderFileAsset)
 {
-	assert(shaderFileAsset != 0);
-	assert(name != Name::Not_Initialized);
+	GameAssert(shaderFileAsset != 0);
+	GameAssert(name != Name::Not_Initialized);
 
 	this->name = name;
 	char file[256];
@@ -59,7 +59,7 @@ void Shader::Reset()
 {
 	ManagedObject::Reset();
 
-	assert(this->Get_Reference_Count() == 0);
+	GameAssert(this->Get_Reference_Count() == 0);
 
 	glDeleteProgram(this->program);
 	this->program = 0;
@@ -73,16 +73,16 @@ void Shader::Free_Me()
 
 void Shader::Activate() const
 {
-	assert(this->name != Name::Not_Initialized);
+	GameAssert(this->name != Name::Not_Initialized);
 
 	glUseProgram(this->program);
 }
 
 GLuint Shader::GetUniform(const char* name) const
 {
-	assert(name != 0);
+	GameAssert(name != 0);
 	GLuint loc = glGetUniformLocation(this->program, name);
-	assert(loc != -1);
+	GameAssert(loc != -1);
 
 	return loc;
 }
@@ -99,34 +99,34 @@ GLuint Shader::GetUniform(const char* name) const
 
 static GLuint Load_Shader(const char* const fileName, GLenum shaderType)
 {
-	assert(fileName != 0);
+	GameAssert(fileName != 0);
 		
 	FileHandle file;
 	FileError status;
 
 	status = File::open(file, fileName, FILE_READ);
-	assert(status == FILE_SUCCESS);
+	GameAssert(status == FILE_SUCCESS);
 	
 	// Read file size
 	int size;
 	status = File::size(file, size);
-	assert(status == FILE_SUCCESS);
+	GameAssert(status == FILE_SUCCESS);
 
 	char* data = new(TemporaryHeap::Instance(), ALIGN_4) char[size+1];
 
 
 	// Read from file
 	status = File::read(file, data, size);
-	assert(status == FILE_SUCCESS);
+	GameAssert(status == FILE_SUCCESS);
 
 	data[size] = 0;
 	
 	// Close file
 	status = File::close(file);
-	assert(status == FILE_SUCCESS);
+	GameAssert(status == FILE_SUCCESS);
 
 	GLuint shader = glCreateShader(shaderType);
-	assert(shader != 0);
+	GameAssert(shader != 0);
 
 	glShaderSource(shader, 1, &data, 0);
 	delete[] data;
@@ -143,7 +143,7 @@ static GLuint Load_Shader(const char* const fileName, GLenum shaderType)
 
 		glDeleteShader(shader);
 
-		assert(false);
+		GameAssert(false);
 	}
 
 	return shader;

@@ -1,10 +1,10 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include <File.h>
 #include <MathEngine.h>
 #include <malloc.h>
 #include <new>
-#include <eat.h>
+#include <asset_reader.h>
 #include <cstdio>
 #include <PCSTree.h>
 
@@ -142,13 +142,11 @@ void ModelBase::Set(const char* const archiveFile)
 {
 	unsigned char* modelName;
 	int modelNameSize;
-	bool status = eat(archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize);
-	assert(status);
+	GameVerify( read_asset(archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize) );
 
 	unsigned char* modelData;
 	int modelSize;
-	status = eat(archiveFile, VERTS_TYPE, reinterpret_cast<char*>(modelName), modelData, modelSize);
-	assert(status);
+	GameVerify( read_asset(archiveFile, VERTS_TYPE, reinterpret_cast<char*>(modelName), modelData, modelSize) );
 
 	Header* header = reinterpret_cast<Header*>(modelData);
 	this->boneParentList = reinterpret_cast<int*>(modelData + sizeof(Header));
@@ -252,7 +250,7 @@ void ModelBase::Set(const char* const archiveFile)
 void ModelBase::Reset()
 {
 	ManagedObject::Reset();
-	assert(this->Get_Reference_Count() == 0);
+	GameAssert(this->Get_Reference_Count() == 0);
 
 	// TODO remove this and replace it with the commented stuff
 	glDeleteBuffers(1, &this->boneMeshes[0].vboIndices);
@@ -315,7 +313,7 @@ const float ModelBase::Get_Bounding_Radius() const
 
 void ModelBase::Draw(const uint32_t boneIndex) const
 {
-	assert(boneIndex < this->boneCount);
+	GameAssert(boneIndex < this->boneCount);
 
 	glBindVertexArray(this->boneMeshes[boneIndex].vao);
 	glBindBuffer(GL_ARRAY_BUFFER, this->boneMeshes[boneIndex].vboVertices);
@@ -360,15 +358,15 @@ Bone* const ModelBase::Create_Skeleton_From_Model() const
 
 const Matrix ModelBase::Get_Bone_Transform(const uint32_t animID, const uint32_t boneIndex, const uint32_t time) const
 {
-	assert(animID < this->animCount);
-	assert(boneIndex < this->boneCount);
+	GameAssert(animID < this->animCount);
+	GameAssert(boneIndex < this->boneCount);
 
 	return this->anims[animID].Get_Transform(time, boneIndex);
 }
 
 const Animation& ModelBase::Get_Animation(const uint32_t animID) const
 {
-	assert(animID < this->animCount);
+	GameAssert(animID < this->animCount);
 
 	return this->anims[animID];
 }

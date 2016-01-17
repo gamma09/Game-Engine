@@ -1,3 +1,4 @@
+#include <GameAssert.h>
 #include "MathEngine.h"
 
 #ifdef MATH_SIMD
@@ -208,7 +209,7 @@ void Vect::norm()
 {
 	#ifdef MATH_SIMD
 		M128_TYPE squaredLength = _mm_set1_ps(this->magSqr());
-		assert(squaredLength.m128_f32[0] != 0.0f);
+		GameAssert(squaredLength.m128_f32[0] != 0.0f);
 
 		M128_TYPE inverseRoot = _mm_rsqrt_ps(squaredLength);
 		this->m *= inverseRoot;
@@ -216,7 +217,7 @@ void Vect::norm()
 	#else // MATH_NO_SIMD
 
 		float length = this->mag();
-		assert(length != 0.0f);
+		GameAssert(length != 0.0f);
 
 		length = 1.0f / length;
 

@@ -220,6 +220,7 @@ void _glfwTerminate_atexit( void )
 // Initialize various GLFW state
 //========================================================================
 
+
 int _glfwPlatformInit( void )
 {
     OSVERSIONINFO osi;
@@ -234,7 +235,11 @@ int _glfwPlatformInit( void )
 
     // Check which OS version we are running
     osi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+#pragma warning( push )
+#pragma warning( disable : 4996 )
     GetVersionEx( &osi );
+#pragma warning( pop )
+
     _glfwLibrary.Sys.winVer = _GLFW_WIN_UNKNOWN;
     if( osi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
     {

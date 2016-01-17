@@ -1,4 +1,5 @@
 #include <cstring>
+#include <GameAssert.h>
 
 #include "KeyFrame.h"
 
@@ -40,14 +41,14 @@ KeyFrame::~KeyFrame()
 
 const uint32_t KeyFrame::Get_Frame_Time() const
 {
-	assert(this->boneTransformationData != 0);
+	GameAssert(this->boneTransformationData != 0);
 
 	return this->frameTimeMillis;
 }
 
 const Transform* const KeyFrame::Get_Transform(const uint32_t& boneIndex) const
 {
-	assert(this->boneTransformationData != 0);
+	GameAssert(this->boneTransformationData != 0);
 
 	return this->boneTransformationData + boneIndex;
 }

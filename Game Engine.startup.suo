@@ -1,0 +1,39 @@
+{
+  "SingleProjectMode": 3,
+  "SingleProjectMruCount": 5,
+  "MRU": [
+    "Game_Engine"
+  ],
+  "MultiProjectConfigurations": {
+    "Model Converter": {
+      "Projects": {
+        "ModelConverter": {
+          "CommandLineArguments": ""
+        }
+      }
+    },
+    "Game Engine": {
+      "Projects": {
+        "Game_Engine": {
+          "CommandLineArguments": ""
+        }
+      }
+    },
+    "Chunkify": {
+      "Projects": {
+        "Chunkify": {
+          "CommandLineArguments": ""
+        }
+      }
+    },
+    "Unify": {
+      "Projects": {
+        "Unify": {
+          "CommandLineArguments": ""
+        }
+      }
+    }
+  },
+  "ActivateCommandLineArguments": false,
+  "Version": 2
+}

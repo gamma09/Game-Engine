@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <assert.h>
+#include <GameAssert.h>
 #include <string.h>
 
 #include "PCSTree.h"
@@ -9,7 +9,7 @@
 // Internal functions
 // -------------------------------------------------
 unsigned int count_levels_to_root(const PCSNode* const node) {
-	assert(node);
+	GameAssert(node);
 
 	const PCSNode* parent = node->getParent();
 	unsigned int result = 0;
@@ -28,7 +28,7 @@ void cleanup_level_list(std::vector<int>& levelsList) {
 }
 
 PCSNode* PCSTree::get_previous_sibling(const PCSNode* const node) const {
-	assert(node);
+	GameAssert(node);
 
 	PCSNode* prev = (node->getParent() == 0) ? root : node->getParent()->getChild();
 
@@ -41,15 +41,15 @@ PCSNode* PCSTree::get_previous_sibling(const PCSNode* const node) const {
 			curr = curr->getSibling();
 		}
 
-		assert(curr == node);
+		GameAssert(curr == node);
 	}
 
 	return prev;
 }
 
 void PCSTree::remove_helper(PCSNode* const node, unsigned int level) {
-	assert(node);
-	assert(levelsList.size() > level);
+	GameAssert(node);
+	GameAssert(levelsList.size() > level);
 	
 	unsigned int nextLevel = level;
 	nextLevel++;
@@ -102,7 +102,7 @@ PCSNode *PCSTree::getRoot() const
 // Insert
 void PCSTree::insert(PCSNode *newNode, PCSNode *parent)
 {
-	assert(newNode);
+	GameAssert(newNode);
 
 	newNode->setChild(0);
 	if (parent == 0) {
@@ -133,7 +133,7 @@ void PCSTree::insert(PCSNode *newNode, PCSNode *parent)
  void PCSTree::remove(PCSNode * const node)
  {
 	 // Preamble
-	assert(node);
+	GameAssert(node);
 
 	unsigned int level = count_levels_to_root(node);
 

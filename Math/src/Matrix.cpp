@@ -1,6 +1,6 @@
 #include "Matrix.h"
 #include <math.h>
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "Quat.h"
 
@@ -172,7 +172,7 @@ void Matrix::set(const MatrixSpecialType type)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 }
@@ -273,7 +273,7 @@ void Matrix::set(const RotType type, const float angle)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 
@@ -305,7 +305,7 @@ void Matrix::set(const RotOrientType type, const Vect& direction, const Vect& up
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 	}
 }
 
@@ -346,7 +346,7 @@ void Matrix::set(const MatrixRowType row, const Vect& v)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 }
@@ -435,7 +435,7 @@ const Vect Matrix::get(const MatrixRowType row) const
 		return this->v3;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		return Vect();
 	}
 }

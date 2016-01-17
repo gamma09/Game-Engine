@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "DirectionLightManager.h"
 #include "DirectionLight.h"
@@ -23,7 +23,7 @@ void DirectionLight::Set(float x, float y, float z, float r, float g, float b, f
 
 void DirectionLight::Reset()
 {
-	assert(this->Get_Reference_Count() == 0);
+	GameAssert(this->Get_Reference_Count() == 0);
 
 	ManagedObject::Reset();
 }

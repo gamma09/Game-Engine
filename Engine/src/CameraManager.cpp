@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "MemorySetup.h"
 #include "CameraManager.h"
@@ -8,7 +8,7 @@ CameraManager* CameraManager::instance;
 
 CameraManager* CameraManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -17,19 +17,17 @@ void CameraManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32_t 
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 	
 	instance = new(managerHeap, ALIGN_4) CameraManager(initialReserve, refillSize);
 }
 
 void CameraManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -72,9 +70,7 @@ CameraManager::CameraManager(uint32_t initialReserve, uint32_t refillSize) :
 	activeCamera(0)
 {
 	// Hey, might as well allocate a whole page of memory...
-	MemReturnCode status = Mem::createHeap(this->heap, 4096, "Camera Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Camera Heap" ) );
 
 	this->Init(initialReserve);
 }

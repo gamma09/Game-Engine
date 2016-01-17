@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 #include <new.h>  // for placement new
 #include <math.h>
 
@@ -115,7 +115,7 @@ void* VariableBlockHeap::alloc(size_t size, Align align, const char* const name,
 	this->heapInfo.peakBytesUsed = max(this->heapInfo.currBytesUsed, this->heapInfo.peakBytesUsed);
 
 	// Have we exceeded the amount of memory specified for heap size?
-	assert((this->heapInfo.totalHeapSize - sizeof(VariableBlockHeap)) >= this->heapInfo.currBytesUsed);
+	GameAssert((this->heapInfo.totalHeapSize - sizeof(VariableBlockHeap)) >= this->heapInfo.currBytesUsed);
 	
 	this->mem->memInfo.currBytesUsed += alignedSize;
 	this->mem->memInfo.peakBytesUsed = max(this->mem->memInfo.currBytesUsed, this->mem->memInfo.peakBytesUsed);
@@ -189,14 +189,14 @@ FixedBlockHeap::FixedBlockHeap(unsigned int numBlocks, unsigned int _blockSize, 
 
 void* FixedBlockHeap::alloc(size_t size, Align align, const char* const, int)
 {
-	assert(size <= this->blockSize);
-	assert(align == ALIGN_4);
+	GameAssert(size <= this->blockSize);
+	GameAssert(align == ALIGN_4);
 
 	align;
 	size;
 
 	// Are we out of blocks?
-	assert(this->alignedFreeHead != 0);
+	GameAssert(this->alignedFreeHead != 0);
 
 	void* p = this->alignedFreeHead;
 	this->alignedFreeHead = this->alignedFreeHead->next;

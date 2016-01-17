@@ -42,8 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Eat\include;$(SolutionDir)ExternLibs\Time\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Eat\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
@@ -51,8 +51,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Eat\include;$(SolutionDir)ExternLibs\Time\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Eat\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -151,10 +151,10 @@
     <ClCompile Include="src\WireframeMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\ExternLibs\Eat\lib\Eat_Debug.lib">
+    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Debug.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
-    <Library Include="..\ExternLibs\Eat\lib\Eat_Release.lib">
+    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Release.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
     <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
@@ -207,7 +207,7 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ExternLibs\Eat\include\eat.h" />
+    <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h" />
     <ClInclude Include="..\ExternLibs\FileSystem\include\File.h" />
     <ClInclude Include="..\ExternLibs\GL3W\include\GL\gl3w.h" />
     <ClInclude Include="..\ExternLibs\GL3W\include\GL\glcorearb.h" />
@@ -222,6 +222,9 @@
     <ClInclude Include="..\ExternLibs\ObjectManagement\include\Manager.h" />
     <ClInclude Include="..\ExternLibs\PCSTree\include\PCSNode.h" />
     <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="..\ExternLibs\Time\include\Time.h" />
     <ClInclude Include="..\ExternLibs\Time\include\Timer.h" />
     <ClInclude Include="src\AnimatingStrategy.h" />

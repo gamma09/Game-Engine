@@ -1,3 +1,5 @@
+#include <GameAssert.h>
+
 #include "MemorySetup.h"
 #include "BoneManager.h"
 #include "Bone.h"
@@ -8,7 +10,7 @@ BoneManager* BoneManager::instance;
 
 BoneManager* BoneManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -17,14 +19,14 @@ void BoneManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32_t re
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) BoneManager(initialReserve, refillSize);
 }
 
 void BoneManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	delete instance;
 }
@@ -54,9 +56,7 @@ void BoneManager::Delete_Object(ManagedObject* obj) const
 BoneManager::BoneManager(uint32_t initialReserve, uint32_t refillSize) :
 	Manager(refillSize)
 {
-	MemReturnCode status = Mem::createFixBlockHeap(this->heap, MAX_BONES_CREATED, sizeof(Bone), "Boneyard/Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createFixBlockHeap( this->heap, MAX_BONES_CREATED, sizeof( Bone ), "Boneyard/Heap" ) );
 	this->Init(initialReserve);
 }
 

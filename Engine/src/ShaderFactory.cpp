@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "ShaderFactory.h"
 #include "ShaderManager.h"
@@ -40,12 +40,12 @@ static Shader* Create_Shader(const Shader::Name& name)
 
 	default:
 		// Shader not recognized!
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 
 	Shader* shader = ShaderManager::Instance()->Add(name, shaderFileBase);
-	assert(shader != 0);
+	GameAssert(shader != 0);
 
 	return shader;
 }

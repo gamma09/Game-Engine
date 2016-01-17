@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "MemorySetup.h"
 #include "ActorManager.h"
@@ -9,7 +9,7 @@ ActorManager* ActorManager::instance;
 
 ActorManager* ActorManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
@@ -18,19 +18,17 @@ void ActorManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32_t r
 {
 	managerHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(managerHeap, ALIGN_4) ActorManager(initialReserve, refillSize);
 }
 
 void ActorManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -59,9 +57,7 @@ ActorManager::ActorManager(uint32_t initialReserve, uint32_t refillSize) :
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! Actor needs to be 16-byte aligned...
-	MemReturnCode status = Mem::createHeap(this->heap, 4096, "Actor Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Actor Heap" ) );
 
 	this->Init(initialReserve);
 }

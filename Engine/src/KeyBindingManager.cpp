@@ -1,6 +1,6 @@
 #include "KeyBindingManager.h"
 
-#include <cassert>
+#include <GameAssert.h>
 
 #include "MemorySetup.h"
 #include "KeyBinding.h"
@@ -9,26 +9,24 @@ KeyBindingManager* KeyBindingManager::instance;
 
 KeyBindingManager* KeyBindingManager::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance;
 }
 		
 void KeyBindingManager::Create(Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize)
 {
-	assert(instance == 0);
+	GameAssert(instance == 0);
 	managerHeap;
 	instance = new(managerHeap, ALIGN_4) KeyBindingManager(initialReserve, refillSize);
 }
 
 void KeyBindingManager::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	instance->Destroy_Objects();
-	MemReturnCode status = Mem::destroyHeap(instance->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -65,9 +63,7 @@ KeyBindingManager::KeyBindingManager(const uint32_t initialReserve, const uint32
 	Manager(refillSize)
 {
 	// Hey, might as well allocate a whole page of memory...
-	MemReturnCode status = Mem::createHeap(this->heap, 4096, "Keybinding Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap(this->heap, 4096, "Keybinding Heap") );
 
 	this->Init(initialReserve);
 }

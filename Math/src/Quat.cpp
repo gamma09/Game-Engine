@@ -8,7 +8,7 @@
 
 #include "MathEngine.h"
 #include <math.h>
-#include <assert.h>
+#include <GameAssert.h>
 #include "Quat.h"
 
 #ifdef MATH_SIMD
@@ -52,7 +52,7 @@ Quat::Quat(const MatrixSpecialType type)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 }
@@ -140,7 +140,7 @@ void Quat::set(const MatrixSpecialType type)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 }
@@ -288,7 +288,7 @@ void Quat::set(const RotType& type, const float& angle)
 		break;
 
 	default:
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 
@@ -744,7 +744,7 @@ const Quat Quat::getNorm() const
 
 Quat& Quat::norm()
 {
-	assert(!this->isZero(MATH_TOLERANCE));
+	GameAssert(!this->isZero(MATH_TOLERANCE));
 
 	float magSqr = this->magSquared();
 

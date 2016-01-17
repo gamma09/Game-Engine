@@ -1,10 +1,10 @@
-#include <cassert>
+#include <GameAssert.h>
 #include <cstdio>
 #include <cstdlib>
 
 #include <GL/gl3w.h>
 #include <GL/glfw.h>
-#include <eat.h>
+#include <asset_reader.h>
 
 #include "MemorySetup.h"
 #include "Texture.h"
@@ -20,7 +20,7 @@ void Texture::Set(const char* archiveFile, const char* textureName)
 	unsigned char* bytes;
 	int size;
 	
-	bool status = eat(archiveFile, TEXTURE_TYPE, textureName, bytes, size);
+	bool status = read_asset(archiveFile, TEXTURE_TYPE, textureName, bytes, size);
 	this->using_default_texture = !status;
 
 	if (status)
@@ -57,7 +57,7 @@ void Texture::Set(const char* archiveFile, const char* textureName)
 			else if (image.BytesPerPixel == 4)
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.Data);
 			else
-				assert(0); // should not happen, unless tga format works differently than we think
+				GameAssert(0); // should not happen, unless tga format works differently than we think
 		}
 		
 		glfwFreeImage(&image);
@@ -94,11 +94,11 @@ Texture::Texture(const char* defaultArchive, const char* textureName) :
 	unsigned char* bytes;
 	int size;
 	
-	bool status = eat(defaultArchive, TEXTURE_TYPE, textureName, bytes, size);
+	bool status = read_asset(defaultArchive, TEXTURE_TYPE, textureName, bytes, size);
 	if (!status)
 	{
 		// If we're in debug mode, dont exit, let the programmer debug it...
-		assert(status);
+		GameAssert(status);
 
 		// This goes beyond asserts...if we can't load up the default texture, WE'VE GOT BIG PROBLEMS!
 		fprintf(stderr, "Error: Could not load default texture \"%s\" from archive \"%s\"!\n", textureName, defaultArchive);
@@ -121,9 +121,7 @@ Texture::Texture(const char* defaultArchive, const char* textureName) :
 
 	// Interpret file as texture data
 	GLFWimage image;
-	int imageReadSuccessfully = glfwReadMemoryImage(bytes, size, &image, 0);
-	imageReadSuccessfully;
-	assert(imageReadSuccessfully == GL_TRUE);
+	GameVerify( GL_TRUE == glfwReadMemoryImage(bytes, size, &image, 0) );
 	delete[] bytes;
 
 	if (image.BytesPerPixel == 3)
@@ -131,7 +129,7 @@ Texture::Texture(const char* defaultArchive, const char* textureName) :
 	else if (image.BytesPerPixel == 4)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.Data);
 	else
-		assert(0);
+		GameAssert(0);
 
 	glfwFreeImage(&image);
 }

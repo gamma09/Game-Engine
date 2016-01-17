@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include <MathEngine.h>
 
@@ -19,21 +19,21 @@ void LightingTextureMaterial::Create_Material(Heap* materialHeap)
 {
 	materialHeap;
 
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new(materialHeap, ALIGN_4) LightingTextureMaterial();
 }
 
 void LightingTextureMaterial::Destroy_Material()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	delete instance;
 }
 
 void LightingTextureMaterial::Draw(const DrawInfo& info)
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW);

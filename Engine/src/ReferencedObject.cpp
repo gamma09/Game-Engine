@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 
 #include "ReferencedObject.h"
 
@@ -20,7 +20,7 @@ void ReferencedObject::Add_Reference()
 
 void ReferencedObject::Remove_Reference()
 {
-	assert(this->reference_count > 0);
+	GameAssert(this->reference_count > 0);
 
 	this->reference_count--;
 	if (this->reference_count == 0)

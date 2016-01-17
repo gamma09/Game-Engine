@@ -9,6 +9,7 @@
 #include "MathEngine.h"
 #include "QuatApp.h"
 #include <math.h>
+#include <GameAssert.h>
 
 void QuatApp::Slerp(Quat& result, const Quat& source, const Quat& target, const float t)
 {
@@ -26,7 +27,7 @@ void QuatApp::Slerp(Quat& result, const Quat& source, const Quat& target, const 
 
 	if (tmp > 1.0f)
 	{
-		assert(tmp - ENGINE_MATH_TOLERANCE <= 1.0f);
+		GameAssert(tmp - ENGINE_MATH_TOLERANCE <= 1.0f);
 		tmp = 1.0f;
 	}
 

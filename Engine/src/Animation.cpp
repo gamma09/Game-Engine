@@ -2,6 +2,7 @@
 
 #include <VectApp.h>
 #include <QuatApp.h>
+#include <GameAssert.h>
 
 #include "Animation.h"
 #include "KeyFrame.h"
@@ -51,9 +52,9 @@ Animation::~Animation()
 
 const Matrix Animation::Get_Transform(const uint32_t& time, const uint32_t& boneIndex) const
 {
-	assert(this->keyFrameCount > 0);
-	assert(this->keyFrames != 0);
-	assert(time <= this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time());
+	GameAssert(this->keyFrameCount > 0);
+	GameAssert(this->keyFrames != 0);
+	GameAssert(time <= this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time());
 
 	KeyFrame* prevFramePtr = 0;
 	KeyFrame* nextFramePtr = this->keyFrames;
@@ -101,8 +102,8 @@ const uint32_t Animation::Get_KeyFrame_Count() const
 
 const uint32_t Animation::Get_Animation_Length() const
 {
-	assert(this->keyFrameCount > 0);
-	assert(this->keyFrames != 0);
+	GameAssert(this->keyFrameCount > 0);
+	GameAssert(this->keyFrames != 0);
 
 	return this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time();
 }

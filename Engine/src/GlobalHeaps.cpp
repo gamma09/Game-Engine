@@ -1,4 +1,4 @@
-#include <assert.h>
+#include <GameAssert.h>
 #include <MemoryEngine.h>
 
 #include "GlobalHeaps.h"
@@ -7,14 +7,14 @@ TemporaryHeap* TemporaryHeap::instance;
 
 void TemporaryHeap::Create()
 {
-	assert(instance == 0);
+	GameAssert(instance == 0);
 
 	instance = new TemporaryHeap();
 }
 
 void TemporaryHeap::Destroy()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	delete instance;
 	instance = 0;
@@ -22,7 +22,7 @@ void TemporaryHeap::Destroy()
 
 Heap* TemporaryHeap::Instance()
 {
-	assert(instance != 0);
+	GameAssert(instance != 0);
 
 	return instance->heap;
 }
@@ -35,14 +35,10 @@ Heap* TemporaryHeap::Instance()
 TemporaryHeap::TemporaryHeap()
 {
 	
-	MemReturnCode status = Mem::createHeap(this->heap, TEMPORARY_HEAP_SIZE, "Temporary Allocations Heap");
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::createHeap(this->heap, TEMPORARY_HEAP_SIZE, "Temporary Allocations Heap") );
 }
 
 TemporaryHeap::~TemporaryHeap()
 {
-	MemReturnCode status = Mem::destroyHeap(this->heap);
-	status;
-	assert(status == Mem_OK);
+	GameVerify( Mem_OK == Mem::destroyHeap(this->heap) );
 }

@@ -1,6 +1,7 @@
 #include "DrawStrategy.h"
 
 #include <Matrix.h>
+#include <GameAssert.h>
 
 #include "ModelBaseManager.h"
 #include "WireframeMaterial.h"
@@ -132,8 +133,8 @@ AbstDrawStrategy* GlobalDrawState::wireframeStrategy;
 
 void GlobalDrawState::Draw(const DrawInfo& info)
 {
-	assert(textureStrategy);
-	assert(wireframeStrategy);
+	GameAssert(textureStrategy);
+	GameAssert(wireframeStrategy);
 
 	textureStrategy->Draw(info);
 	wireframeStrategy->Draw(info);
@@ -157,7 +158,7 @@ void GlobalDrawState::Change_Draw_Types(const TextureDrawType& textureType, cons
 
 	default:
 		// Forget to add something to the switch statement?
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 
@@ -173,7 +174,7 @@ void GlobalDrawState::Change_Draw_Types(const TextureDrawType& textureType, cons
 
 	default:
 		// Forget to add something to the switch statement?
-		assert(0);
+		GameAssert(0);
 		break;
 	}
 }

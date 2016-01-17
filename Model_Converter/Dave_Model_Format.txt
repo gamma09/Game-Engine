@@ -1,0 +1,58 @@
+Mesh file format
+
+  Offset | Size | Type      | Description
+  -------+------+-----------+--------------------------------------
+  0      |   4  | FLOAT     | Bounding Sphere Radius
+  4      |   4  | FLOAT     | Bounding Sphere X
+  8      |   4  | FLOAT     | Bounding Sphere Y
+  12     |   4  | FLOAT     | Bounding Sphere Z
+
+  16     |   4  | UINT      | The number of vertices in the model
+  20     |   4  | UINT      | The number of triangles in the model
+  24     |   4  | UINT      | The number of texture names in the model
+  28     |   4  | UINT      | The number of bones in the model
+  32     |   4  | UINT      | The number of animations in the model
+
+  36     |  ??  | INTS      | Bone data, each integer is the index in the bone array of each bone's parent
+  **     |  ??  | ANIMS     | THe animation data
+  **     |  ??  | VERTICES  | The Vertex data, the size of this block in the file is: (32 * vertex count)
+  **     |  ??  | TRIANGLES | The Triangle data, the size of this block in the file is: (12 * triangle count)
+  **     |  ??  | STRINGS   | The names of the textures used in this model as null-terminated strings
+  
+
+Animation data layout:
+
+  Offset | Size | Type   | Description
+  -------+------+--------+----------------------------------------
+  0      |   4  | UINT   | Number of frames
+  4      |  ??  | FRAMES | The frame data
+
+Frame data layout: 
+
+  Offset | Size | Type  | Description
+  -------+------+-------+-----------------------------------------
+  0      |  4   | UINT  | The key-frame's time in milliseconds
+  4*     |  16* | VECT  | Bone N's scale vector (field is repeated for every bone in the model)
+  20*    |  16* | QUAT  | Bone N's rotation quaternion (field is repeated for every bone in the model)
+  36*    |  16* | VECT  | Bone N's translation vector (field is repeated for every bone in the model)
+  
+Vertex data layout:
+
+  Offset | Size | Type  | Description
+  -------+------+-------+----------------------------------------
+  0      |   4  | FLOAT | X
+  4      |   4  | FLOAT | Y
+  8      |   4  | FLOAT | Z
+  12     |   4  | FLOAT | U (used for texture coordinates)
+  16     |   4  | FLOAT | V (used for texture coordinates)
+  20     |   4  | FLOAT | NX (Vertex normal, X component)
+  24     |   4  | FLOAT | NY (Vertex normal, Y component)
+  28     |   4  | FLOAT | NZ (Vertex normal, Z component)
+
+
+Triangle data layout:
+  Offset | Size | Type   | Description
+  -------+------+--------+------------------------------------------
+  0      |   4  | UINT   | The index in the vertex data block of the first vertex of this triangle
+  4      |   4  | UINT   | The index in the vertex data block of the second vertex of this triangle
+  8      |   4  | UINT   | The index in the vertex data block of the third vertex of this triangle

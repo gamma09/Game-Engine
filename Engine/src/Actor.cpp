@@ -1,6 +1,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <cassert>
+#include <GameAssert.h>
 
 #include "Actor.h"
 #include "Camera.h"
@@ -19,8 +19,8 @@ Actor::Actor() :
 
 void Actor::Set(ModelBase* modelBase, UpdateStrategy* updateStrategy)
 {
-	assert(modelBase != 0);
-	assert(updateStrategy != 0);
+	GameAssert(modelBase != 0);
+	GameAssert(updateStrategy != 0);
 
 	this->position.set(0.0f, 0.0f, 0.0f);
 	this->rx = 0.0f;
@@ -39,7 +39,7 @@ void Actor::Set(ModelBase* modelBase, UpdateStrategy* updateStrategy)
 
 void Actor::Reset()
 {
-	assert(this->Get_Reference_Count() == 0);
+	GameAssert(this->Get_Reference_Count() == 0);
 
 	this->model.Reset();
 	this->updateStrategy->Remove_Reference();

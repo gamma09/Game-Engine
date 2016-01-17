@@ -5,6 +5,15 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="_libs">
+      <UniqueIdentifier>{676f4c9c-7386-431a-97a5-a6a5b76cb49d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared">
+      <UniqueIdentifier>{aaf6ce87-3aca-492c-974c-bd50dd172384}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\include">
+      <UniqueIdentifier>{461b2027-f32f-4b9d-b2fa-d21d64aa7d8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PCSNode.cpp">
@@ -23,6 +32,15 @@
     </ClInclude>
     <ClInclude Include="src\PCSConfig.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
