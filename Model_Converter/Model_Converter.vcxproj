@@ -125,7 +125,6 @@
     </Library>
     <Library Include="libs\fbx\lib\libfbxsdk-mt_d32.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </Library>
     <Library Include="libs\fbx\lib\libfbxsdk-mt_r32.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
