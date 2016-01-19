@@ -9,23 +9,10 @@
 #include "Component.h"
 
 Component::Component( Fl_Widget* fltk_widget ) :
+	PCSNode(),
 	fltk_component( fltk_widget )
 {
 	GameAssert( fltk_widget );
-}
-
-Component::Component( Component&& component ) :
-	fltk_component( component.fltk_component )
-{
-	component.fltk_component = nullptr;
-}
-
-Component& Component::operator=( Component&& component )
-{
-	this->fltk_component = component.fltk_component;
-	component.fltk_component = nullptr;
-
-	return *this;
 }
 
 Component::~Component()
@@ -34,6 +21,11 @@ Component::~Component()
 	{
 		delete this->fltk_component;
 	}
+}
+
+Fl_Widget* Component::Get_FLTK_Component() const
+{
+	return this->fltk_component;
 }
 
 void Component::Set_Visible( bool isVisible ) const
@@ -81,6 +73,16 @@ void Component::Set_Tooltip( const char* tooltipText ) const
 const char* Component::Get_Tooltip() const
 {
 	return this->fltk_component->tooltip();
+}
+
+void Component::Set_Text( const char* text ) const
+{
+	this->fltk_component->copy_label( text );
+}
+
+const char* Component::Get_Text() const
+{
+	return this->fltk_component->label();
 }
 
 void Component::Set_Bounds( const Rectangle& rect ) const

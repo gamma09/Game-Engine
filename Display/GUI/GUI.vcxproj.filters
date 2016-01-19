@@ -483,9 +483,6 @@
     <ClInclude Include="include\List.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\TextComponent.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\ListElement.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -496,9 +493,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Button.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Canvas.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ExternLibs\PCSTree\include\PCSConfig.h">
@@ -519,6 +513,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Rectangle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Label.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

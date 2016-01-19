@@ -10,8 +10,8 @@ class Component : public PCSNode
 {
 protected:
 	Component( Fl_Widget* fltk_widget );
-	Component( Component&& component );
-	Component& operator=( Component&& component );
+
+	Fl_Widget* Get_FLTK_Component() const;
 
 public:
 	virtual ~Component();
@@ -25,8 +25,12 @@ public:
 	void Set_Tooltip( const char* tooltipText ) const;
 	const char* Get_Tooltip() const;
 
+	void Set_Text( const char* text ) const;
+	const char* Get_Text() const;
+
 	void Set_Bounds( const Rectangle& rect ) const;
 	Rectangle Get_Bounds() const;
+
 	void Repaint() const;
 
 private:

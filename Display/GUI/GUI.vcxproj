@@ -161,17 +161,16 @@
     <ClInclude Include="..\..\PreCompiledLibs\FLTK\include\FL\win32.H" />
     <ClInclude Include="..\..\PreCompiledLibs\FLTK\include\FL\x.H" />
     <ClInclude Include="include\Button.h" />
-    <ClInclude Include="include\Canvas.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Label.h" />
     <ClInclude Include="include\List.h" />
     <ClInclude Include="include\ListElement.h" />
     <ClInclude Include="include\Rectangle.h" />
-    <ClInclude Include="include\TextComponent.h" />
     <ClInclude Include="include\TextField.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -257,14 +256,14 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)PreCompiledLibs\FLTK\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)PreCompiledLibs\FLTK\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -280,7 +279,6 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -313,7 +311,6 @@ COPY "$(OutputPath)$(ProjectName)_$(Configuration).pdb" "$(SolutionDir)ExternLib
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
