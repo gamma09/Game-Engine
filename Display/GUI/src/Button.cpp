@@ -48,6 +48,8 @@ Button::Button( const char* buttonText ) :
 	Component( new Fl_Button( 0, 0, 0, 0 ) ),
 	listenerHead( nullptr )
 {
+	GameAssert( buttonText );
+
 	this->Get_FLTK_Component( )->callback( Button::Button_Click_Callback, this );
 	this->Set_Text( buttonText );
 }
@@ -56,6 +58,8 @@ Button::Button( const Rectangle& rect, const char* buttonText ) :
 	Component( new Fl_Button( rect.x, rect.y, rect.width, rect.height ) ),
 	listenerHead( nullptr )
 {
+	GameAssert( buttonText );
+
 	this->Get_FLTK_Component( )->callback( Button::Button_Click_Callback, this );
 	this->Set_Text( buttonText );
 }
@@ -72,11 +76,14 @@ Button::~Button()
 
 void Button::Add_Action_Listener( ButtonListener* listener )
 {
+	GameAssert( listener );
 	this->listenerHead = new ButtonListenerNode( listener, this->listenerHead );
 }
 
 void Button::Remove_Action_Listener( ButtonListener* listener )
 {
+	GameAssert( listener );
+
 	ButtonListenerNode* prev = nullptr;
 	ButtonListenerNode* curr = this->listenerHead;
 

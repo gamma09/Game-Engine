@@ -524,6 +524,9 @@
     <ClCompile Include="src\Button.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextField.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
