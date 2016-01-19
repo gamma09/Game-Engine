@@ -1,0 +1,35 @@
+#pragma once
+
+#include <PCSNode.h>
+#include "Rectangle.h"
+
+class Fl_Widget;
+
+// This class is abstract
+class Component : public PCSNode
+{
+protected:
+	Component( Fl_Widget* fltk_widget );
+	Component( Component&& component );
+	Component& operator=( Component&& component );
+
+public:
+	virtual ~Component();
+
+	void Set_Visible( bool isVisible ) const;
+	bool Is_Visible() const;
+
+	void Set_Active( bool isActive ) const;
+	bool Is_Active() const;
+
+	void Set_Tooltip( const char* tooltipText ) const;
+	const char* Get_Tooltip() const;
+
+	void Set_Bounds( const Rectangle& rect ) const;
+	Rectangle Get_Bounds() const;
+	void Repaint() const;
+
+private:
+
+	Fl_Widget* fltk_component;
+};
