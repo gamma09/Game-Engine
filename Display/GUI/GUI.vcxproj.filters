@@ -507,6 +507,9 @@
     <ClInclude Include="include\Rectangle.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\ButtonListener.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -516,6 +519,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Label.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Button.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

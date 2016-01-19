@@ -160,6 +160,7 @@
     <ClInclude Include="..\..\PreCompiledLibs\FLTK\include\FL\names.h" />
     <ClInclude Include="..\..\PreCompiledLibs\FLTK\include\FL\win32.H" />
     <ClInclude Include="..\..\PreCompiledLibs\FLTK\include\FL\x.H" />
+    <ClInclude Include="include\ButtonListener.h" />
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Label.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="include\TextField.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Rectangle.cpp" />

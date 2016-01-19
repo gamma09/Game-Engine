@@ -17,10 +17,16 @@ Label::Label( const Rectangle& rect ) :
 	// Do nothing
 }
 
+Label::Label( const char* text ) :
+	Component( new Fl_Box( 0, 0, 0, 0 ) )
+{
+	this->Set_Text( text );
+}
+
 Label::Label( const Rectangle& rect, const char* text ) :
 	Component( new Fl_Box( rect.x, rect.y, rect.width, rect.height ) )
 {
-	static_cast<Fl_Box*>( this->Get_FLTK_Component() )->copy_label( text );
+	this->Set_Text( text );
 }
 
 Label::~Label()
