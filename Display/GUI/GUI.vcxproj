@@ -164,8 +164,8 @@
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Label.h" />
-    <ClInclude Include="include\List.h" />
-    <ClInclude Include="include\ListElement.h" />
+    <ClInclude Include="include\Tree.h" />
+    <ClInclude Include="include\TreeElement.h" />
     <ClInclude Include="include\Rectangle.h" />
     <ClInclude Include="include\TextField.h" />
   </ItemGroup>
@@ -175,6 +175,8 @@
     <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\Rectangle.cpp" />
     <ClCompile Include="src\TextField.cpp" />
+    <ClCompile Include="src\Tree.cpp" />
+    <ClCompile Include="src\TreeElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
@@ -282,6 +284,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

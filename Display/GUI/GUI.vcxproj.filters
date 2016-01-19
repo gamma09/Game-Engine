@@ -480,12 +480,6 @@
     <ClInclude Include="include\Component.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\List.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ListElement.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\TextField.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -510,6 +504,12 @@
     <ClInclude Include="include\ButtonListener.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Tree.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TreeElement.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -525,6 +525,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\TextField.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TreeElement.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tree.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

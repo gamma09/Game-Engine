@@ -2,12 +2,15 @@
 
 #include "Component.h"
 
-class Label : public Component
+namespace GUI
 {
-public:
-	Label();
-	Label( const Rectangle& rect );
-	Label( const char* text );
-	Label( const Rectangle& rect, const char* text );
-	virtual ~Label();
-};
+	class Label : public Component
+	{
+	public:
+		Label();
+		Label( const GUI::Rectangle& rect );
+		Label( const char* text );
+		Label( const GUI::Rectangle& rect, const char* text );
+		virtual ~Label();
+	};
+}

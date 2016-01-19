@@ -8,95 +8,101 @@
 #include <GameAssert.h>
 #include "Component.h"
 
-Component::Component( Fl_Widget* fltk_widget ) :
-	PCSNode(),
-	fltk_component( fltk_widget )
+namespace GUI
 {
-	GameAssert( fltk_widget );
-}
 
-Component::~Component()
-{
-	if( nullptr != this->fltk_component )
+	Component::Component( Fl_Widget* fltk_widget ) :
+		PCSNode(),
+		fltk_component( fltk_widget )
 	{
-		delete this->fltk_component;
+		GameAssert( fltk_widget );
 	}
-}
 
-Fl_Widget* Component::Get_FLTK_Component() const
-{
-	return this->fltk_component;
-}
-
-void Component::Set_Visible( bool isVisible ) const
-{
-	if( isVisible )
+	Component::~Component()
 	{
-		this->fltk_component->show();
+		if( nullptr != this->fltk_component )
+		{
+			delete this->fltk_component;
+		}
 	}
-	else
+
+	Fl_Widget* Component::Get_FLTK_Component() const
 	{
-		this->fltk_component->hide();
+		return this->fltk_component;
 	}
-}
 
-bool Component::Is_Visible() const
-{
-	return 0 != this->fltk_component->visible();
-}
-
-void Component::Set_Active( bool isActive ) const
-{
-	if( isActive )
+	void Component::Set_Visible( bool isVisible ) const
 	{
-		this->fltk_component->activate();
+		if( isVisible )
+		{
+			this->fltk_component->show();
+		}
+		else
+		{
+			this->fltk_component->hide();
+		}
 	}
-	else
+
+	bool Component::Is_Visible() const
 	{
-		this->fltk_component->deactivate();
+		return 0 != this->fltk_component->visible();
 	}
-}
 
-bool Component::Is_Active() const
-{
-	return 0 != this->fltk_component->active();
-}
+	void Component::Set_Active( bool isActive ) const
+	{
+		if( isActive )
+		{
+			this->fltk_component->activate();
+		}
+		else
+		{
+			this->fltk_component->deactivate();
+		}
+	}
 
-void Component::Set_Tooltip( const char* tooltipText ) const
-{
-	GameAssert( tooltipText );
+	bool Component::Is_Active() const
+	{
+		return 0 != this->fltk_component->active();
+	}
 
-	this->fltk_component->copy_tooltip( tooltipText );
-	this->Repaint();
-}
+	void Component::Set_Tooltip( const char* tooltipText ) const
+	{
+		GameAssert( tooltipText );
 
-const char* Component::Get_Tooltip() const
-{
-	return this->fltk_component->tooltip();
-}
+		this->fltk_component->copy_tooltip( tooltipText );
+		this->Repaint();
+	}
 
-void Component::Set_Text( const char* text ) const
-{
-	this->fltk_component->copy_label( text );
-}
+	const char* Component::Get_Tooltip() const
+	{
+		return this->fltk_component->tooltip();
+	}
 
-const char* Component::Get_Text() const
-{
-	return this->fltk_component->label();
-}
+	void Component::Set_Text( const char* text ) const
+	{
+		this->fltk_component->copy_label( text );
+	}
 
-void Component::Set_Bounds( const Rectangle& rect ) const
-{
-	this->fltk_component->resize( rect.x, rect.y, rect.width, rect.height );
-	this->Repaint();
-}
+	const char* Component::Get_Text() const
+	{
+		return this->fltk_component->label();
+	}
 
-Rectangle Component::Get_Bounds() const
-{
-	return Rectangle( this->fltk_component->x(), this->fltk_component->y(), this->fltk_component->w(), this->fltk_component->h() );
-}
+	void Component::Set_Bounds( const Rectangle& rect ) const
+	{
+		this->fltk_component->resize( rect.x, rect.y, rect.width, rect.height );
+		this->Repaint();
+	}
 
-void Component::Repaint() const
-{
-	this->fltk_component->redraw();
+	Rectangle Component::Get_Bounds() const
+	{
+		return Rectangle( this->fltk_component->x(), this->fltk_component->y(), this->fltk_component->w(), this->fltk_component->h() );
+	}
+
+	void Component::Repaint() const
+	{
+		this->fltk_component->redraw();
+	}
+
+
 }
