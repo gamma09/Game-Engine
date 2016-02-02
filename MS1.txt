@@ -1,0 +1,8 @@
+Milestone 1: Develop a GUI library for the editor.
+
+Status: Completed, but not yet tested.
+
+Implementation is in:
+Display\GUI
+
+Implementation wraps a 3rd party lightweight GUI library called FLTK.
