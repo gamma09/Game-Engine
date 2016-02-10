@@ -1,8 +1,9 @@
-#include <stdio.h>
 #include <string.h>
+#include <utility>
 #include <GameAssert.h>
 
 #include "ReflectedType.h"
+
 
 ReflectedType::ReflectedType( const char* inName ) :
 	name( nullptr ),
@@ -12,6 +13,7 @@ ReflectedType::ReflectedType( const char* inName ) :
 	variables()
 {
 	GameAssert( inName );
+	
 	this->name = new char[strlen( inName ) + 1];
 	strcpy( this->name, inName );
 }
@@ -24,111 +26,221 @@ ReflectedType::ReflectedType( const char* inName, bool isPrimitive ) :
 	variables()
 {
 	GameAssert( inName );
+	
 	this->name = new char[strlen( inName ) + 1];
 	strcpy( this->name, inName );
 }
 
 ReflectedType::ReflectedType( const ReflectedType& type ) :
-	name( new char[strlen( type.name ) + 1] ),
 	is_final( type.is_final ),
 	is_primitive( type.is_primitive ),
-	parents( type.parents ),
+	parents(),
 	variables( type.variables )
 {
+	GameAssert( type.name );
+	
+	for( const char* parent : type.parents )
+	{
+		char* copiedParent = new char[strlen( parent ) + 1];
+		strcpy( copiedParent, parent );
+		this->parents.push_back( copiedParent );
+	}
+	
+	this->name = new char[strlen( type.name ) + 1];
 	strcpy( this->name, type.name );
+}
+
+ReflectedType::ReflectedType( ReflectedType&& type ) :
+	name( type.name ),
+	is_final( type.is_final ),
+	is_primitive( type.is_primitive ),
+	parents( std::move( type.parents ) ),
+	variables( std::move( type.variables ) )
+{
+	GameAssert( type.name );
+	
+	type.name = nullptr;
+	type.parents.clear();
 }
 
 ReflectedType& ReflectedType::operator=( const ReflectedType& type )
 {
+	GameAssert( this != &type );
+	GameAssert( type.name );
+	
 	this->name = new char[strlen( type.name ) + 1];
 	strcpy( this->name, type.name );
 	this->is_final = type.is_final;
 	this->is_primitive = type.is_primitive;
+	for( char* parent : this->parents )
+	{
+		delete parent;
+	}
+	
+	this->parents.clear();
+	
+	for( const char* parent : type.parents )
+	{
+		char* copiedParent = new char[strlen(parent) + 1];
+		strcpy( copiedParent, parent );
+		this->parents.push_back( copiedParent );
+	}
+	
 	this->parents = type.parents;
 	this->variables = type.variables;
 	
 	return *this;
 }
 
+ReflectedType& ReflectedType::operator=( ReflectedType&& type )
+{
+	GameAssert( this != &type );
+	GameAssert( type.name );
+	
+	this->name = type.name;
+	type.name = nullptr;
+	
+	this->is_final = type.is_final;
+	this->is_primitive = type.is_primitive;
+	this->parents = std::move( type.parents );
+	type.parents.clear();
+	this->variables = std::move( type.variables );
+	
+	return *this;
+}
+
 ReflectedType::~ReflectedType()
 {
-	delete this->name;
+	if( this->name != nullptr )
+	{
+		delete this->name;
+		this->name = nullptr;
+	}
+	
+	for( char* parent : this->parents )
+	{
+		delete parent;
+	}
+	
+	this->parents.clear();
 }
 
-bool ReflectedType::AddParentType( const ReflectedType* parent )
+void ReflectedType::AddParentType( const char* parent, FeedbackContext& context )
 {
+	GameAssert( this->name );
+	GameAssert( parent );
 	GameAssert( !this->is_final );
 	
-	if( this == parent )
+	if( strcmp( this->name, parent ) == 0 )
 	{
-		fprintf( stderr, "ERROR: Class %s cannot be its own parent.\n", this->name );
-		return false;
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Class %s cannot be its own parent.\n", this->name );
 	}
-	
-	if( this->HasParent( parent ) )
+	else if( this->HasParent( parent ) )
 	{
-		fprintf( stderr, "ERROR: Duplicate parent class %s declared for type %s\n", parent->name, this->name );
-		return false;
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Duplicate parent class %s declared for type %s.\n", parent, this->name );
 	}
-	
-	this->parents.push_back( parent );
-	return true;
+	else
+	{
+		char* copiedParent = new char[strlen( parent ) + 1];
+		strcpy( copiedParent, parent );
+		this->parents.push_back( copiedParent );
+	}
 }
 
-bool ReflectedType::AddVariable( const char* name, const ReflectedType* type )
+void ReflectedType::AddVariable( const char* inName, const char* type, FeedbackContext& context )
 {
-	GameAssert( !this->is_final );
+	GameAssert( this->name );
+	GameAssert( inName );
+	GameAssert( type );
 	
-	if( this->HasVariable( name ) )
+	if( strlen( inName ) == 0 )
 	{
-		fprintf( stderr, "ERROR: Duplicate variable %s in class %s\n", name, this->name );
-		return false;
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable has no name.\n" );
 	}
-	
-	this->variables.push_back( new ReflectedVariable( name, type ) );
-	return true;
+	else if( strlen( type ) == 0 )
+	{
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable %s has no type.\n", inName );
+	}
+	else if( this->HasVariable( inName ) && !this->HasVariable( inName, type ) )
+	{
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable %s in class %s is declared multiple times with different types.\n", inName, this->name );
+	}
+	else if( !this->HasVariable( inName, type ) && this->is_final )
+	{
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Reflected class %s defined multiple times with different member variables.\n", this->name );
+	}
+	else
+	{
+		this->variables.emplace_back( name, type );
+	}
 }
 
 void ReflectedType::FinalizeType()
 {
+	GameAssert( this->name );
+	
 	this->is_final = true;
 }
 
-const std::vector<const ReflectedType*>& ReflectedType::GetParentTypes() const
+const std::vector<char*>& ReflectedType::GetParentTypes() const
 {
+	GameAssert( this->name );
+	
 	return this->parents;
 }
 
-const std::vector<ReflectedVariable*>& ReflectedType::GetVariables() const
+const std::vector<ReflectedVariable>& ReflectedType::GetVariables() const
 {
+	GameAssert( this->name );
+	
 	return this->variables;
 }
 
 bool ReflectedType::IsPrimitive() const
 {
+	GameAssert( this->name );
+	
 	return this->is_primitive;
 }
 
 bool ReflectedType::IsFinal() const
 {
+	GameAssert( this->name );
+	
 	return this->is_final;
 }
 
 const char* ReflectedType::GetName() const
 {
+	GameAssert( this->name );
+	
 	return this->name;
 }
 
-bool ReflectedType::operator==( const char* name ) const
+bool ReflectedType::operator==( const char* inName ) const
 {
-	return strcmp( this->name, name ) == 0;
+	GameAssert( inName );
+	GameAssert( this->name );
+	
+	return strcmp( this->name, inName ) == 0;
 }
 
-bool ReflectedType::HasParent( const ReflectedType* type ) const
+bool ReflectedType::operator<( const ReflectedType& other ) const
 {
-	for( unsigned int index = 0; index < this->parents.size(); ++index )
+	GameAssert( this->name );
+	GameAssert( other.name );
+	
+	return strcmp( this->name, other.name ) < 0;
+}
+
+bool ReflectedType::HasParent( const char* type ) const
+{
+	GameAssert( type );
+	GameAssert( this->name );
+	
+	for( const char* parent : this->parents )
 	{
-		if( *this->parents[index] == *type )
+		if( strcmp( parent, type ) == 0 )
 		{
 			return true;
 		}
@@ -137,11 +249,14 @@ bool ReflectedType::HasParent( const ReflectedType* type ) const
 	return false;
 }
 
-bool ReflectedType::HasVariable( const char* name ) const
+bool ReflectedType::HasVariable( const char* inName ) const
 {
-	for( unsigned int index = 0; index < this->variables.size(); ++index )
+	GameAssert( inName );
+	GameAssert( this->name );
+	
+	for( const ReflectedVariable& variable : this->variables )
 	{
-		if( *this->variables[index] == name )
+		if( variable == inName )
 		{
 			return true;
 		}
@@ -150,11 +265,15 @@ bool ReflectedType::HasVariable( const char* name ) const
 	return false;
 }
 
-bool ReflectedType::HasVariable( const char* name, const ReflectedType* type ) const
+bool ReflectedType::HasVariable( const char* inName, const char* type ) const
 {
-	for( unsigned int index = 0; index < this->variables.size(); ++index )
+	GameAssert( inName );
+	GameAssert( type );
+	GameAssert( this->name );
+	
+	for( const ReflectedVariable& variable : this->variables )
 	{
-		if( *this->variables[index] == name && this->variables[index]->GetType() == type )
+		if( variable == inName && strcmp( variable->GetTypeName(), type ) == 0 )
 		{
 			return true;
 		}
