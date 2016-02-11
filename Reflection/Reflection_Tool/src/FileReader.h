@@ -1,16 +1,19 @@
 #pragma once
 
-#include "SourceCodePipeline.h"
+class SourceCodePipe;
 
-class FileReader : public SourceCodePipeline
+class FileReader
 {
 public:
-	FileReader( SourceCodePipeline* outputPipe );
-	virtual ~FileReader() override;
+	FileReader( SourceCodePipe* outputPipe );
+	~FileReader();
 	
+	// Reads the file with the filename specified and writes the contents
+	// to the source code pipe
+	void ReadFile( const char* filename );
 	
-	
-	
+private:
+	SourceCodePipe* out;
 	
 	
 private:
