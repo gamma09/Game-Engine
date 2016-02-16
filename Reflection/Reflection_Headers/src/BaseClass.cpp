@@ -1,8 +1,12 @@
-#include "GameAssert.h"
+#include <string.h>
+#include <GameAssert.h>
 #include "BaseClass.h"
 
 
-BaseClass::BaseClass( const char* inName )
+BaseClass::BaseClass( const char* inName, const BaseClass* inParent, unsigned int inSize ) :
+	parent( inParent ),
+	size( inSize ),
+	variableHead( nullptr )
 {
 	GameAssert( inName );
 	GameAssert( strlen( inName ) );

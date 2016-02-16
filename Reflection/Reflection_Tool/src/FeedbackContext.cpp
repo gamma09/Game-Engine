@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 
+using namespace std;
+
+#include <GameAssert.h>
 #include "FeedbackContext.h"
 
 FeedbackContext::FeedbackContext( std::ostream& outParam ) :
 	out( outParam ),
 	currentFile( new char[1] ),
-	currentLine( 0 ),
 	warningCount( 0 ),
 	errorCount( 0 )
 {
@@ -16,27 +19,11 @@ FeedbackContext::FeedbackContext( std::ostream& outParam ) :
 FeedbackContext::FeedbackContext( FeedbackContext&& context ) :
 	out( context.out ),
 	currentFile( context.currentFile ),
-	currentLine( context.currentLine ),
 	warningCount( context.warningCount ),
 	errorCount( context.errorCount )
 {
 
 	context.currentFile = nullptr;
-}
-
-FeedbackContext& FeedbackContext::operator=( FeedbackContext&& context )
-{
-	GameAssert( this != &context );
-	
-	this->out = context.out;
-	this->currentFile = context.currentFile;
-	this->currentLine = context.currentLine;
-	this->warningCount = context.warningCount;
-	this->errorCount = context.errorCount;
-	
-	context.currentFile = nullptr;
-	
-	return *this;
 }
 
 FeedbackContext::~FeedbackContext()
@@ -71,12 +58,12 @@ void FeedbackContext::AddMessage( MessageType type, const char* messageFormat, .
 			
 		case MessageType::MSG_TYPE_WARNING:
 			this->warningCount += 1;
-			this->out << this->currentFile << "(" << this->currentLine << "): WARNING: " << message << endl;
+			this->out << this->currentFile << ": WARNING: " << message << endl;
 			break;
 		
 		case MessageType::MSG_TYPE_ERROR:
 			this->errorCount += 1;
-			this->out << this->currentFile << "(" << this->currentLine << "): ERROR: " << message << endl;
+			this->out << this->currentFile << ": ERROR: " << message << endl;
 			break;
 			
 		case MessageType::MSG_TYPE_LINK_ERROR:
@@ -99,11 +86,6 @@ void FeedbackContext::SetCurrentFile( const char* file )
 	delete this->currentFile;
 	this->currentFile = new char[strlen( file ) + 1];
 	strcpy( this->currentFile, file );
-}
-
-void FeedbackContext::SetCurrentLine( unsigned int line )
-{
-	this->currentLine = line;
 }
 
 unsigned int FeedbackContext::GetNumWarnings() const

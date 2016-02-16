@@ -1,14 +1,15 @@
 #include <utility>
+#include <GameAssert.h>
 #include "ReflectionData.h"
 
 #define STRINGIFY( x ) #x
 #define CONCAT( a, b ) STRINGIFY( a ## b )
 
-#define ADD_PRIMITIVE_TYPE( container, typeName ) (container).emplace( STRINGIFY( typeName ), true );
+#define ADD_PRIMITIVE_TYPE( container, typeName ) (container).emplace_back( STRINGIFY( typeName ), true );
 
 #define ADD_PRIMITIVE_INT_TYPE( container, typeName ) \
-	(container).emplace( STRINGIFY( typeName ), true );\
-	(container).emplace( CONCAT( unsigned, typeName ), true );
+	(container).emplace_back( STRINGIFY( typeName ), true );\
+	(container).emplace_back( CONCAT( unsigned, typeName ), true );
 
 
 
@@ -82,24 +83,45 @@ ReflectedType* ReflectionData::AddType( const char* name, FeedbackContext& conte
 	}
 	else
 	{
-		return &*( this->types.emplace( name ).first );
+		ReflectedType* existingType = FindType( name );
+		if( existingType )
+		{
+			return existingType;
+		}
+		else
+		{
+			return &*( this->types.emplace( this->types.begin(), name ) );
+		}
 	}
 }
 
 ReflectedType* ReflectionData::FindType( const char* name )
 {
-	std::set<ReflectedType>::iterator result = this->types.find( ReflectedType( name ) );
-	if ( result == this->types.end() )
+	for( ReflectedType& type : this->types )
 	{
-		return nullptr;
+		if( type == name )
+		{
+			return &type;
+		}
 	}
-	else
-	{
-		return &*result;
-	}
+
+	return nullptr;
 }
 
-const std::set<ReflectedType>& ReflectionData::GetTypes() const
+const ReflectedType* ReflectionData::FindType( const char* name ) const
+{
+	for( const ReflectedType& type : this->types )
+	{
+		if( type == name )
+		{
+			return &type;
+		}
+	}
+
+	return nullptr;
+}
+
+const std::list<ReflectedType>& ReflectionData::GetTypes() const
 {
 	return this->types;
 }
@@ -108,16 +130,16 @@ void ReflectionData::CheckVariableTypeLinks( FeedbackContext& context ) const
 {
 	for( const ReflectedType& type : this->types )
 	{
-		// Make sure all of the parents exist
-		for( const char* parentType : type.GetParentTypes() )
+		// Make sure the parent exists
+		if( type.GetParentType( ) != nullptr )
 		{
-			if( FindType( parentType ) == nullptr )
+			if( FindType( type.GetParentType() ) == nullptr )
 			{
-				context.AddMessage( MSG_TYPE_LINK_ERROR, "Parent class %s of reflected class %s was not found.\n", parentType, type.GetName() );
+				context.AddMessage( MSG_TYPE_LINK_ERROR, "Parent class %s of reflected class %s was not found.\n", type.GetParentType( ), type.GetName( ) );
 			}
-			else if ( FindType( parentType )->IsPrimitive() )
+			else if( FindType( type.GetParentType() )->IsPrimitive() )
 			{
-				context.AddMessage( MSG_TYPE_LINK_ERROR, "Class %s may not have primitive type %s as its parent.\n", type.GetName(), parentType );
+				context.AddMessage( MSG_TYPE_LINK_ERROR, "Class %s may not have primitive type %s as its parent.\n", type.GetName( ), type.GetParentType( ) );
 			}
 		}
 		

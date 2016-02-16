@@ -73,9 +73,8 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
-      <DisableSpecificWarnings>
-      </DisableSpecificWarnings>
-      <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+      <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,20 +88,34 @@
     <PostBuildEvent>
       <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>RMDIR /S /Q "$(IntDir)Preprocess"
+RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
+
+MKDIR "$(IntDir)Preprocess"
+MKDIR "$(ProjectDir)GeneratedFiles"
+
+ECHO "$(VC_ExecutablePath_x86)\cl.exe" &gt; "$(IntDir)Preprocess\command.in"
+ECHO "$(IncludePath)" &gt; "$(IntDir)Preprocess\include.in"
+ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\defines.in"
+
+"$(SolutionDir)Tools\Reflection_Tool_$(Configuration).exe" "$(ProjectDir)" "$(ProjectDir)GeneratedFiles"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;SOLUTION_LOCATION="$(SolutionDir)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,6 +126,19 @@
     <PostBuildEvent>
       <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>RMDIR /S /Q "$(IntDir)Preprocess"
+RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
+
+MKDIR "$(IntDir)Preprocess"
+MKDIR "$(ProjectDir)GeneratedFiles"
+
+ECHO "$(VC_ExecutablePath_x86)\cl.exe" &gt; "$(IntDir)Preprocess\command.in"
+ECHO "$(IncludePath)" &gt; "$(IntDir)Preprocess\include.in"
+ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\defines.in"
+
+"$(SolutionDir)Tools\Reflection_Tool_$(Configuration).exe" "$(ProjectDir)" "$(ProjectDir)GeneratedFiles"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Actor.cpp" />

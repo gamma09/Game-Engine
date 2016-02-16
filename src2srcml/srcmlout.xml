@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.9.5" language="C++" filename="src.cpp"><class_decl>class <name>X</name>;</class_decl>
+<decl_stmt><decl><type><name>int</name></type> <name>globalVar</name></decl>;</decl_stmt>
+
+<class>class <name>Y</name>
+<block>{<private type="default">
+<block>{ <label><name>CLASS_IS_REFLECTED</name>:</label> <expr_stmt><expr><name>Y</name></expr>;</expr_stmt> }</block> <block>{ <label><name>CLASS_FILE</name>:</label> <expr_stmt><expr><literal type="string">"/tmp/gcc-explorer-compiler116114-74-1rq9te7/example.cpp"</literal></expr>;</expr_stmt> }</block>
+
+ <block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> }</block>
+<block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>float</name></type> <name>b</name></decl>;</decl_stmt> }</block>
+
+ <decl_stmt><decl><type><name>double</name></type> <name>d</name></decl>;</decl_stmt>
+
+ <constructor><name>Y</name><parameter_list>()</parameter_list> <block>{ }</block></constructor>
+  <constructor><name>Y</name><parameter_list>( <parameter><decl><type><specifier>const</specifier> <name>Y</name><modifier>&amp;</modifier></type> <name>y</name></decl></parameter> )</parameter_list> <block>{ }</block></constructor>
+   <constructor><name>Y</name><parameter_list>( <parameter><decl><type><name>Y</name><modifier>&amp;&amp;</modifier></type> <name>y</name></decl></parameter> )</parameter_list> <block>{ }</block></constructor>
+   <function type="operator"><type><name>Y</name><modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>( <parameter><decl><type><specifier>const</specifier> <name>Y</name><modifier>&amp;</modifier></type> <name>y</name></decl></parameter> )</parameter_list> <block>{ <return>return <expr><operator>*</operator><name>this</name></expr>;</return> }</block></function>
+   <function type="operator"><type><name>Y</name><modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>( <parameter><decl><type><name>Y</name><modifier>&amp;&amp;</modifier></type> <name>y</name></decl></parameter> )</parameter_list> <block>{ <return>return <expr><operator>*</operator><name>this</name></expr>;</return> }</block></function>
+   <destructor><specifier>virtual</specifier> <name>~<name>Y</name></name><parameter_list>()</parameter_list> <block>{ }</block></destructor>
+ <function><type><name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{ }</block></function>
+</private>}</block>;</class>
+
+<class>class <name>Z</name>
+<block>{<private type="default">
+ <block>{ <label><name>CLASS_IS_REFLECTED</name>:</label> <expr_stmt><expr><name>Z</name></expr>;</expr_stmt> }</block> <block>{ <label><name>CLASS_FILE</name>:</label> <expr_stmt><expr><literal type="string">"/tmp/gcc-explorer-compiler116114-74-1rq9te7/example.cpp"</literal></expr>;</expr_stmt> }</block>
+ <block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>Y</name></type> <name>y</name></decl>;</decl_stmt> }</block>
+ <block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>char</name></type> <name>c</name></decl>;</decl_stmt> }</block>
+</private>}</block>;</class>
+
+<class>class <name>X</name> <super>: <specifier>public</specifier> <name>Y</name></super>
+<block>{<private type="default">
+ <block>{ <label><name>CLASS_IS_REFLECTED</name>:</label> <expr_stmt><expr><name>X</name></expr>;</expr_stmt> }</block> <block>{ <label><name>CLASS_FILE</name>:</label> <expr_stmt><expr><literal type="string">"/tmp/gcc-explorer-compiler116114-74-1rq9te7/example.cpp"</literal></expr>;</expr_stmt> }</block>
+ <block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>short</name></type> <name>s</name></decl>;</decl_stmt> }</block>
+ <block>{ <label><name>VARIABLE_IS_REFLECTED</name>:</label> <decl_stmt><decl><type><name>double</name></type> <name>rd</name></decl>;</decl_stmt> }</block>
+</private>}</block>;</class>
+
+<function><type><name>int</name></type> <name>main</name><parameter_list>( <parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name>char</name><modifier>*</modifier><modifier>*</modifier></type> <name>argv</name></decl></parameter> )</parameter_list>
+<block>{
+ <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">3</literal></expr></init></decl>;</decl_stmt>
+ <expr_stmt><expr><name>i</name><operator>++</operator></expr>;</expr_stmt>
+}</block></function></unit>

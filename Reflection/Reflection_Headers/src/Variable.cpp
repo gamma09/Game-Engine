@@ -1,8 +1,10 @@
+#include <GameAssert.h>
 #include "Variable.h"
 
-Variable::Variable( const char* inName, const BaseClass& inType, unsigned int inOffset )
+Variable::Variable( const char* inName, const BaseClass& inType, unsigned int inOffset, Variable* inNext )
 :	type( inType ),
-	offset( inOffset )
+	offset( inOffset ),
+	next( inNext )
 {
 	GameAssert( inName );
 	GameAssert( strlen( inName ) );

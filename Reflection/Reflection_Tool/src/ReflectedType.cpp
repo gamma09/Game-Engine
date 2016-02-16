@@ -4,26 +4,13 @@
 
 #include "ReflectedType.h"
 
-
-ReflectedType::ReflectedType( const char* inName ) :
-	name( nullptr ),
-	is_final( false ),
-	is_primitive( false ),
-	parents(),
-	variables()
-{
-	GameAssert( inName );
-	
-	this->name = new char[strlen( inName ) + 1];
-	strcpy( this->name, inName );
-}
-
 ReflectedType::ReflectedType( const char* inName, bool isPrimitive ) :
 	name( nullptr ),
-	is_final( true ),
-	is_primitive( true ),
-	parents(),
-	variables()
+	is_final( isPrimitive ),
+	is_primitive( isPrimitive ),
+	parent( nullptr ),
+	variables(),
+	file( nullptr )
 {
 	GameAssert( inName );
 	
@@ -34,16 +21,28 @@ ReflectedType::ReflectedType( const char* inName, bool isPrimitive ) :
 ReflectedType::ReflectedType( const ReflectedType& type ) :
 	is_final( type.is_final ),
 	is_primitive( type.is_primitive ),
-	parents(),
 	variables( type.variables )
 {
 	GameAssert( type.name );
 	
-	for( const char* parent : type.parents )
+	if( type.parent != nullptr )
 	{
-		char* copiedParent = new char[strlen( parent ) + 1];
-		strcpy( copiedParent, parent );
-		this->parents.push_back( copiedParent );
+		this->parent = new char[strlen( type.parent ) + 1];
+		strcpy( this->parent, type.parent );
+	}
+	else
+	{
+		this->parent = nullptr;
+	}
+
+	if( type.file != nullptr )
+	{
+		this->file = new char[strlen( type.file ) + 1];
+		strcpy( this->file, type.file );
+	}
+	else
+	{
+		this->file = nullptr;
 	}
 	
 	this->name = new char[strlen( type.name ) + 1];
@@ -54,13 +53,15 @@ ReflectedType::ReflectedType( ReflectedType&& type ) :
 	name( type.name ),
 	is_final( type.is_final ),
 	is_primitive( type.is_primitive ),
-	parents( std::move( type.parents ) ),
+	parent( type.parent ),
+	file( type.file ),
 	variables( std::move( type.variables ) )
 {
 	GameAssert( type.name );
 	
 	type.name = nullptr;
-	type.parents.clear();
+	type.parent = nullptr;
+	type.file = nullptr;
 }
 
 ReflectedType& ReflectedType::operator=( const ReflectedType& type )
@@ -68,25 +69,35 @@ ReflectedType& ReflectedType::operator=( const ReflectedType& type )
 	GameAssert( this != &type );
 	GameAssert( type.name );
 	
+	if( this->name != nullptr ) delete this->name;
+	if( this->file != nullptr ) delete this->file;
+	if( this->parent != nullptr ) delete this->parent;
+
 	this->name = new char[strlen( type.name ) + 1];
 	strcpy( this->name, type.name );
 	this->is_final = type.is_final;
 	this->is_primitive = type.is_primitive;
-	for( char* parent : this->parents )
+
+	if( type.parent != nullptr )
 	{
-		delete parent;
+		this->parent = new char[strlen( type.parent ) + 1];
+		strcpy( this->parent, type.parent );
 	}
-	
-	this->parents.clear();
-	
-	for( const char* parent : type.parents )
+	else
 	{
-		char* copiedParent = new char[strlen(parent) + 1];
-		strcpy( copiedParent, parent );
-		this->parents.push_back( copiedParent );
+		this->parent = nullptr;
 	}
-	
-	this->parents = type.parents;
+
+	if( type.file != nullptr )
+	{
+		this->file = new char[strlen( type.file ) + 1];
+		strcpy( this->file, type.file );
+	}
+	else
+	{
+		this->file = nullptr;
+	}
+
 	this->variables = type.variables;
 	
 	return *this;
@@ -97,13 +108,22 @@ ReflectedType& ReflectedType::operator=( ReflectedType&& type )
 	GameAssert( this != &type );
 	GameAssert( type.name );
 	
+	if( this->name != nullptr ) delete this->name;
+	if( this->file != nullptr ) delete this->file;
+	if( this->parent != nullptr ) delete this->parent;
+
 	this->name = type.name;
 	type.name = nullptr;
+
+	this->parent = type.parent;
+	type.parent = nullptr;
+
+	this->file = type.file;
+	type.file = nullptr;
 	
 	this->is_final = type.is_final;
 	this->is_primitive = type.is_primitive;
-	this->parents = std::move( type.parents );
-	type.parents.clear();
+
 	this->variables = std::move( type.variables );
 	
 	return *this;
@@ -114,36 +134,34 @@ ReflectedType::~ReflectedType()
 	if( this->name != nullptr )
 	{
 		delete this->name;
-		this->name = nullptr;
 	}
-	
-	for( char* parent : this->parents )
+
+	if( this->parent != nullptr )
 	{
-		delete parent;
+		delete this->parent;
 	}
-	
-	this->parents.clear();
+
+	if( this->file != nullptr )
+	{
+		delete this->file;
+	}
 }
 
-void ReflectedType::AddParentType( const char* parent, FeedbackContext& context )
+void ReflectedType::SetParentType( const char* parent, FeedbackContext& context )
 {
 	GameAssert( this->name );
 	GameAssert( parent );
 	GameAssert( !this->is_final );
+	GameAssert( this->parent == nullptr );
 	
 	if( strcmp( this->name, parent ) == 0 )
 	{
 		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Class %s cannot be its own parent.\n", this->name );
 	}
-	else if( this->HasParent( parent ) )
-	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Duplicate parent class %s declared for type %s.\n", parent, this->name );
-	}
 	else
 	{
-		char* copiedParent = new char[strlen( parent ) + 1];
-		strcpy( copiedParent, parent );
-		this->parents.push_back( copiedParent );
+		this->parent = new char[strlen( parent ) + 1];
+		strcpy( this->parent, parent );
 	}
 }
 
@@ -175,6 +193,23 @@ void ReflectedType::AddVariable( const char* inName, const char* type, FeedbackC
 	}
 }
 
+void ReflectedType::SetFile( const char* inFile, FeedbackContext& context )
+{
+	GameAssert( this->name );
+	GameAssert( inFile );
+	GameAssert( this->file == nullptr );
+
+	if( strlen( inFile ) == 0 )
+	{
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Filename is the empty string." );
+	}
+	else
+	{
+		this->file = new char[strlen( inFile ) + 1];
+		strcpy( this->file, inFile );
+	}
+}
+
 void ReflectedType::FinalizeType()
 {
 	GameAssert( this->name );
@@ -182,11 +217,11 @@ void ReflectedType::FinalizeType()
 	this->is_final = true;
 }
 
-const std::vector<char*>& ReflectedType::GetParentTypes() const
+const char* ReflectedType::GetParentType() const
 {
 	GameAssert( this->name );
 	
-	return this->parents;
+	return this->parent;
 }
 
 const std::vector<ReflectedVariable>& ReflectedType::GetVariables() const
@@ -194,6 +229,13 @@ const std::vector<ReflectedVariable>& ReflectedType::GetVariables() const
 	GameAssert( this->name );
 	
 	return this->variables;
+}
+
+const char* ReflectedType::GetFile() const
+{
+	GameAssert( this->name );
+
+	return this->file;
 }
 
 bool ReflectedType::IsPrimitive() const
@@ -233,22 +275,6 @@ bool ReflectedType::operator<( const ReflectedType& other ) const
 	return strcmp( this->name, other.name ) < 0;
 }
 
-bool ReflectedType::HasParent( const char* type ) const
-{
-	GameAssert( type );
-	GameAssert( this->name );
-	
-	for( const char* parent : this->parents )
-	{
-		if( strcmp( parent, type ) == 0 )
-		{
-			return true;
-		}
-	}
-	
-	return false;
-}
-
 bool ReflectedType::HasVariable( const char* inName ) const
 {
 	GameAssert( inName );
@@ -273,7 +299,7 @@ bool ReflectedType::HasVariable( const char* inName, const char* type ) const
 	
 	for( const ReflectedVariable& variable : this->variables )
 	{
-		if( variable == inName && strcmp( variable->GetTypeName(), type ) == 0 )
+		if( variable == inName && strcmp( variable.GetTypeName(), type ) == 0 )
 		{
 			return true;
 		}

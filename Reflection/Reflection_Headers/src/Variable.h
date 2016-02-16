@@ -1,13 +1,12 @@
 #pragma once
 
 #include <string.h>
-#include <GameAssert.h>
-#include <BaseClass.h>
+#include "BaseClass.h"
 
 class Variable
 {
 private:
-	Variable( const char* inName, const BaseClass& inType, unsigned int inOffset );
+	Variable( const char* inName, const BaseClass& inType, unsigned int inOffset, Variable* next );
 	
 public:
 	
@@ -27,10 +26,10 @@ private:
 	
 	
 private:
+	Variable* next;
 	const BaseClass& type;
 	unsigned int offset;
 	
-	// TODO with editor
 	char* name;
 	
 	

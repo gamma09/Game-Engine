@@ -1,6 +1,6 @@
 #pragma once
 
-#include <set>
+#include <list>
 #include "ReflectedType.h"
 
 class ReflectionData
@@ -16,9 +16,10 @@ public:
 	
 	ReflectedType* AddType( const char* name, FeedbackContext& context );
 	ReflectedType* FindType( const char* name );
-	const std::set<ReflectedType>& GetTypes() const;
+	const ReflectedType* FindType( const char* name ) const;
+	const std::list<ReflectedType>& GetTypes() const;
 	void CheckVariableTypeLinks( FeedbackContext& context ) const;
 	
 private:
-	std::set<ReflectedType> types;
+	std::list<ReflectedType> types;
 };

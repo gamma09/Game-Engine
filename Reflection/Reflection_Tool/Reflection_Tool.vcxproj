@@ -44,19 +44,23 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\TinyXML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\TinyXML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\TinyXML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\TinyXML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <StringPooling>false</StringPooling>
@@ -64,11 +68,19 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <ProgramDataBaseFileName>$(TargetPath)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL /F "$(SolutionDir)Tools\$(TargetName).pdb"
+DEL /F "$(SolutionDir)Tools\$(TargetName).exe"
+
+COPY "$(OutputPath)$(TargetName).exe" "$(SolutionDir)Tools\"
+COPY "$(OutputPath)$(TargetName).pdb" "$(SolutionDir)Tools\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -77,12 +89,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,17 +103,58 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+    <PostBuildEvent>
+      <Command>DEL /F /S "$(SolutionDir)Tools\$(TargetFileName)"
+
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)Tools\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\DatabaseWriter.h" />
+    <ClInclude Include="..\..\ExternLibs\FileSystem\include\File.h" />
+    <ClInclude Include="..\..\ExternLibs\FileSystem\include\WinFileWrapper.h" />
+    <ClInclude Include="..\..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\..\ExternLibs\Shared\include\PackageHeader.h" />
+    <ClInclude Include="..\..\ExternLibs\TinyXML\include\tinystr.h" />
+    <ClInclude Include="..\..\ExternLibs\TinyXML\include\tinyxml.h" />
+    <ClInclude Include="src\ClassFilter.h" />
+    <ClInclude Include="src\CodeParser.h" />
+    <ClInclude Include="src\DataWriter.h" />
+    <ClInclude Include="src\FeedbackContext.h" />
+    <ClInclude Include="src\FilePreprocessor.h" />
+    <ClInclude Include="src\Log.h" />
+    <ClInclude Include="src\ProcessHandler.h" />
     <ClInclude Include="src\ReflectedType.h" />
     <ClInclude Include="src\ReflectedVariable.h" />
     <ClInclude Include="src\ReflectionData.h" />
+    <ClInclude Include="src\SourceCodePipe.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ClassFilter.cpp" />
+    <ClCompile Include="src\CodeParser.cpp" />
+    <ClCompile Include="src\DataWriter.cpp" />
+    <ClCompile Include="src\FeedbackContext.cpp" />
+    <ClCompile Include="src\FilePreprocessor.cpp" />
+    <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ProcessHandler.cpp" />
     <ClCompile Include="src\ReflectedType.cpp" />
     <ClCompile Include="src\ReflectedVariable.cpp" />
+    <ClCompile Include="src\ReflectionData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\ExternLibs\TinyXML\lib\TinyXML_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\..\ExternLibs\TinyXML\lib\TinyXML_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,61 +1,51 @@
 #pragma once
 
-// TODO move Reflection.h to Shared project
 #include "Class.h"
 
 #ifdef ADD_META_TAGS
 
-#define REFL_CLASS_DECLARATION( Type, ... ) CLASS_IS_REFLECTED: Type __VA_ARGS__
-#define REFL_VAR_DECLARATION( type, name ) VARIABLE_IS_REFLECTED: type name
+#define REFL_CLASS_DECLARATION( Type ) { CLASS_IS_REFLECTED: Type; } { CLASS_FILE: __FILE__; }
+#define REFL_VAR_DECLARATION( type, name ) { VARIABLE_IS_REFLECTED: type name; }
 
 #else
 
-// This header is the interface with the generated reflection headers. It may only be accessed during compilation after
-// the reflection tool has run.
-#include <GeneratedFiles/GeneratedReflectionDatabase.h>
-
-// TODO Rework this function into a set of private static functions in the GeneratedReflectionDatabase:
+// This function will ultimately be implemented for each and every reflected type by the Reflection Tool.
+// If there is a linker error to do with not finding an implementation of this function, then it means
+// either the GeneratedReflectionDatabase.cpp file wasn't compiled into the current compilation unit,
+// or there is a bug with the reflection tool.
 template<typename T>
-const Class<T>* Load_Class()
-{
-	return nullptr;
-}
+extern const Class<T>* Load_Class();
 
 // None of the functions or macros in this class are to be used outside of the Reflection
 // package.
 
-#define REFL_TYPE( T ) const Class<T>
-#define CLASS_TYPE_FUNC_BODY( T ) static REFL_TYPE(T) myClass( *Load_Class<T>() ); return myClass;
-
-#define REFL_CLASS_DECLARATION( T, ... ) public: REFL_TYPE(T)& GetClass() const { CLASS_TYPE_FUNC_BODY(T) }
+#define REFL_CLASS_DECLARATION( T ) public: const Class<T>& GetClass() const { return *Load_Class<T>(); }
 #define REFL_VAR_DECLARATION( type, name ) type name;
 
 // REFL_CLASS_DECLARATION( Type ) expands to:
 // public:
 // 		const Class< Type >& GetClass() const
 //		{
-//			static const Class< Type > myClass( *Load_Class< Type >() );
-//			return myClass;
+// 			return *Load_Class< Type >();
 //		}
 
 #endif
 
+// These macros are mainly used by the reflection tool (which builds the class info from macros, etc.)
 
-
-// These macros are mainly used by the pre-pre-processor (which builds the class info from macros, etc.)
-
-// Usage: REFLECTED_CLASS( ClassName, ParentClass, ParentClass, ... )
-// ...where the parent classes are only the parent classes that are also reflected. Only direct parents
-// may be specified. If any of the classes specified are not in the global namespace, you must include
-// the namespace in the class names. This macro must be at the top of the class declaration in a header
-// file, immediately following the class heading. (the part that has the form below) 
+// Usage: REFLECTED_CLASS( ClassName )
+// ...This macro must be at the top of the class declaration
+// in a header file, immediately following the class heading. (the part that has the form below) Only one
+// parent class of the specified class may be a reflected class - otherwise, the reflection tool will
+// generate an error.
 // 
-// class X : public Y, public Z
+// Example:
+// class X : public Y
 // {
-//     REFLECTED_CLASS( X, Y, Z )
-//     ...
+//   REFLECTED_CLASS( X )
+//   ...
 // };
-#define REFLECTED_CLASS( ClassName, ... ) REFL_CLASS_DECLARATION( ClassName, __VA_ARGS__ )
+#define REFLECTED_CLASS( ClassName ) REFL_CLASS_DECLARATION( ClassName )
 
 // Used to indicate a variable should be reflected. Only variables declared with this macro
 // are added to the reflection class member table. Using this macro in a class that is not
