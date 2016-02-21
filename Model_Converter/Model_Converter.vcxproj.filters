@@ -91,6 +91,9 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{55d91e1f-2ecf-4487-ab85-3d0280da78ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{4db548ff-4a0e-46a7-8e93-d44aeafe4da4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
@@ -104,6 +107,12 @@
     </Library>
     <Library Include="libs\fbx\lib\libfbxsdk-mt_r32.lib">
       <Filter>_libs\fbx\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +888,9 @@
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>

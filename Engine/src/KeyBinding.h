@@ -3,7 +3,7 @@
 #include <ManagedObject.h>
 #include "KeyAction.h"
 
-class KeyBinding : ManagedObject
+class KeyBinding : public ManagedObject
 {
 public:
 

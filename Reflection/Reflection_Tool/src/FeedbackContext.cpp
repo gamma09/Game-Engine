@@ -35,21 +35,8 @@ FeedbackContext::~FeedbackContext()
 	}
 }
 	
-void FeedbackContext::AddMessage( MessageType type, const char* messageFormat, ... )
+void FeedbackContext::AddMessage( MessageType type, const char* message )
 {
-	
-	char lengthTest;
-	va_list args[2];
-	va_start( args[0], messageFormat );
-	va_copy( args[1], args[0] );
-	
-	int lengthRequired = vsnprintf( &lengthTest, 1, messageFormat, args[0] );
-	va_end( args[0] );
-	
-	char* message = new char[lengthRequired + 1];
-	GameVerify( lengthRequired == vsnprintf( message, lengthRequired + 1, messageFormat, args[1] ) );
-	va_end( args[1] );
-	
 	switch( type )
 	{
 		case MessageType::MSG_TYPE_INFO:
@@ -58,12 +45,12 @@ void FeedbackContext::AddMessage( MessageType type, const char* messageFormat, .
 			
 		case MessageType::MSG_TYPE_WARNING:
 			this->warningCount += 1;
-			this->out << this->currentFile << ": WARNING: " << message << endl;
+			this->out << "WARNING: " << this->currentFile << ": " << message << endl;
 			break;
 		
 		case MessageType::MSG_TYPE_ERROR:
 			this->errorCount += 1;
-			this->out << this->currentFile << ": ERROR: " << message << endl;
+			this->out << "ERROR: " << this->currentFile << ": " << message << endl;
 			break;
 			
 		case MessageType::MSG_TYPE_LINK_ERROR:

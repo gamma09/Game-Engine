@@ -16,7 +16,7 @@ public:
 
 	virtual void Serialize( Object* instance, Writeable& writer ) override
 	{
-		T* myInstance = dynamic_cast<T*>( instance );
+		T* myInstance = reinterpret_cast<T*>( instance );
 		GameAssert( myInstance );
 
 		SerializeClass<T>( myInstance, writer );
@@ -24,7 +24,7 @@ public:
 
 	virtual void Deserialize( Object* instance, Readable& reader ) override
 	{
-		T* myInstance = dynamic_cast<T*>( instance );
+		T* myInstance = reinterpret_cast<T*>( instance );
 		GameAssert( myInstance );
 
 		DeserializeClass<T>( myInstance, reader );

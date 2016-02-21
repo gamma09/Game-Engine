@@ -1,24 +1,14 @@
-#include <stdarg.h>
+#include <string>
 #include <GameAssert.h>
 #include <File.h>
 #include "DataWriter.h"
 #include "ReflectionData.h"
 
-static void Write_String( FileHandle fh, bool newLine, const char* format, ... )
+using namespace std;
+
+static void Write_String( FileHandle fh, bool newLine, const string& str )
 {
-	char lengthTest;
-	va_list args[2];
-	va_start( args[0], format );
-	va_copy( args[1], args[0] );
-
-	int lengthRequired = vsnprintf( &lengthTest, 1, format, args[0] );
-	va_end( args[0] );
-
-	char* str = new char[lengthRequired + 1];
-	GameVerify( lengthRequired == vsnprintf( str, lengthRequired + 1, format, args[1] ) );
-	va_end( args[1] );
-
-	GameVerify( FileError::FILE_SUCCESS == File::write( fh, str, strlen( str ) ) );
+	GameVerify( FileError::FILE_SUCCESS == File::write( fh, str.c_str(), str.length() ) );
 
 	if( newLine )
 	{
@@ -30,17 +20,22 @@ static void Write_Includes( FileHandle fh, ReflectionData* data )
 {
 	Write_String( fh, true, "#include <Class.h>" );
 	Write_String( fh, true, "#include <Variable.h>" );
+	Write_String( fh, true, "#include <Writeable.h>" );
+	Write_String( fh, true, "#include <Readable.h>" );
 
 	for( const ReflectedType& type : data->GetTypes() )
 	{
-		Write_String( fh, true, "#include \"%s\"", type.GetFile() );
+		if( !type.IsPrimitive() )
+		{
+			Write_String( fh, true, string( "#include \"" ) + type.GetFile() + "\"" );
+		}
 	}
 }
 
 static void Write_Magic_Offset_Incantation( FileHandle fh )
 {
 	Write_String( fh, true, "template<typename T, typename U>" );
-	Write_String( fh, true, "constexpr size_t offsetOf( U T::*member )" );
+	Write_String( fh, true, "size_t offsetOf( U T::*member )" );
 	Write_String( fh, true, "{" );
 	Write_String( fh, true, "	return (const char*)&((const T*)nullptr->*member) - (const char*)nullptr;" );
 	Write_String( fh, true, "}" );
@@ -56,32 +51,32 @@ static void Write_Class_Loader( FileHandle fh, ReflectionData* data )
 	Write_String( fh, true, "	{" );
 	Write_String( fh, true, "		return nullptr;" );
 	Write_String( fh, true, "	}" );
-	Write_String( fh, true, "private:" );
-
-	for( const ReflectedType& type : data->GetTypes() )
-	{
-		Write_String( fh, true, "	static Class<%s>* %sInstance = nullptr;", type.GetName(), type.GetName() );
-	}
-
-	Write_String( fh, true, "public:" );
 
 	for( const ReflectedType& type : data->GetTypes() )
 	{
 		
 		Write_String( fh, true, "	template<>" );
-		Write_String( fh, true, "	static const Class<%s>* LoadClass<%s>()", type.GetName(), type.GetName() );
+		Write_String( fh, true, string("	static const Class<") + type.GetName() + ">* LoadClass<" + type.GetName() + ">()" );
 		Write_String( fh, true, "	{" );
-		Write_String( fh, true, "		if( %sInstance == nullptr )", type.GetName() );
+		Write_String( fh, true, string( "		static Class<" ) + type.GetName() + ">* Instance = nullptr;" );
+		Write_String( fh, true, "		if( Instance == nullptr )" );
 		Write_String( fh, true, "		{" );
-		Write_String( fh, true, "			%sInstance = new Class<%s>( \"%s\", LoadClass<%s>() );", type.GetName(), type.GetName(), type.GetName(), type.GetParentType() );
+		if( type.GetParentType() )
+		{
+			Write_String( fh, true, string( "			Instance = new Class<") + type.GetName() + ">( \"" + type.GetName() + "\", LoadClass<" + type.GetParentType() + ">() );" );
+		}
+		else
+		{
+			Write_String( fh, true, string( "			Instance = new Class<") + type.GetName() + ">( \"" + type.GetName() + "\", nullptr);" );
+		}
 
 		for( const ReflectedVariable& var : type.GetVariables() )
 		{
-			Write_String( fh, true, "			%sInstance->variableHead = new Variable( \"%s\", *LoadClass<%s>(), offsetOf( &%s::%s ), %sInstance->variableHead );", type.GetName(), var.GetName(), var.GetTypeName(), type.GetName(), var.GetName(), type.GetName() );
+			Write_String( fh, true, string("			Instance->variableHead = new Variable( \"") + var.GetName() + "\", *LoadClass<" + var.GetTypeName() + ">(), offsetOf( &" + type.GetName() + "::" + var.GetName() + " ), " + type.GetName() + "Instance->variableHead );" );
 		}
 
 		Write_String( fh, true, "		}" );
-		Write_String( fh, true, "		return %sInstance;", type.GetName() );
+		Write_String( fh, true, "		return Instance;" );
 		Write_String( fh, true, "	}" );
 	}
 
@@ -98,24 +93,46 @@ static void Write_Load_Class_Global_Functions( FileHandle fh, ReflectionData* da
 
 	for( const ReflectedType& type : data->GetTypes() )
 	{
-		Write_String( fh, true, "template<> const Class<%s>* Load_Class<%s>()", type.GetName(), type.GetName() );
+		Write_String( fh, true, string("template<> const Class<") + type.GetName() + ">* Load_Class<" + type.GetName() + ">()");
 		Write_String( fh, true, "{" );
-		Write_String( fh, true, "	return ClassLoader::LoadClass<%s>();", type.GetName() );
+		Write_String( fh, true, string("	return ClassLoader::LoadClass<") + type.GetName() + ">();" );
 		Write_String( fh, true, "}" );
 	}
+}
+
+static void Write_Serialize_Functions( FileHandle fh, ReflectionData* data )
+{
+	data;
+
+	Write_String( fh, true, "template< typename T >" );
+	Write_String( fh, true, "void SerializeClass( T*, Writeable& )  { }" );
+
+	// TODO add class-specific serialization functions
+}
+
+static void Write_Deserialize_Functions( FileHandle fh, ReflectionData* data )
+{
+	data;
+
+	Write_String( fh, true, "template< typename T >" );
+	Write_String( fh, true, "void DeserializeClass( T*, Readable& )  { }" );
+
+	// TODO add class-specific deserialization functions
 }
 
 
 void Write_Reflection_Data( const char* outputFile, ReflectionData* data )
 {
 	FileHandle fh;
-	GameVerify( FileError::FILE_SUCCESS == File::open( fh, outputFile, FileMode::FILE_WRITE ) );
+	GameCheckFatal( FileError::FILE_SUCCESS == File::open( fh, outputFile, FileMode::FILE_WRITE ), "Could not open output file for writing." );
 
 	Write_Includes( fh, data );
 	Write_Magic_Offset_Incantation( fh );
 	Write_Class_Loader( fh, data );
 	Write_Load_Class_Global_Functions( fh, data );
+	Write_Serialize_Functions( fh, data );
+	Write_Deserialize_Functions( fh, data );
 
-	GameVerify( FileError::FILE_SUCCESS == File::flush( fh ) );
-	GameVerify( FileError::FILE_SUCCESS == File::close( fh ) );
+	GameCheckFatal( FileError::FILE_SUCCESS == File::flush( fh ), "Could not flush output file." );
+	GameCheckFatal( FileError::FILE_SUCCESS == File::close( fh ), "Could not close output file." );
 }

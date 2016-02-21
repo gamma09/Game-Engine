@@ -13,6 +13,9 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{ac0ce41d-56a2-4f1a-b90b-19dcefc7b866}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{4c97c307-7b8f-45b1-9638-d36284cb0572}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Reflection.h">
@@ -45,6 +48,9 @@
     <ClInclude Include="..\..\ExternLibs\Shared\include\PackageHeader.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BaseClass.cpp">
@@ -53,5 +59,13 @@
     <ClCompile Include="src\Variable.cpp">
       <Filter>src</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
   </ItemGroup>
 </Project>

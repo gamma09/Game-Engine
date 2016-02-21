@@ -5,10 +5,10 @@
 #ifdef _DEBUG
 
 extern std::ofstream logStream;
-#define LOG( a ) logStream << a << std::endl
+#define LOG( a ) logStream << (a) << std::endl
 
 #else
 
-#define LOG( a ) a
+#define LOG( a ) (a)
 
 #endif

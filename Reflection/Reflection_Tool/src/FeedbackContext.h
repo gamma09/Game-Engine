@@ -2,6 +2,7 @@
 
 #include <forward_list>
 #include <iostream>
+#include "Log.h"
 
 enum MessageType
 {
@@ -11,8 +12,11 @@ enum MessageType
 	MSG_TYPE_LINK_ERROR
 };
 
-#define FEEDBACK_CHECK_RETURN_VALUE( returnVal, context, valueToCheck, type, format, ... ) if( !(valueToCheck) ) { (context).AddMessage( type, format, __VA_ARGS__ ); return returnVal; }
-#define FEEDBACK_CHECK_RETURN( context, valueToCheck, type, format, ... ) if( !(valueToCheck) ) { (context).AddMessage( type, format, __VA_ARGS__ ); return; }
+#define FEEDBACK_CHECK_RETURN_VALUE( returnVal, context, valueToCheck, type, str ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); return returnVal; }
+#define FEEDBACK_CHECK_RETURN_VALUE_XML( returnVal, context, valueToCheck, type, str, xml ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); LOG( xml ); return returnVal; }
+
+#define FEEDBACK_CHECK_RETURN( context, valueToCheck, type, str ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); return; }
+#define FEEDBACK_CHECK_RETURN_XML( context, valueToCheck, type, str, xml ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); LOG( xml ); return; }
 
 class FeedbackContext
 {
@@ -22,7 +26,7 @@ public:
 	
 	~FeedbackContext();
 	
-	void AddMessage( MessageType type, const char* messageFormat, ... );
+	void AddMessage( MessageType type, const char* message );
 	void SetCurrentFile( const char* file );
 	unsigned int GetNumWarnings() const;
 	unsigned int GetNumErrors() const;

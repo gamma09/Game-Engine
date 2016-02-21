@@ -156,7 +156,8 @@ void ReflectedType::SetParentType( const char* parent, FeedbackContext& context 
 	
 	if( strcmp( this->name, parent ) == 0 )
 	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Class %s cannot be its own parent.\n", this->name );
+		std::string message = std::string( "Class " ) + this->name + " cannot be its own parent.";
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, message.c_str() );
 	}
 	else
 	{
@@ -173,19 +174,19 @@ void ReflectedType::AddVariable( const char* inName, const char* type, FeedbackC
 	
 	if( strlen( inName ) == 0 )
 	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable has no name.\n" );
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable has no name." );
 	}
 	else if( strlen( type ) == 0 )
 	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable %s has no type.\n", inName );
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, (std::string("Variable ") + inName + " has no type.").c_str() );
 	}
 	else if( this->HasVariable( inName ) && !this->HasVariable( inName, type ) )
 	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Variable %s in class %s is declared multiple times with different types.\n", inName, this->name );
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, (std::string("Variable ") + inName + " in class " + this->name + " is declared multiple times with different types.").c_str() );
 	}
 	else if( !this->HasVariable( inName, type ) && this->is_final )
 	{
-		context.AddMessage( MessageType::MSG_TYPE_ERROR, "Reflected class %s defined multiple times with different member variables.\n", this->name );
+		context.AddMessage( MessageType::MSG_TYPE_ERROR, (std::string("Reflected class ") + this->name + " defined multiple times with different member variables.").c_str() );
 	}
 	else
 	{

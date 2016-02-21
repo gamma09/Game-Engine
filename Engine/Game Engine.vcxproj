@@ -42,19 +42,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
+    <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -89,18 +91,20 @@
       <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>RMDIR /S /Q "$(IntDir)Preprocess"
-RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
+      <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
 
-MKDIR "$(IntDir)Preprocess"
-MKDIR "$(ProjectDir)GeneratedFiles"
-
-ECHO "$(VC_ExecutablePath_x86)\cl.exe" &gt; "$(IntDir)Preprocess\command.in"
-ECHO "$(IncludePath)" &gt; "$(IntDir)Preprocess\include.in"
-ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\defines.in"
-
-"$(SolutionDir)Tools\Reflection_Tool_$(Configuration).exe" "$(ProjectDir)" "$(ProjectDir)GeneratedFiles"</Command>
+MKDIR "$(IntDir)"
+MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Building Reflection Data</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -109,13 +113,14 @@ ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\def
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;SOLUTION_LOCATION="$(SolutionDir)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,20 +132,20 @@ ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\def
       <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>RMDIR /S /Q "$(IntDir)Preprocess"
-RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
+      <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
 
 MKDIR "$(IntDir)Preprocess"
-MKDIR "$(ProjectDir)GeneratedFiles"
-
-ECHO "$(VC_ExecutablePath_x86)\cl.exe" &gt; "$(IntDir)Preprocess\command.in"
-ECHO "$(IncludePath)" &gt; "$(IntDir)Preprocess\include.in"
-ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\defines.in"
-
-"$(SolutionDir)Tools\Reflection_Tool_$(Configuration).exe" "$(ProjectDir)" "$(ProjectDir)GeneratedFiles"</Command>
+MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "NDEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
+      <Message>Building Reflection Data</Message>
+      <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp" />
     <ClCompile Include="src\Actor.cpp" />
     <ClCompile Include="src\ActorManager.cpp" />
     <ClCompile Include="src\AnimatingStrategy.cpp" />
@@ -225,6 +230,18 @@ ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\def
     <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
     <Library Include="..\ExternLibs\Time\lib\Time_Debug.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
@@ -248,7 +265,15 @@ ECHO "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" &gt; "$(IntDir)Preprocess\def
     <ClInclude Include="..\ExternLibs\ObjectManagement\include\Manager.h" />
     <ClInclude Include="..\ExternLibs\PCSTree\include\PCSNode.h" />
     <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="..\ExternLibs\Time\include\Time.h" />

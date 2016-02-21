@@ -19,6 +19,9 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{001fea32-e32b-40ce-8fb1-7a731954f694}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{2b65df32-7d12-4593-8010-d253820d6565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\block.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\block.cpp">
@@ -62,5 +68,13 @@
     <ClCompile Include="src\mem.cpp">
       <Filter>Mem\src</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
   </ItemGroup>
 </Project>

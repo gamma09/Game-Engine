@@ -1,15 +1,15 @@
 #include <utility>
+#include <string>
 #include <GameAssert.h>
 #include "ReflectionData.h"
 
 #define STRINGIFY( x ) #x
-#define CONCAT( a, b ) STRINGIFY( a ## b )
 
 #define ADD_PRIMITIVE_TYPE( container, typeName ) (container).emplace_back( STRINGIFY( typeName ), true );
 
 #define ADD_PRIMITIVE_INT_TYPE( container, typeName ) \
 	(container).emplace_back( STRINGIFY( typeName ), true );\
-	(container).emplace_back( CONCAT( unsigned, typeName ), true );
+	(container).emplace_back( (std::string("unsigned ") + STRINGIFY( typeName )).c_str(), true );
 
 
 
@@ -18,16 +18,10 @@ ReflectionData::ReflectionData() :
 {
 	// Add primitive types - char, short, int, long, long long
 	ADD_PRIMITIVE_INT_TYPE( this->types, char )
-	ADD_PRIMITIVE_INT_TYPE( this->types, __int8 )
 	ADD_PRIMITIVE_INT_TYPE( this->types, short )
-	ADD_PRIMITIVE_INT_TYPE( this->types, short int )
-	ADD_PRIMITIVE_INT_TYPE( this->types, __int16 )
 	ADD_PRIMITIVE_INT_TYPE( this->types, int )
 	ADD_PRIMITIVE_INT_TYPE( this->types, long )
-	ADD_PRIMITIVE_INT_TYPE( this->types, __int32 )
-	ADD_PRIMITIVE_INT_TYPE( this->types, long int )
 	ADD_PRIMITIVE_INT_TYPE( this->types, long long )
-	ADD_PRIMITIVE_INT_TYPE( this->types, __int64 )
 	ADD_PRIMITIVE_TYPE( this->types, float )
 	ADD_PRIMITIVE_TYPE( this->types, double )
 	ADD_PRIMITIVE_TYPE( this->types, long double )
@@ -135,11 +129,13 @@ void ReflectionData::CheckVariableTypeLinks( FeedbackContext& context ) const
 		{
 			if( FindType( type.GetParentType() ) == nullptr )
 			{
-				context.AddMessage( MSG_TYPE_LINK_ERROR, "Parent class %s of reflected class %s was not found.\n", type.GetParentType( ), type.GetName( ) );
+				std::string message = std::string("Parent class ") + type.GetParentType() + " of reflected class " + type.GetName() + " was not found.";
+				context.AddMessage( MSG_TYPE_LINK_ERROR, message.c_str() );
 			}
 			else if( FindType( type.GetParentType() )->IsPrimitive() )
 			{
-				context.AddMessage( MSG_TYPE_LINK_ERROR, "Class %s may not have primitive type %s as its parent.\n", type.GetName( ), type.GetParentType( ) );
+				std::string message = std::string( "Class " ) + type.GetName() + " may not have primitive type " + type.GetParentType() + " as its parent.";
+				context.AddMessage( MSG_TYPE_LINK_ERROR, message.c_str() );
 			}
 		}
 		
@@ -148,7 +144,8 @@ void ReflectionData::CheckVariableTypeLinks( FeedbackContext& context ) const
 		{
 			if( FindType( variable.GetTypeName() ) == nullptr )
 			{
-				context.AddMessage( MSG_TYPE_LINK_ERROR, "Reflected type %s for variable %s in class %s was not found.\n", variable.GetTypeName(), variable.GetName(), type.GetName() );
+				std::string message = std::string( "Reflected type " ) + variable.GetTypeName() + " for variable " + variable.GetName() + " in class " + type.GetName() + " was not found.";
+				context.AddMessage( MSG_TYPE_LINK_ERROR, message.c_str());
 			}
 		}
 	}

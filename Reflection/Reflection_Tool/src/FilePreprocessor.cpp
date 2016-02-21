@@ -1,4 +1,5 @@
 #include <GameAssert.h>
+#include <Execute.h>
 #include <File.h>
 #include <tinyxml.h>
 
@@ -19,19 +20,36 @@ FilePreprocessor::~FilePreprocessor()
 	delete this->out;
 }
 
-void FilePreprocessor::ReadFile( const char* filename, FeedbackContext& context )
+void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context )
 {
-	GameAssert( filename );
+	context.SetCurrentFile( filename.c_str() );
 
-	context.AddMessage( MessageType::MSG_TYPE_INFO, filename );
-	context.SetCurrentFile( filename );
+	string cl = clCommandLine + filename;
 
-	TiXmlDocument doc( filename );
+	char* out;
+	char* error;
 
-	FEEDBACK_CHECK_RETURN( context, doc.LoadFile(), MessageType::MSG_TYPE_ERROR, "Error %d when loading XML document: %s", doc.ErrorId(), doc.ErrorDesc() )
+	unsigned long exitCode = Exec::Execute( cl.c_str(), nullptr, &out, &error );
+	
+	cout << out;
+	cerr << error;
+	delete out;
+	delete error;
 
-	LOG( "=== FilePreprocessor::ReadFile ===" );
-	LOG( doc );
+	FEEDBACK_CHECK_RETURN( context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "cl.exe returned an error." );
+
+	exitCode = Exec::Execute( src2srcmlCommandLine.c_str(), nullptr, &out, &error );
+	
+	cout << out;
+	cerr << error;
+	delete out;
+	delete error;
+
+	FEEDBACK_CHECK_RETURN( context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "srcml.exe returned an error." );
+
+	TiXmlDocument doc( srcmlFile );
+
+	FEEDBACK_CHECK_RETURN( context, doc.LoadFile(), MessageType::MSG_TYPE_ERROR, (std::string("Error ") + std::to_string(doc.ErrorId()) + " when loading XML document: " + doc.ErrorDesc()).c_str() );
 
 	// Write will clean up the data pointer when it is finished with it
 	this->out->Write( doc, context );

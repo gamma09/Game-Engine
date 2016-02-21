@@ -31,6 +31,9 @@
     <Filter Include="_libs\TinyXML\lib">
       <UniqueIdentifier>{61a478bc-ef65-4e6b-8397-cb3e01af6a0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{3a1f3f7b-ca9a-4e3e-ba24-1eb44b61704f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ReflectedType.h">
@@ -81,11 +84,11 @@
     <ClInclude Include="src\DataWriter.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ProcessHandler.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\FilePreprocessor.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +119,6 @@
     <ClCompile Include="src\DataWriter.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProcessHandler.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\FilePreprocessor.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -135,6 +135,12 @@
     </Library>
     <Library Include="..\..\ExternLibs\TinyXML\lib\TinyXML_Release.lib">
       <Filter>_libs\TinyXML\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

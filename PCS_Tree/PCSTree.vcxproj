@@ -16,11 +16,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\PCSConfig.h" />
     <ClInclude Include="src\PCSNode.h" />
     <ClInclude Include="src\PCSTree.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{17C3E42C-647C-4130-ACD9-0D7E3BEADA57}</ProjectGuid>
@@ -59,6 +68,7 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -66,6 +76,7 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

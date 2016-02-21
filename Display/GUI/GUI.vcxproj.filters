@@ -37,6 +37,9 @@
     <Filter Include="_libs\FLTK\lib">
       <UniqueIdentifier>{6acc47b7-3576-4b6f-9421-995976947164}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{67eb44a8-625a-4027-aee8-fb0e6514dfb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExternLibs\Shared\include\ChunkHeader.h">
@@ -510,6 +513,9 @@
     <ClInclude Include="include\TreeElement.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -582,6 +588,12 @@
     </Library>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltkzlibd.lib">
       <Filter>_libs\FLTK\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

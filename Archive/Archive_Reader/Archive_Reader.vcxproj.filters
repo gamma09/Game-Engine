@@ -16,6 +16,9 @@
     <ClInclude Include="..\..\ExternLibs\Shared\include\PackageHeader.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -39,6 +42,9 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{7c54d9ca-2fd2-4a71-b23f-401a5d253c9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{d015ffcc-8128-4817-ae39-2732cebcabbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\asset_reader.cpp">
@@ -51,6 +57,12 @@
     </Library>
     <Library Include="..\..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
       <Filter>_libs\FileSystem\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

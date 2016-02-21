@@ -3,6 +3,7 @@
 #include "SourceCodePipe.h"
 
 class ReflectionData;
+class TiXmlElement;
 
 class CodeParser : public SourceCodePipe
 {
@@ -20,7 +21,7 @@ private:
 	// Returns true if successful (even if no reflected class was found). Returns false if an error was found.
 	bool ReadClass( TiXmlElement* classElement, FeedbackContext& context, const char* namespaceSoFar );
 	// Returns true if successful read. Returns false if an error was found.
-	bool ReadParents( TiXmlElement* superElement, FeedbackContext& context, const char*& parentOut );
+	bool ReadParents( TiXmlElement* superElement, FeedbackContext& context, const char*& parentOut, const char* className );
 
 
 private:

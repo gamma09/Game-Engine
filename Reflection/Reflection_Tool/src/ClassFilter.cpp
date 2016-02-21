@@ -1,4 +1,5 @@
 #include <string.h>
+#include <set>
 
 #include <GameAssert.h>
 #include <tinyxml.h>
@@ -6,13 +7,15 @@
 #include "Log.h"
 #include "FeedbackContext.h"
 
-void Remove( TiXmlElement* element, const char* tagToRemove )
+using namespace std;
+
+void Remove( TiXmlElement* element, const set<string>& tagsToRemove )
 {
 	TiXmlElement* curr = element->FirstChildElement( );
 	while( curr != nullptr )
 	{
 		TiXmlElement* next = curr->NextSiblingElement( );
-		if( strcmp( curr->Value(), tagToRemove ) == 0 )
+		if( tagsToRemove.find(curr->ValueStr()) != tagsToRemove.cend() )
 		{
 			element->RemoveChild( curr );
 		}
@@ -21,15 +24,15 @@ void Remove( TiXmlElement* element, const char* tagToRemove )
 	}
 }
 
-void RemoveRecursive( TiXmlElement* element, const char* tagToRemove )
+void RemoveRecursive( TiXmlElement* element, const set<string>& tagsToRemove )
 {
-	Remove( element, tagToRemove );
+	Remove( element, tagsToRemove );
 
 	TiXmlElement* curr = element->FirstChildElement();
 	while( curr != nullptr )
 	{
 		TiXmlElement* next = curr->NextSiblingElement();
-		RemoveRecursive( curr, tagToRemove );
+		RemoveRecursive( curr, tagsToRemove );
 		if( curr->NoChildren() )
 		{
 			element->RemoveChild( curr );
@@ -54,17 +57,20 @@ void ClassFilter::Write( TiXmlDocument& doc, FeedbackContext& context )
 {
 	TiXmlElement* unit = doc.RootElement();
 
-	FEEDBACK_CHECK_RETURN( context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml." );
-	FEEDBACK_CHECK_RETURN( context, strcmp( unit->Value(), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, "Unknown root element type in srcml: %s", unit->Value() );
+	FEEDBACK_CHECK_RETURN_XML( context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml.", doc );
+	FEEDBACK_CHECK_RETURN_XML( context, strcmp( unit->Value(), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, (string("Unknown root element type in srcml: ") + unit->Value() ).c_str(), *unit );
 
-	RemoveRecursive( unit, "function" );
-	RemoveRecursive( unit, "constructor" );
-	RemoveRecursive( unit, "destructor" );
-	RemoveRecursive( unit, "class_decl" );
-	Remove( unit, "decl_stmt" );
+	set<string> recursiveRemovals;
+	recursiveRemovals.emplace( "function" );
+	recursiveRemovals.emplace( "constructor" );
+	recursiveRemovals.emplace( "destructor" );
+	recursiveRemovals.emplace( "class_decl" );
 
-	LOG( "=== ClassFilter::Write ===" );
-	LOG( doc );
+	RemoveRecursive( unit, recursiveRemovals );
+
+	set<string> regularRemovals;
+	regularRemovals.emplace( "decl_stmt" );
+	Remove( unit, regularRemovals );
 
 	this->out->Write( doc, context );
 }
