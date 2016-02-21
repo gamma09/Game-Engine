@@ -13,9 +13,6 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{46c96bf9-8bd1-49e9-ac09-0ccb9e14ee0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Shared\lib">
-      <UniqueIdentifier>{074f6f9a-09ed-4ee0-83d4-148889963481}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\File.cpp">
@@ -44,13 +41,5 @@
     <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
   </ItemGroup>
 </Project>

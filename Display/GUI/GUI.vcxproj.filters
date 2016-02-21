@@ -31,14 +31,8 @@
     <Filter Include="_libs\PCSTree\include">
       <UniqueIdentifier>{fc806954-c20e-4627-a263-e3ee4a1620c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\PCSTree\lib">
-      <UniqueIdentifier>{bd047cf8-ddfb-454e-a64c-e33e2654c944}</UniqueIdentifier>
-    </Filter>
     <Filter Include="_libs\FLTK\lib">
       <UniqueIdentifier>{6acc47b7-3576-4b6f-9421-995976947164}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Shared\lib">
-      <UniqueIdentifier>{67eb44a8-625a-4027-aee8-fb0e6514dfb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -541,12 +535,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
-      <Filter>_libs\PCSTree\lib</Filter>
-    </Library>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
-      <Filter>_libs\PCSTree\lib</Filter>
-    </Library>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltk.lib">
       <Filter>_libs\FLTK\lib</Filter>
     </Library>
@@ -588,12 +576,6 @@
     </Library>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltkzlibd.lib">
       <Filter>_libs\FLTK\lib</Filter>
-    </Library>
-    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <Filter>_libs\Shared\lib</Filter>
     </Library>
   </ItemGroup>
 </Project>

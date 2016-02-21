@@ -180,18 +180,6 @@
     <ClCompile Include="src\TreeElement.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltk.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
@@ -269,14 +257,14 @@
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)PreCompiledLibs\FLTK\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)PreCompiledLibs\FLTK\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)PreCompiledLibs\FLTK\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)PreCompiledLibs\FLTK\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)PreCompiledLibs\FLTK\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

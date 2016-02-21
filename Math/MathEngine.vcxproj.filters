@@ -16,9 +16,6 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{e897ef1d-0415-4687-a70c-b4a5c8c71719}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Shared\lib">
-      <UniqueIdentifier>{f44e3917-1e5d-44b8-b42d-7781bd445d98}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.h">
@@ -89,13 +86,5 @@
     <ClCompile Include="src\VectApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
   </ItemGroup>
 </Project>

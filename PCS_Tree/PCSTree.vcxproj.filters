@@ -14,9 +14,6 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{461b2027-f32f-4b9d-b2fa-d21d64aa7d8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Shared\lib">
-      <UniqueIdentifier>{cc5042cb-0818-4b36-9ccb-b9b526fab378}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\PCSNode.cpp">
@@ -48,13 +45,5 @@
     <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
   </ItemGroup>
 </Project>
