@@ -125,6 +125,7 @@ ECHO #define MATH_NO_SIMD &gt;&gt; "%config_file%"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\Constants.h" />

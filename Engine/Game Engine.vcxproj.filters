@@ -97,6 +97,9 @@
     <ClCompile Include="src\BoneManager.cpp">
       <Filter>Models</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp">
+      <Filter>GeneratedFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Models">
@@ -237,6 +240,21 @@
     <Filter Include="_libs\Shared\include">
       <UniqueIdentifier>{326ea2ca-3cef-4e87-892f-64397b7f7aa6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{81a2a664-805f-4118-b408-9a7e2972992e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeneratedFiles">
+      <UniqueIdentifier>{26b39153-9f4c-421e-89f4-2b06f909e724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers">
+      <UniqueIdentifier>{18ded188-8bcf-45d2-8716-ad9fe7a2d574}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers\include">
+      <UniqueIdentifier>{486fa836-b0c2-4f9a-ba0e-f6392636d46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers\lib">
+      <UniqueIdentifier>{a5399e53-4784-4204-aa4f-4dd62f194e86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
@@ -292,6 +310,18 @@
     </Library>
     <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Release.lib">
       <Filter>_libs\Archive_Reader\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
+      <Filter>_libs\Reflection_Headers\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
+      <Filter>_libs\Reflection_Headers\lib</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +496,30 @@
     </ClInclude>
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
       <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

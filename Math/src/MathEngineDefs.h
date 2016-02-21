@@ -94,8 +94,8 @@
 
 #else // MATH_NO_SIMD
 	
-	#include <cstdint>
-	#include <cmath>
+	#include <stdint.h>
+	#include <math.h>
 
 	struct Math128
 	{

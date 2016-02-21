@@ -15,5 +15,13 @@
     <ClInclude Include="src\GameAssert.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Execute.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Execute.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -44,13 +44,13 @@
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,7 +61,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <AdditionalIncludeDirectories>$(ProjectDir)libs\fbx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
@@ -87,7 +86,6 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <AdditionalIncludeDirectories>$(ProjectDir)libs\fbx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -123,6 +121,12 @@
     <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
     <Library Include="libs\fbx\lib\libfbxsdk-mt_d32.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
@@ -133,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="libs\fbx\include\fbxsdk.h" />

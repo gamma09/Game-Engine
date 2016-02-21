@@ -12,8 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ChunkHeader.h" />
+    <ClInclude Include="src\Execute.h" />
     <ClInclude Include="src\GameAssert.h" />
     <ClInclude Include="src\PackageHeader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Execute.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF0D953C-BE31-4F51-96BF-6649C455A2BE}</ProjectGuid>
@@ -56,11 +60,16 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
+      <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -68,21 +77,29 @@
     </Link>
     <PostBuildEvent>
       <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
 
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(ProjectName)_$(Configuration).pdb"
 DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
 
-COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"</Command>
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(OutputPath)$(ProjectName)_$(Configuration).pdb" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,10 +109,13 @@ COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"</
     </Link>
     <PostBuildEvent>
       <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
 
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
 DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
 
-COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"</Command>
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

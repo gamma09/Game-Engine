@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\ExternLibs\FileSystem\include\File.h" />
     <ClInclude Include="..\..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\..\ExternLibs\Shared\include\GameAssert.h" />
     <ClInclude Include="..\..\ExternLibs\Shared\include\PackageHeader.h" />
     <ClInclude Include="src\asset_reader.h" />
@@ -60,13 +61,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

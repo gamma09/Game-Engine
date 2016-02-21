@@ -32,6 +32,13 @@
           "CommandLineArguments": ""
         }
       }
+    },
+    "Reflection Tool": {
+      "Projects": {
+        "Reflection_Tool": {
+          "CommandLineArguments": ""
+        }
+      }
     }
   },
   "ActivateCommandLineArguments": false,

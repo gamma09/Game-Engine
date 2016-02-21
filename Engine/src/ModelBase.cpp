@@ -140,11 +140,11 @@ const static Vertex cubeData[] =
 
 void ModelBase::Set(const char* const archiveFile)
 {
-	unsigned char* modelName;
+	unsigned char* modelName = nullptr;
 	int modelNameSize;
 	GameVerify( read_asset(archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize) );
 
-	unsigned char* modelData;
+	unsigned char* modelData = nullptr;
 	int modelSize;
 	GameVerify( read_asset(archiveFile, VERTS_TYPE, reinterpret_cast<char*>(modelName), modelData, modelSize) );
 

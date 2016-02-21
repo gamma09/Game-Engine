@@ -31,9 +31,6 @@
     <Filter Include="_libs\PCSTree\include">
       <UniqueIdentifier>{fc806954-c20e-4627-a263-e3ee4a1620c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\PCSTree\lib">
-      <UniqueIdentifier>{bd047cf8-ddfb-454e-a64c-e33e2654c944}</UniqueIdentifier>
-    </Filter>
     <Filter Include="_libs\FLTK\lib">
       <UniqueIdentifier>{6acc47b7-3576-4b6f-9421-995976947164}</UniqueIdentifier>
     </Filter>
@@ -510,6 +507,9 @@
     <ClInclude Include="include\TreeElement.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -535,12 +535,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
-      <Filter>_libs\PCSTree\lib</Filter>
-    </Library>
-    <Library Include="..\..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
-      <Filter>_libs\PCSTree\lib</Filter>
-    </Library>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltk.lib">
       <Filter>_libs\FLTK\lib</Filter>
     </Library>

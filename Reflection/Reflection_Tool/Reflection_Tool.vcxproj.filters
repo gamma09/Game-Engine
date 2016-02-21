@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{a9c9318f-1a7c-4584-a769-8c8167a4b3db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs">
+      <UniqueIdentifier>{f2b770ad-ec5a-4bda-8b29-57633b196268}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared">
+      <UniqueIdentifier>{e8df901d-c178-40d5-b631-818de9e268d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\include">
+      <UniqueIdentifier>{0a3461c6-bda2-4891-bed6-6c310a2abb7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\FileSystem">
+      <UniqueIdentifier>{466185df-231e-4cde-8039-15d8630c0432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\FileSystem\include">
+      <UniqueIdentifier>{84e7cfeb-905d-4f01-89ff-f67a1d9e3d7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\FileSystem\lib">
+      <UniqueIdentifier>{cee39fa9-f4b4-4718-9fd6-bbfaf2b990b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\TinyXML">
+      <UniqueIdentifier>{eb0287fc-025c-4ab5-bddc-cdf9392bd910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\TinyXML\include">
+      <UniqueIdentifier>{e3872237-9e6c-4be8-91e2-7f97bc6f7023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\TinyXML\lib">
+      <UniqueIdentifier>{61a478bc-ef65-4e6b-8397-cb3e01af6a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\lib">
+      <UniqueIdentifier>{3a1f3f7b-ca9a-4e3e-ba24-1eb44b61704f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ReflectedType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReflectedVariable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ReflectionData.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CodeParser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FeedbackContext.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SourceCodePipe.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\ChunkHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\GameAssert.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\FileSystem\include\File.h">
+      <Filter>_libs\FileSystem\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\FileSystem\include\WinFileWrapper.h">
+      <Filter>_libs\FileSystem\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ClassFilter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\TinyXML\include\tinystr.h">
+      <Filter>_libs\TinyXML\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\TinyXML\include\tinyxml.h">
+      <Filter>_libs\TinyXML\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataWriter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FilePreprocessor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReflectedType.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReflectedVariable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CodeParser.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FeedbackContext.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ReflectionData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ClassFilter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataWriter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FilePreprocessor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
+      <Filter>_libs\FileSystem\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
+      <Filter>_libs\FileSystem\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\TinyXML\lib\TinyXML_Debug.lib">
+      <Filter>_libs\TinyXML\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\TinyXML\lib\TinyXML_Release.lib">
+      <Filter>_libs\TinyXML\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <Filter>_libs\Shared\lib</Filter>
+    </Library>
+  </ItemGroup>
+</Project>
