@@ -169,6 +169,7 @@
     <ClInclude Include="include\TreeElement.h" />
     <ClInclude Include="include\Rectangle.h" />
     <ClInclude Include="include\TextField.h" />
+    <ClInclude Include="include\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\TextField.cpp" />
     <ClCompile Include="src\Tree.cpp" />
     <ClCompile Include="src\TreeElement.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\PreCompiledLibs\FLTK\lib\fltk.lib">

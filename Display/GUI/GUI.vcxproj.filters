@@ -510,6 +510,9 @@
     <ClInclude Include="..\..\ExternLibs\Shared\include\Execute.h">
       <Filter>_libs\Shared\include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Window.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component.cpp">
@@ -531,6 +534,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Tree.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
