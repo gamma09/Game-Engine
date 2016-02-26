@@ -2,7 +2,7 @@
   "SingleProjectMode": 3,
   "SingleProjectMruCount": 5,
   "MRU": [
-    "Game_Engine"
+    "Game"
   ],
   "MultiProjectConfigurations": {
     "Model Converter": {
@@ -12,9 +12,9 @@
         }
       }
     },
-    "Game Engine": {
+    "Game": {
       "Projects": {
-        "Game_Engine": {
+        "Game": {
           "CommandLineArguments": ""
         }
       }

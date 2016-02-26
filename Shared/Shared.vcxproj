@@ -12,12 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ChunkHeader.h" />
+    <ClInclude Include="src\DebuggerSetup.h" />
     <ClInclude Include="src\Execute.h" />
     <ClInclude Include="src\GameAssert.h" />
     <ClInclude Include="src\PackageHeader.h" />
+    <ClInclude Include="src\ReferencedObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Execute.cpp" />
+    <ClCompile Include="src\ReferencedObject.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF0D953C-BE31-4F51-96BF-6649C455A2BE}</ProjectGuid>

@@ -4,7 +4,8 @@
 	#pragma once
 	#define _CRT_SECURE_NO_WARNINGS 1
 
-	#define WIN32_LEAN_AND_MEAN 1
+	#define WIN32_LEAN_AND_MEAN
+	#define WIN32_EXTRA_LEAN
 	#include <Windows.h>
 
 	#ifdef _DEBUG

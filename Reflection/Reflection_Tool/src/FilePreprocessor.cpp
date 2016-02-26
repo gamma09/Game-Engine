@@ -20,6 +20,18 @@ FilePreprocessor::~FilePreprocessor()
 	delete this->out;
 }
 
+static void TrimString( char* str )
+{
+	if( *str == 0 ) return;
+
+	while( *(str+1) != 0 ) str++;
+
+	while( *str == '\n' || *str == '\r' || *str == '\f' || *str == '\t' || *str == ' ' )
+	{
+		*str-- = 0;
+	}
+}
+
 void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context )
 {
 	context.SetCurrentFile( filename.c_str() );
@@ -30,18 +42,38 @@ void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string
 	char* error;
 
 	unsigned long exitCode = Exec::Execute( cl.c_str(), nullptr, &out, &error );
-	
-	cout << out;
-	cerr << error;
+	TrimString( out );
+	TrimString( error );
+
+	if( strlen( out ) > 0 )
+	{
+		cout << out << '\n';
+	}
+
+	if( strlen( error ) > 0 )
+	{
+		cerr << error << '\n';
+	}
+
 	delete out;
 	delete error;
 
 	FEEDBACK_CHECK_RETURN( context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "cl.exe returned an error." );
 
 	exitCode = Exec::Execute( src2srcmlCommandLine.c_str(), nullptr, &out, &error );
-	
-	cout << out;
-	cerr << error;
+	TrimString( out );
+	TrimString( error );
+
+	if( strlen( out ) > 0 )
+	{
+		cout << out << '\n';
+	}
+
+	if( strlen( error ) > 0 )
+	{
+		cerr << error << '\n';
+	}
+
 	delete out;
 	delete error;
 

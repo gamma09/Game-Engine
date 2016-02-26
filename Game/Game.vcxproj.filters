@@ -1,145 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Actor.cpp">
-      <Filter>Actors</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CameraManager.cpp">
-      <Filter>Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Model.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderFactory.cpp">
-      <Filter>Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderManager.cpp">
-      <Filter>Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\WireframeMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>Materials\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureManager.cpp">
-      <Filter>Materials\Textures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ActorManager.cpp">
-      <Filter>Actors</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GlobalHeaps.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ReferencedObject.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LightingTextureMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DirectionLight.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DirectionLightManager.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KeyBinding.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KeyBindingManager.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\StationaryStrategy.cpp">
       <Filter>Actors\Strategies</Filter>
-    </ClCompile>
-    <ClCompile Include="src\HierarchyElement.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bone.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ModelBase.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ModelBaseManager.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DrawStrategy.cpp">
-      <Filter>Base\Draw</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Moveable.cpp">
-      <Filter>Base\Update</Filter>
     </ClCompile>
     <ClCompile Include="src\MoveAction.cpp">
       <Filter>Input\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="src\Animation.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="src\KeyFrame.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
     <ClCompile Include="src\AnimatingStrategy.cpp">
       <Filter>Actors\Strategies</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoneManager.cpp">
-      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp">
       <Filter>GeneratedFiles</Filter>
     </ClCompile>
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Models">
-      <UniqueIdentifier>{1e424936-e08a-48fb-881d-a267403a7d0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Actors">
       <UniqueIdentifier>{a87c0d0c-52b5-470a-8704-a757e879ec2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Actors\Strategies">
       <UniqueIdentifier>{d08ac1df-4886-4756-b41c-c4f54b5e7d36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Cameras">
-      <UniqueIdentifier>{77107da4-b3a2-477f-87d8-7abd5c6c062f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities">
-      <UniqueIdentifier>{c6cdb873-ccd5-4097-b887-4eaf75e015b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lights">
-      <UniqueIdentifier>{212cd640-049d-43fa-a9c4-5b46aeba230b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{b8320887-3da3-409e-90f6-256bcf29be6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base">
-      <UniqueIdentifier>{bcb5d27a-4aca-42b2-a97f-2ceaa6d2e964}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Materials">
-      <UniqueIdentifier>{b6f686f5-e9c1-4f4d-a71e-e20fe8191325}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Materials\Textures">
-      <UniqueIdentifier>{611b3f79-6913-48e7-bac0-50f088870645}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{8cfa8487-23e8-43d4-9c31-fdee14659a31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Draw">
-      <UniqueIdentifier>{f11abb4b-045a-45cd-94e4-d870111eec68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Base\Update">
-      <UniqueIdentifier>{aeb183c0-fc4f-402f-b0d1-83f47b60a894}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input\Actions">
       <UniqueIdentifier>{77f54d0d-34ff-45c5-b396-a8e1aebe19a4}</UniqueIdentifier>
@@ -255,6 +140,15 @@
     <Filter Include="_libs\Reflection_Headers\lib">
       <UniqueIdentifier>{a5399e53-4784-4204-aa4f-4dd62f194e86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Engine">
+      <UniqueIdentifier>{17b6344a-cea2-4746-9a31-3a1df032be26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Engine\include">
+      <UniqueIdentifier>{240a7b8f-0ea6-4e48-891d-d762c3bb74e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Engine\lib">
+      <UniqueIdentifier>{3fafa1fb-588b-4560-a544-7cf985f8e398}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
@@ -323,6 +217,12 @@
     <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
       <Filter>_libs\Reflection_Headers\lib</Filter>
     </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Debug.lib">
+      <Filter>_libs\Engine\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Release.lib">
+      <Filter>_libs\Engine\lib</Filter>
+    </Library>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\FileSystem\include\File.h">
@@ -367,70 +267,7 @@
     <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h">
       <Filter>_libs\PCS_Tree\include</Filter>
     </ClInclude>
-    <ClInclude Include="src\Actor.h">
-      <Filter>Actors</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Camera.h">
-      <Filter>Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CameraManager.h">
-      <Filter>Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Model.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shader.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderFactory.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderManager.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\LibrarySetup.h" />
-    <ClInclude Include="src\WireframeMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Texture.h">
-      <Filter>Materials\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureManager.h">
-      <Filter>Materials\Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MemorySetup.h" />
-    <ClInclude Include="src\ActorManager.h">
-      <Filter>Actors</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GlobalHeaps.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ReferencedObject.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LightingTextureMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DirectionLight.h">
-      <Filter>Lights</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DirectionLightManager.h">
-      <Filter>Lights</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KeyBinding.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KeyBindingManager.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KeyAction.h">
-      <Filter>Input</Filter>
-    </ClInclude>
     <ClInclude Include="src\StationaryStrategy.h">
       <Filter>Actors\Strategies</Filter>
     </ClInclude>
@@ -440,50 +277,11 @@
     <ClInclude Include="..\ExternLibs\Time\include\Timer.h">
       <Filter>_libs\Time\include</Filter>
     </ClInclude>
-    <ClInclude Include="src\HierarchyElement.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Bone.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ModelBase.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ModelBaseManager.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DrawInfo.h">
-      <Filter>Base\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DrawStrategy.h">
-      <Filter>Base\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moveable.h">
-      <Filter>Base\Update</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DebuggerSetup.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="src\MoveAction.h">
       <Filter>Input\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="src\UpdateStrategy.h">
-      <Filter>Base\Update</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Animation.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="src\KeyFrame.h">
-      <Filter>Models</Filter>
-    </ClInclude>
     <ClInclude Include="src\AnimatingStrategy.h">
       <Filter>Actors\Strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BoneManager.h">
-      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h">
       <Filter>_libs\Archive_Reader\include</Filter>
@@ -521,25 +319,107 @@
     <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h">
       <Filter>_libs\Reflection_Headers\include</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Wireframe.fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="src\Wireframe.vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="src\Texture.fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="src\Texture.vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="src\LightingTexture.fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="src\LightingTexture.vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClInclude Include="..\ExternLibs\Engine\include\Actor.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\ActorManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Animation.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Bone.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\BoneManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Camera.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\CameraManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\DirectionLight.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\DirectionLightManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\DrawInfo.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\DrawStrategy.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Engine.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\GlobalHeaps.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\HierarchyElement.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyAction.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyBinding.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyBindingManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyFrame.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\LibrarySetup.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\LightingTextureMaterial.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\MemorySetup.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Mesh.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Model.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\ModelBase.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\ModelBaseManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Moveable.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Shader.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\ShaderFactory.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\ShaderManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\Texture.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\TextureManager.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\TextureMaterial.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\UpdateStrategy.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Engine\include\WireframeMaterial.h">
+      <Filter>_libs\Engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

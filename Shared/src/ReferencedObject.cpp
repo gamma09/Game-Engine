@@ -1,4 +1,4 @@
-#include <GameAssert.h>
+#include "GameAssert.h"
 
 #include "ReferencedObject.h"
 

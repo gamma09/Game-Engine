@@ -1,0 +1,470 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{06a430ce-86fa-4e0a-8801-bc955eae58ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{aa144959-c9c6-4349-9e9c-66e2761894ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{bef12da2-03dc-49a0-ad87-1d9d3add8e3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting">
+      <UniqueIdentifier>{9056cd22-822a-4593-85ef-7decde24157a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{c668a317-696f-4179-80dd-0f5f94f98cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{49da30c7-2f5b-4a37-ba30-b3d0ee36dce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading">
+      <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\GLSL">
+      <UniqueIdentifier>{fdf3610d-122f-47e5-855d-43acb95100e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{9d97b1ae-80b7-441e-a873-5c9977405686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2b60d538-2cca-4d4f-8edc-ff6f294da3ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Draw">
+      <UniqueIdentifier>{173c58a5-9e3c-4e15-8940-77134ff6efd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Update">
+      <UniqueIdentifier>{3c3182cf-217e-49cb-bc73-a1180da780f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs">
+      <UniqueIdentifier>{698bc5ce-f23b-46e8-9aa3-58ef51a215fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Archive_Reader">
+      <UniqueIdentifier>{2326eb2c-2593-4c64-91bc-d427ddc69739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Archive_Reader\include">
+      <UniqueIdentifier>{95ccab55-5b89-4285-a669-d5ef34af588e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\File_System">
+      <UniqueIdentifier>{805b01fd-916f-45ed-b1c8-71d3e9c7755e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\File_System\include">
+      <UniqueIdentifier>{42e62cd2-1e9f-415e-98ce-b2e2833df393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GL3W">
+      <UniqueIdentifier>{a009e758-fa3d-40c7-93d7-9a295e033417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GL3W\include">
+      <UniqueIdentifier>{59af8e86-67af-4e64-8e21-7ccf87c84af7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GL3W\include\GL">
+      <UniqueIdentifier>{9e1291e1-d6c5-454b-a717-2284f9478127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GLFW">
+      <UniqueIdentifier>{da7ae6ac-c841-4c8c-8f5b-73aaf9b3853c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GLFW\include">
+      <UniqueIdentifier>{5fe1d2f2-c7e2-4e90-8b40-94edeafc05bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\GLFW\include\GL">
+      <UniqueIdentifier>{45c0d534-4c55-4a78-8cf8-b7674ca175ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Math_Engine">
+      <UniqueIdentifier>{40bcf57f-23ab-45c5-875e-0085415120b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Math_Engine\include">
+      <UniqueIdentifier>{56e09495-dd16-4568-bf53-1642d51421a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Memory_System">
+      <UniqueIdentifier>{f1fcc59c-a03b-44ee-bff1-c48d3add9c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Memory_System\include">
+      <UniqueIdentifier>{445eabe3-dbbe-430e-97cd-36e62114d33a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Object_Management">
+      <UniqueIdentifier>{68d6600f-9709-4cc2-9229-c6a4e46f42ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Object_Management\include">
+      <UniqueIdentifier>{8433c874-4939-48c0-8395-45f2ba52e07a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\PCS_Tree">
+      <UniqueIdentifier>{ea1ad49a-247d-469c-b757-bad619dbb439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\PCS_Tree\include">
+      <UniqueIdentifier>{421bd696-c62b-487a-9fb0-ecfb012d8dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers">
+      <UniqueIdentifier>{48f64333-df68-440b-afd0-34ef89639b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers\include">
+      <UniqueIdentifier>{c0d2d52b-3056-4614-b16a-f6fc4e8adcd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared">
+      <UniqueIdentifier>{6ced81a0-7eba-425f-acf3-4ca77bd4c323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Shared\include">
+      <UniqueIdentifier>{2267ec0e-3c54-4daa-8fe7-9e854bd1dcc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Time">
+      <UniqueIdentifier>{3718d14d-97dd-4ad0-bd66-c5cbc15056ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Time\include">
+      <UniqueIdentifier>{3b044dd2-e27b-4ca6-8747-ecb33d96ec47}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Actor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ActorManager.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DrawStrategy.cpp">
+      <Filter>Core\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moveable.cpp">
+      <Filter>Core\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraManager.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyBinding.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyBindingManager.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionLight.cpp">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionLightManager.cpp">
+      <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LightingTextureMaterial.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureMaterial.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WireframeMaterial.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bone.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BoneManager.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HierarchyElement.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KeyFrame.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelBase.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelBaseManager.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderFactory.cpp">
+      <Filter>Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlobalHeaps.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Actor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ActorManager.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DrawInfo.h">
+      <Filter>Core\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DrawStrategy.h">
+      <Filter>Core\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moveable.h">
+      <Filter>Core\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UpdateStrategy.h">
+      <Filter>Core\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CameraManager.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyAction.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyBinding.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyBindingManager.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectionLight.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DirectionLightManager.h">
+      <Filter>Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LightingTextureMaterial.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureMaterial.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WireframeMaterial.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureManager.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Animation.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bone.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BoneManager.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HierarchyElement.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KeyFrame.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModelBase.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModelBaseManager.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderFactory.h">
+      <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderManager.h">
+      <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlobalHeaps.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h">
+      <Filter>_libs\Archive_Reader\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\FileSystem\include\File.h">
+      <Filter>_libs\File_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\FileSystem\include\WinFileWrapper.h">
+      <Filter>_libs\File_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\gl3w.h">
+      <Filter>_libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glcorearb.h">
+      <Filter>_libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glext.h">
+      <Filter>_libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glxext.h">
+      <Filter>_libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\wglext.h">
+      <Filter>_libs\GL3W\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\GLFW\include\GL\glfw.h">
+      <Filter>_libs\GLFW\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Constants.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Enum.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngineConfig.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngineDefs.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Matrix.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Quat.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\QuatApp.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Util.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Vect.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\MathEngine\include\VectApp.h">
+      <Filter>_libs\Math_Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\block.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\Enums.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\global.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\heap.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\mem.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Memory\include\MemoryEngine.h">
+      <Filter>_libs\Memory_System\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObject.h">
+      <Filter>_libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObjectCondition.h">
+      <Filter>_libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\Manager.h">
+      <Filter>_libs\Object_Management\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSConfig.h">
+      <Filter>_libs\PCS_Tree\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSNode.h">
+      <Filter>_libs\PCS_Tree\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h">
+      <Filter>_libs\PCS_Tree\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\DebuggerSetup.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Shared\include\ReferencedObject.h">
+      <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Time\include\Time.h">
+      <Filter>_libs\Time\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Time\include\Timer.h">
+      <Filter>_libs\Time\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemorySetup.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LibrarySetup.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AppInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glsl\LightingTexture.fs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+    <None Include="glsl\LightingTexture.vs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+    <None Include="glsl\Texture.fs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+    <None Include="glsl\Texture.vs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+    <None Include="glsl\Wireframe.fs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+    <None Include="glsl\Wireframe.vs.glsl">
+      <Filter>Shading\GLSL</Filter>
+    </None>
+  </ItemGroup>
+</Project>

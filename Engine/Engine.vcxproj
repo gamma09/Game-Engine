@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Actor.cpp" />
+    <ClCompile Include="src\ActorManager.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Bone.cpp" />
+    <ClCompile Include="src\BoneManager.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CameraManager.cpp" />
+    <ClCompile Include="src\DirectionLight.cpp" />
+    <ClCompile Include="src\DirectionLightManager.cpp" />
+    <ClCompile Include="src\DrawStrategy.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\GlobalHeaps.cpp" />
+    <ClCompile Include="src\HierarchyElement.cpp" />
+    <ClCompile Include="src\KeyBinding.cpp" />
+    <ClCompile Include="src\KeyBindingManager.cpp" />
+    <ClCompile Include="src\KeyFrame.cpp" />
+    <ClCompile Include="src\LightingTextureMaterial.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\ModelBase.cpp" />
+    <ClCompile Include="src\ModelBaseManager.cpp" />
+    <ClCompile Include="src\Moveable.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderFactory.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TextureMaterial.cpp" />
+    <ClCompile Include="src\WireframeMaterial.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h" />
+    <ClInclude Include="..\ExternLibs\FileSystem\include\File.h" />
+    <ClInclude Include="..\ExternLibs\FileSystem\include\WinFileWrapper.h" />
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\gl3w.h" />
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glcorearb.h" />
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glext.h" />
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\glxext.h" />
+    <ClInclude Include="..\ExternLibs\GL3W\include\GL\wglext.h" />
+    <ClInclude Include="..\ExternLibs\GLFW\include\GL\glfw.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Constants.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Enum.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngineConfig.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngineDefs.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Matrix.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Quat.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\QuatApp.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Util.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\Vect.h" />
+    <ClInclude Include="..\ExternLibs\MathEngine\include\VectApp.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\block.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\Enums.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\global.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\heap.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\mem.h" />
+    <ClInclude Include="..\ExternLibs\Memory\include\MemoryEngine.h" />
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObject.h" />
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\ManagedObjectCondition.h" />
+    <ClInclude Include="..\ExternLibs\ObjectManagement\include\Manager.h" />
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSConfig.h" />
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSNode.h" />
+    <ClInclude Include="..\ExternLibs\PCSTree\include\PCSTree.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\DebuggerSetup.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h" />
+    <ClInclude Include="..\ExternLibs\Shared\include\ReferencedObject.h" />
+    <ClInclude Include="..\ExternLibs\Time\include\Time.h" />
+    <ClInclude Include="..\ExternLibs\Time\include\Timer.h" />
+    <ClInclude Include="src\Actor.h" />
+    <ClInclude Include="src\ActorManager.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\AppInfo.h" />
+    <ClInclude Include="src\Bone.h" />
+    <ClInclude Include="src\BoneManager.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\CameraManager.h" />
+    <ClInclude Include="src\DirectionLight.h" />
+    <ClInclude Include="src\DirectionLightManager.h" />
+    <ClInclude Include="src\DrawInfo.h" />
+    <ClInclude Include="src\DrawStrategy.h" />
+    <ClInclude Include="src\Engine.h" />
+    <ClInclude Include="src\GlobalHeaps.h" />
+    <ClInclude Include="src\HierarchyElement.h" />
+    <ClInclude Include="src\KeyAction.h" />
+    <ClInclude Include="src\KeyBinding.h" />
+    <ClInclude Include="src\KeyBindingManager.h" />
+    <ClInclude Include="src\KeyFrame.h" />
+    <ClInclude Include="src\LibrarySetup.h" />
+    <ClInclude Include="src\LightingTextureMaterial.h" />
+    <ClInclude Include="src\MemorySetup.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\ModelBase.h" />
+    <ClInclude Include="src\ModelBaseManager.h" />
+    <ClInclude Include="src\Moveable.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\ShaderFactory.h" />
+    <ClInclude Include="src\ShaderManager.h" />
+    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\TextureManager.h" />
+    <ClInclude Include="src\TextureMaterial.h" />
+    <ClInclude Include="src\UpdateStrategy.h" />
+    <ClInclude Include="src\WireframeMaterial.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glsl\LightingTexture.fs.glsl" />
+    <None Include="glsl\LightingTexture.vs.glsl" />
+    <None Include="glsl\Texture.fs.glsl" />
+    <None Include="glsl\Texture.vs.glsl" />
+    <None Include="glsl\Wireframe.fs.glsl" />
+    <None Include="glsl\Wireframe.vs.glsl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4067ADA5-F2DD-4C7A-94D9-763F0FD223A7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Engine</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;DONT_OVERRIDE_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+MKDIR "$(SolutionDir)ExternLibs\Shaders"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(ProjectName)_$(Configuration).pdb"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+DEL /F "$(SolutionDir)ExternLibs\Shaders\*.glsl"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(OutputPath)$(ProjectName)_$(Configuration).pdb" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(ProjectDir)glsl\*.glsl" "$(SolutionDir)ExternLibs\Shaders\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\include"
+MKDIR "$(SolutionDir)ExternLibs\$(ProjectName)\lib"
+MKDIR "$(SolutionDir)ExternLibs\Shaders"
+
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\lib\$(TargetFileName)"
+DEL /F "$(SolutionDir)ExternLibs\$(ProjectName)\include\*.h"
+DEL /F "$(SolutionDir)ExternLibs\Shaders\*.glsl"
+
+COPY "$(ProjectDir)src\*.h" "$(SolutionDir)ExternLibs\$(ProjectName)\include\"
+COPY "$(OutputPath)$(TargetFileName)" "$(SolutionDir)ExternLibs\$(ProjectName)\lib\"
+COPY "$(ProjectDir)glsl\*.glsl" "$(SolutionDir)ExternLibs\Shaders\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

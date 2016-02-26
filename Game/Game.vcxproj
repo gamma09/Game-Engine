@@ -14,7 +14,7 @@
     <ProjectGuid>{3167A812-5D2C-4EE9-ACFD-F0E959384755}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>spinnycube</RootNamespace>
-    <ProjectName>Game_Engine</ProjectName>
+    <ProjectName>Game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,18 +42,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(SolutionDir)ExternLibs\Engine\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(SolutionDir)ExternLibs\Engine\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
@@ -68,15 +68,14 @@
       <ProgramDataBaseFileName>$(OutputPath)$(ProjectName)_$(Configuration).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <StringPooling>false</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <SDLCheck>
       </SDLCheck>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
       <WarningLevel>Level4</WarningLevel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -88,7 +87,7 @@
       <IgnoreSpecificDefaultLibraries>MSVCRTD.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
+      <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
@@ -129,7 +128,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "$(ProjectDir)src\*.glsl" "$(TargetDir)\."</Command>
+      <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
@@ -146,46 +145,23 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp" />
-    <ClCompile Include="src\Actor.cpp" />
-    <ClCompile Include="src\ActorManager.cpp" />
     <ClCompile Include="src\AnimatingStrategy.cpp" />
-    <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Bone.cpp" />
-    <ClCompile Include="src\BoneManager.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\CameraManager.cpp" />
-    <ClCompile Include="src\DirectionLight.cpp" />
-    <ClCompile Include="src\DirectionLightManager.cpp" />
-    <ClCompile Include="src\DrawStrategy.cpp" />
-    <ClCompile Include="src\Engine.cpp" />
-    <ClCompile Include="src\KeyFrame.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GlobalHeaps.cpp" />
-    <ClCompile Include="src\HierarchyElement.cpp" />
-    <ClCompile Include="src\KeyBinding.cpp" />
-    <ClCompile Include="src\KeyBindingManager.cpp" />
-    <ClCompile Include="src\LightingTextureMaterial.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Model.cpp" />
-    <ClCompile Include="src\ModelBase.cpp" />
-    <ClCompile Include="src\ModelBaseManager.cpp" />
-    <ClCompile Include="src\Moveable.cpp" />
     <ClCompile Include="src\MoveAction.cpp" />
-    <ClCompile Include="src\ReferencedObject.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\ShaderFactory.cpp" />
-    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\StationaryStrategy.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\TextureManager.cpp" />
-    <ClCompile Include="src\TextureMaterial.cpp" />
-    <ClCompile Include="src\WireframeMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Debug.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
     <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Release.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
     <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
@@ -251,6 +227,40 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Actor.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\ActorManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Animation.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Bone.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\BoneManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Camera.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\CameraManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\DirectionLight.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\DirectionLightManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\DrawInfo.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\DrawStrategy.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Engine.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\GlobalHeaps.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\HierarchyElement.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyAction.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyBinding.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyBindingManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\KeyFrame.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\LibrarySetup.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\LightingTextureMaterial.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\MemorySetup.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Mesh.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Model.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\ModelBase.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\ModelBaseManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Moveable.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Shader.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\ShaderFactory.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\ShaderManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\Texture.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\TextureManager.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\TextureMaterial.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\UpdateStrategy.h" />
+    <ClInclude Include="..\ExternLibs\Engine\include\WireframeMaterial.h" />
     <ClInclude Include="..\ExternLibs\FileSystem\include\File.h" />
     <ClInclude Include="..\ExternLibs\GL3W\include\GL\gl3w.h" />
     <ClInclude Include="..\ExternLibs\GL3W\include\GL\glcorearb.h" />
@@ -279,53 +289,9 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ClInclude Include="..\ExternLibs\Time\include\Time.h" />
     <ClInclude Include="..\ExternLibs\Time\include\Timer.h" />
     <ClInclude Include="src\AnimatingStrategy.h" />
-    <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\BoneManager.h" />
-    <ClInclude Include="src\KeyFrame.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\DrawInfo.h" />
-    <ClInclude Include="src\Actor.h" />
-    <ClInclude Include="src\ActorManager.h" />
-    <ClInclude Include="src\Bone.h" />
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\CameraManager.h" />
-    <ClInclude Include="src\DebuggerSetup.h" />
-    <ClInclude Include="src\DirectionLight.h" />
-    <ClInclude Include="src\DirectionLightManager.h" />
-    <ClInclude Include="src\DrawStrategy.h" />
-    <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\GlobalHeaps.h" />
-    <ClInclude Include="src\KeyAction.h" />
-    <ClInclude Include="src\KeyBinding.h" />
-    <ClInclude Include="src\KeyBindingManager.h" />
-    <ClInclude Include="src\LibrarySetup.h" />
-    <ClInclude Include="src\LightingTextureMaterial.h" />
-    <ClInclude Include="src\MemorySetup.h" />
-    <ClInclude Include="src\Model.h" />
-    <ClInclude Include="src\ModelBase.h" />
-    <ClInclude Include="src\ModelBaseManager.h" />
-    <ClInclude Include="src\Moveable.h" />
     <ClInclude Include="src\MoveAction.h" />
-    <ClInclude Include="src\ReferencedObject.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\ShaderFactory.h" />
-    <ClInclude Include="src\ShaderManager.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\TextureManager.h" />
-    <ClInclude Include="src\TextureMaterial.h" />
-    <ClInclude Include="src\HierarchyElement.h" />
-    <ClInclude Include="src\UpdateStrategy.h" />
-    <ClInclude Include="src\WireframeMaterial.h" />
     <ClInclude Include="src\StationaryStrategy.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\LightingTexture.fs.glsl" />
-    <None Include="src\LightingTexture.vs.glsl" />
-    <None Include="src\Texture.fs.glsl" />
-    <None Include="src\Texture.vs.glsl" />
-    <None Include="src\Wireframe.fs.glsl" />
-    <None Include="src\Wireframe.vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

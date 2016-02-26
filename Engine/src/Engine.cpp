@@ -3,23 +3,41 @@
 #include "Engine.h"
 #include <GL/glext.h>
 #include <string.h>
-#include "DebuggerSetup.h"
+#include <DebuggerSetup.h>
+#include <GameAssert.h>
+#include <mem.h>
+
+#include "GlobalHeaps.h"
+#include "AppInfo.h"
+#include "TextureMaterial.h"
+#include "LightingTextureMaterial.h"
+#include "WireframeMaterial.h"
+
+#include "ActorManager.h"
+#include "BoneManager.h"
+#include "CameraManager.h"
+#include "DirectionLightManager.h"
+#include "KeyBindingManager.h"
+#include "ModelBaseManager.h"
+#include "ShaderManager.h"
+#include "TextureManager.h"
+
 
 Engine * Engine::app = 0;
 
 
 
-int IsExtensionSupported(const char * extname)
+int IsExtensionSupported( const char * extname )
 {
 	GLint numExtensions;
 	GLint i;
 
-	glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+	glGetIntegerv( GL_NUM_EXTENSIONS, &numExtensions );
 
-	for (i = 0; i < numExtensions; i++)
+	for( i = 0; i < numExtensions; i++ )
 	{
-		const GLubyte * e = glGetStringi(GL_EXTENSIONS, i);
-		if (!strcmp((const char *)e, extname))
+		const GLubyte * e = glGetStringi( GL_EXTENSIONS, i );
+		if( !strcmp( (const char *) e, extname ) )
 		{
 			return 1;
 		}
@@ -34,108 +52,151 @@ int IsExtensionSupported(const char * extname)
 //------------------------------------------------------------------
 void Engine::run()
 {
-	this->privPreInitialize(  );
+	this->PreInitialize();
 
-	Initialize();   // Virtual
+	Initialize();
 
-	this->privPreLoadContent();
+	this->PreLoadContent();
 
-	LoadContent();  // Virtual
+	LoadContent();
 
-	while(glfwGetWindowParam( GLFW_OPENED ) != GL_FALSE)
+	while( glfwGetWindowParam( GLFW_OPENED ) != GL_FALSE )
 	{
 		// moving
 		Update();
 
 		// rendering
 		ClearBufferFunc();
-		Draw();  
+		Draw();
 
 		glfwSwapBuffers();
-	} 
+	}
 
 	UnLoadContent();
+
+	this->PostUnLoadContent();
 
 	glfwTerminate();
 }
 
-void Engine::privPreInitialize()
+void Engine::PreInitialize()
 {
 	//app = the_app;
 	app = this;
 
-	if (!glfwInit())
+	if( !glfwInit() )
 	{
-		out("Failed to initialize GLFW\n");
+		out( "Failed to initialize GLFW\n" );
 		return;
 	}
+
+	GameVerify( Mem_OK == Mem::initialize() );
+
+	TemporaryHeap::Create();
+
+	GameVerify( Mem_OK == Mem::createHeap( this->managerHeap, 4096, "Manager Heap" ) );
+	GameVerify( Mem_OK == Mem::createHeap( this->materialHeap, 4096, "Material Heap" ) );
+
+	ShaderManager::Create( this->managerHeap, 4, 1 );
+	ModelBaseManager::Create( this->managerHeap, 7, 1 );
+	CameraManager::Create( this->managerHeap, 1, 1 );
+	TextureManager::Create( this->managerHeap, 10, 3 );
+	ActorManager::Create( this->managerHeap, 12, 1 );
+	DirectionLightManager::Create( this->managerHeap, 1, 1 );
+	KeyBindingManager::Create( this->managerHeap, 4, 2 );
+	BoneManager::Create( this->managerHeap, 100, 10 );
 }
 
-void Engine::privPreLoadContent()
+void Engine::PreLoadContent()
 {
 
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, info.majorVersion);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, info.minorVersion);
+	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MAJOR, info->majorVersion );
+	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MINOR, info->minorVersion );
 
 #ifdef _DEBUG
-	glfwOpenWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	glfwOpenWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );
 #endif /* _DEBUG */
-	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, info.samples);
-	glfwOpenWindowHint(GLFW_STEREO, info.flags.stereo ? GL_TRUE : GL_FALSE);
-	if (info.flags.fullscreen)
+	glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+	glfwOpenWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
+	glfwOpenWindowHint( GLFW_FSAA_SAMPLES, info->samples );
+	glfwOpenWindowHint( GLFW_STEREO, info->flags & FLAG_STEREO ? GL_TRUE : GL_FALSE );
+	if( info->flags & FLAG_FULLSCREEN )
 	{
-		if (info.windowWidth == 0 || info.windowHeight == 0)
+		if( info->windowWidth == 0 || info->windowHeight == 0 )
 		{
 			GLFWvidmode mode;
-			glfwGetDesktopMode(&mode);
-			info.windowWidth = mode.Width;
-			info.windowHeight = mode.Height;
+			glfwGetDesktopMode( &mode );
+			info->windowWidth = mode.Width;
+			info->windowHeight = mode.Height;
 		}
-		glfwOpenWindow(info.windowWidth, info.windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN);
-		glfwSwapInterval((int)info.flags.vsync);
+		glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN );
+		glfwSwapInterval( info->flags & FLAG_VSYNC );
 	}
 	else
 	{
-		if (!glfwOpenWindow(info.windowWidth, info.windowHeight, 8, 8, 8, 0, 32, 0, GLFW_WINDOW))
+		if( !glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_WINDOW ) )
 		{
-			out("Failed to open window\n");
+			out( "Failed to open window\n" );
 			return;
 		}
 	}
 
-	glfwSetWindowTitle(info.title);
-	glfwSetWindowSizeCallback(glfw_onResize);
-	glfwSetKeyCallback(glfw_onKey);
-	glfwSetMouseButtonCallback(glfw_onMouseButton);
-	glfwSetMousePosCallback(glfw_onMouseMove);
-	glfwSetMouseWheelCallback(glfw_onMouseWheel);
-	(info.flags.cursor ? glfwEnable : glfwDisable)(GLFW_MOUSE_CURSOR);
+	glfwSetWindowTitle( info->title );
+	glfwSetWindowSizeCallback( glfw_onResize );
+	( info->flags & FLAG_CURSOR ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
 
-	info.flags.stereo = (glfwGetWindowParam(GLFW_STEREO) ? 1 : 0);
+	info->flags = ( info->flags & ~FLAG_STEREO ) | ( glfwGetWindowParam( GLFW_STEREO ) ? FLAG_STEREO : 0 );
 
 	gl3wInit();
 
 #ifdef _DEBUG
-	out("VENDOR: %s\n", (char *)glGetString(GL_VENDOR));
-	out("VERSION: %s\n", (char *)glGetString(GL_VERSION));
-	out("RENDERER: %s\n", (char *)glGetString(GL_RENDERER));
+	out( "VENDOR: %s\n", (char *) glGetString( GL_VENDOR ) );
+	out( "VERSION: %s\n", (char *) glGetString( GL_VERSION ) );
+	out( "RENDERER: %s\n", (char *) glGetString( GL_RENDERER ) );
 #endif
 
-	if (info.flags.debug)
+	if( info->flags & FLAG_DEBUG )
 	{
-		if (gl3wIsSupported(4, 3))
+		if( gl3wIsSupported( 4, 3 ) )
 		{
-			glDebugMessageCallback(debug_callback, this);
-			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			glDebugMessageCallback( debug_callback, this );
+			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
 		}
-		else if (IsExtensionSupported("GL_ARB_debug_output"))
+		else if( IsExtensionSupported( "GL_ARB_debug_output" ) )
 		{
-			glDebugMessageCallbackARB(debug_callback, this);
-			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+			glDebugMessageCallbackARB( debug_callback, this );
+			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB );
 		}
 	}
+
+	TextureManager::Instance()->Create_Default_Texture();
+
+	WireframeMaterial::Create_Material( this->materialHeap );
+	TextureMaterial::Create_Material( this->materialHeap );
+	LightingTextureMaterial::Create_Material( this->materialHeap );
+}
+
+void Engine::PostUnLoadContent()
+{
+	TextureMaterial::Destroy_Material();
+	WireframeMaterial::Destroy_Material();
+	LightingTextureMaterial::Destroy_Material();
+
+	KeyBindingManager::Destroy();
+	DirectionLightManager::Destroy();
+	ActorManager::Destroy();
+	TextureManager::Destroy();
+	CameraManager::Destroy();
+	ModelBaseManager::Destroy();
+	BoneManager::Destroy();
+	ShaderManager::Destroy();
+
+	GameVerify( Mem_OK == Mem::destroyHeap( this->managerHeap ) );
+	GameVerify( Mem_OK == Mem::destroyHeap( this->materialHeap ) );
+
+	TemporaryHeap::Destroy();
+
+	GameVerify( Mem_OK == Mem::destroy() );
 }
 
 //------------------------------------------------------------------
@@ -144,52 +205,33 @@ void Engine::privPreLoadContent()
 //------------------------------------------------------------------
 void Engine::ClearBufferFunc()
 {
-	const GLfloat grey[] = { 0.250f, 0.25f, 0.25f, 1.0f };
+	const GLfloat grey[] ={ 0.250f, 0.25f, 0.25f, 1.0f };
 	const GLfloat one = 1.0f;
 
-	glClearBufferfv(GL_COLOR, 0, grey);
-	glClearBufferfv(GL_DEPTH, 0, &one);
+	glClearBufferfv( GL_COLOR, 0, grey );
+	glClearBufferfv( GL_DEPTH, 0, &one );
 }
 
-Engine::Engine( const char* windowName, const int Width,const int Height)
+Engine::Engine( const char* windowName, const int Width, const int Height ) :
+info( new AppInfo() )
 {
-	strcpy(info.title, windowName);
-	info.windowWidth = Width;
-	info.windowHeight = Height;
+	strcpy( info->title, windowName );
+	info->windowWidth = Width;
+	info->windowHeight = Height;
 
-	info.majorVersion = 3;
-	info.minorVersion = 3;
+	info->majorVersion = 4;
+	info->minorVersion = 0;
 
-	info.samples = 0;
-	info.flags.all = 0;
-	info.flags.cursor = 1;
+	info->samples = 0;
+	info->flags = FLAG_CURSOR;
 
 #ifdef _DEBUG
-	info.flags.debug = 1;
+	info->flags |= FLAG_DEBUG;
 #endif
 
 }
 
-Engine::Engine() 
-{
-	strcpy(info.title, "DEFAULT SETUP please redo");
-	info.windowWidth = 800;
-	info.windowHeight = 600;
-
-	info.majorVersion = 3;
-	info.minorVersion = 3;
-
-	info.samples = 0;
-	info.flags.all = 0;
-	info.flags.cursor = 1;
-
-#ifdef _DEBUG
-	info.flags.debug = 1;
-#endif
-
-}
-
-Engine::~Engine() 
+Engine::~Engine()
 {
 
 }
@@ -199,22 +241,22 @@ Engine::~Engine()
 
 
 
-void * sb6GetProcAddress(const char * funcname)
+void * sb6GetProcAddress( const char * funcname )
 {
-	return gl3wGetProcAddress(funcname);
+	return gl3wGetProcAddress( funcname );
 }
 
-int sb6IsExtensionSupported(const char * extname)
+int sb6IsExtensionSupported( const char * extname )
 {
 	GLint numExtensions;
 	GLint i;
 
-	glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+	glGetIntegerv( GL_NUM_EXTENSIONS, &numExtensions );
 
-	for (i = 0; i < numExtensions; i++)
+	for( i = 0; i < numExtensions; i++ )
 	{
-		const GLubyte * e = glGetStringi(GL_EXTENSIONS, i);
-		if (!strcmp((const char *)e, extname))
+		const GLubyte * e = glGetStringi( GL_EXTENSIONS, i );
+		if( !strcmp( (const char *) e, extname ) )
 		{
 			return 1;
 		}
@@ -224,45 +266,45 @@ int sb6IsExtensionSupported(const char * extname)
 }
 
 
-void Engine::onResize(int w, int h)
+void Engine::onResize( int w, int h )
 {
-	info.windowWidth = w;
-	info.windowHeight = h;
+	info->windowWidth = w;
+	info->windowHeight = h;
 }
 
-void Engine::onKey(int key, int action)
+void Engine::onKey( int key, int action )
 {
 	key;//not used
 	action;//not used
 }
 
-void Engine::onMouseButton(int button, int action)
+void Engine::onMouseButton( int button, int action )
 {
 	button;//not used
 	action;//not used
 }
 
-void Engine::onMouseMove(int x, int y)
+void Engine::onMouseMove( int x, int y )
 {
 	x; /*not used*/
 	y;/* not used*/
 }
 
-void Engine::onMouseWheel(int pos)
+void Engine::onMouseWheel( int pos )
 {
 	pos; /*not used*/
 }
 
-void Engine::onDebugMessage(GLenum source,
-							GLenum type,
-							GLuint id,
-							GLenum severity,
-							GLsizei length,
-							const GLchar* message)
+void Engine::onDebugMessage( GLenum source,
+							 GLenum type,
+							 GLuint id,
+							 GLenum severity,
+							 GLsizei length,
+							 const GLchar* message )
 {
 #ifdef _WIN32
-	OutputDebugStringA(message);
-	OutputDebugStringA("\n");
+	OutputDebugStringA( message );
+	OutputDebugStringA( "\n" );
 
 	type; //not used
 	id; //not used
@@ -273,52 +315,33 @@ void Engine::onDebugMessage(GLenum source,
 #endif /* _WIN32 */
 }
 
-void Engine::getMousePosition(int& x, int& y)
+void Engine::getMousePosition( int& x, int& y )
 {
-	glfwGetMousePos(&x, &y);
+	glfwGetMousePos( &x, &y );
 }
 
 
 
 
-void GLFWCALL Engine::glfw_onResize(int w, int h)
+void GLFWCALL Engine::glfw_onResize( int w, int h )
 {
-	app->onResize(w, h);
+	app->onResize( w, h );
 }
 
-void GLFWCALL Engine::glfw_onKey(int key, int action)
+
+void Engine::setVsync( bool enable )
 {
-	app->onKey(key, action);
+	info->flags = ( info->flags & ~FLAG_VSYNC ) | ( enable ? FLAG_VSYNC : 0 );
+	glfwSwapInterval( (int) info->flags & FLAG_VSYNC );
 }
 
-void GLFWCALL Engine::glfw_onMouseButton(int button, int action)
+void APIENTRY Engine::debug_callback( GLenum source,
+									  GLenum type,
+									  GLuint id,
+									  GLenum severity,
+									  GLsizei length,
+									  const GLchar* message,
+									  GLvoid* userParam )
 {
-	app->onMouseButton(button, action);
-}
-
-void GLFWCALL Engine::glfw_onMouseMove(int x, int y)
-{
-	app->onMouseMove(x, y);
-}
-
-void GLFWCALL Engine::glfw_onMouseWheel(int pos)
-{
-	app->onMouseWheel(pos);
-}
-
-void Engine::setVsync(bool enable)
-{
-	info.flags.vsync = enable ? 1 : 0;
-	glfwSwapInterval((int)info.flags.vsync);
-}
-
-void APIENTRY Engine::debug_callback(GLenum source,
-									 GLenum type,
-									 GLuint id,
-									 GLenum severity,
-									 GLsizei length,
-									 const GLchar* message,
-									 GLvoid* userParam)
-{
-	reinterpret_cast<Engine *>(userParam)->onDebugMessage(source, type, id, severity, length, message);
+	reinterpret_cast<Engine *>( userParam )->onDebugMessage( source, type, id, severity, length, message );
 }
