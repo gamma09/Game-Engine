@@ -11,24 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3167A812-5D2C-4EE9-ACFD-F0E959384755}</ProjectGuid>
+    <ProjectGuid>{2709ED34-EE40-4C0A-89B8-FF945CB4842D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>spinnycube</RootNamespace>
-    <ProjectName>Game</ProjectName>
+    <RootNamespace>Editor</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -42,47 +41,40 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
-    <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(SolutionDir)ExternLibs\Engine\lib;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
+    <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ExternLibs\FileSystem\lib;$(SolutionDir)ExternLibs\GLFW\lib;$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Memory\lib;$(SolutionDir)ExternLibs\PCSTree\lib;$(SolutionDir)ExternLibs\GL3W\lib;$(SolutionDir)ExternLibs\ObjectManagement\lib;$(SolutionDir)ExternLibs\Archive_Reader\lib;$(SolutionDir)ExternLibs\Time\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(SolutionDir)ExternLibs\Engine\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
-      <ProgramDataBaseFileName>$(OutputPath)$(ProjectName)_$(Configuration).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <SDLCheck>
-      </SDLCheck>
-      <OpenMPSupport>false</OpenMPSupport>
-      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+      <ProgramDataBaseFileName>$(OutputPath)$(TargetName).pdb</ProgramDataBaseFileName>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
-      <WarningLevel>Level4</WarningLevel>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>MSVCRTD.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
@@ -95,11 +87,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
-    </CustomBuildStep>
-    <CustomBuildStep>
       <Message>Building Reflection Data</Message>
-    </CustomBuildStep>
-    <CustomBuildStep>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
@@ -112,116 +100,32 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <OpenMPSupport>false</OpenMPSupport>
+      <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
-    </PostBuildEvent>
     <PreBuildEvent>
       <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
 
 MKDIR "$(IntDir)Preprocess"
 MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
+    </PostBuildEvent>
     <CustomBuildStep>
       <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "NDEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
       <Message>Building Reflection Data</Message>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp" />
-    <ClCompile Include="src\AnimatingStrategy.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MoveAction.cpp" />
-    <ClCompile Include="src\StationaryStrategy.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Engine\lib\Engine_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Engine\lib\Engine_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Memory\lib\Memory_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Memory\lib\Memory_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Time\lib\Time_Debug.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </Library>
-    <Library Include="..\ExternLibs\Time\lib\Time_Release.lib">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </Library>
-  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\Archive_Reader\include\asset_reader.h" />
     <ClInclude Include="..\ExternLibs\Engine\include\Actor.h" />
@@ -286,9 +190,115 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ClInclude Include="..\ExternLibs\Time\include\Time.h" />
     <ClInclude Include="..\ExternLibs\Time\include\Timer.h" />
     <ClInclude Include="src\AnimatingStrategy.h" />
-    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Editor.h" />
     <ClInclude Include="src\MoveAction.h" />
     <ClInclude Include="src\StationaryStrategy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Archive_Reader\lib\Archive_Reader_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Engine\lib\Engine_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\FileSystem\lib\FileSystem_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\GL3W\lib\GL3W_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\GLFW\lib\GLFW_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Memory\lib\Memory_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Memory\lib\Memory_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\ObjectManagement\lib\ObjectManagement_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\PCSTree\lib\PCSTree_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Time\lib\Time_Debug.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Time\lib\Time_Release.lib">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp" />
+    <ClCompile Include="src\AnimatingStrategy.cpp" />
+    <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MoveAction.cpp" />
+    <ClCompile Include="src\StationaryStrategy.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

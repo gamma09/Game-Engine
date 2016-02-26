@@ -39,6 +39,13 @@
           "CommandLineArguments": ""
         }
       }
+    },
+    "Editor": {
+      "Projects": {
+        "Editor": {
+          "CommandLineArguments": ""
+        }
+      }
     }
   },
   "ActivateCommandLineArguments": false,

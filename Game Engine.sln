@@ -120,6 +120,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcx
 		{ADDFF1E2-C5D4-4217-A5B3-96ECED2C3584} = {ADDFF1E2-C5D4-4217-A5B3-96ECED2C3584}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Editor", "Editor\Editor.vcxproj", "{2709ED34-EE40-4C0A-89B8-FF945CB4842D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -246,6 +248,12 @@ Global
 		{4067ADA5-F2DD-4C7A-94D9-763F0FD223A7}.Release|Win32.Build.0 = Release|Win32
 		{4067ADA5-F2DD-4C7A-94D9-763F0FD223A7}.Tool DBG|Win32.ActiveCfg = Release|Win32
 		{4067ADA5-F2DD-4C7A-94D9-763F0FD223A7}.Tools|Win32.ActiveCfg = Release|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Debug|Win32.Build.0 = Debug|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Release|Win32.ActiveCfg = Release|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Release|Win32.Build.0 = Release|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Tool DBG|Win32.ActiveCfg = Release|Win32
+		{2709ED34-EE40-4C0A-89B8-FF945CB4842D}.Tools|Win32.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,10 @@
-#include "Game.h"
+#include "Editor.h"
 
 int CALLBACK WinMain(HINSTANCE , HINSTANCE ,  LPSTR , int)                  
 {                                                   
 
-	Game *pGame = new Game("Game", 800,600);                                 
-	pGame->run();                                  
+	Editor *pEditor = new Editor("Editor", 800,600);                                 
+	pEditor->run();                                  
 
 	return 0;                                       
 }
