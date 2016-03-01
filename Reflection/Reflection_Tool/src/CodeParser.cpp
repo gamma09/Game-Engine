@@ -3,7 +3,6 @@
 #include "CodeParser.h"
 #include "ReflectionData.h"
 #include "FeedbackContext.h"
-#include "Log.h"
 
 CodeParser::CodeParser( ReflectionData* inData ) :
 	data( inData )
@@ -83,10 +82,8 @@ bool CodeParser::ReadClass( TiXmlElement* classElement, FeedbackContext& context
 	TiXmlElement* accessModifier = classBlock->FirstChildElement();
 	while( accessModifier != nullptr )
 	{
-		bool isPrivate = strcmp( accessModifier->Value(), "private" ) == 0;
 		bool isPublic = strcmp( accessModifier->Value(), "public" ) == 0;
-		bool isProtected = strcmp( accessModifier->Value(), "protected" ) == 0;
-		FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, isPrivate || isPublic || isProtected, MessageType::MSG_TYPE_ERROR, (std::string("Unknown class storage modifier: ") + accessModifier->Value() + ".").c_str(), *classElement );
+		FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, isPublic, MessageType::MSG_TYPE_ERROR, (std::string("Unknown class storage modifier: ") + accessModifier->Value() + ".").c_str(), *classElement );
 
 		TiXmlElement* blockElement = accessModifier->FirstChildElement( "block" );
 		while( blockElement != nullptr )

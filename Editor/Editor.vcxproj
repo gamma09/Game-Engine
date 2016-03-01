@@ -86,7 +86,7 @@ MKDIR "$(IntDir)"
 MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
     <CustomBuildStep>
-      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "_DEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;ADD_META_TAGS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
       <Message>Building Reflection Data</Message>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>
@@ -121,7 +121,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <Command>COPY "$(SolutionDir)ExternLibs\Shaders\*.glsl" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <CustomBuildStep>
-      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "NDEBUG;_LIB;DONT_OVERRIDE_NEW;ADD_META_TAGS" "$(IncludePath)" "$(Configuration)"</Command>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;NDEBUG;_WINDOWS;ADD_META_TAGS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
       <Message>Building Reflection Data</Message>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>

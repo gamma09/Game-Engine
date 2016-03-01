@@ -57,6 +57,11 @@ std::string Format_Argument_String( const char* preamble, char* str, const char*
 
 int main( int argc, char** argv )
 {
+#ifdef _DEBUG
+	while( !IsDebuggerPresent() )
+		Sleep( 10 );
+#endif
+
 	cerr << "Command line: " << argc << ": ";
 	for( int i = 0; i < argc; i++ )
 	{

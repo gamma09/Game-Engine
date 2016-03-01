@@ -94,6 +94,15 @@
     <Filter Include="_libs\Shared\lib">
       <UniqueIdentifier>{4db548ff-4a0e-46a7-8e93-d44aeafe4da4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_libs\Reflection_Headers">
+      <UniqueIdentifier>{131aea26-7edb-4c5f-850b-f455c31ff81f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers\include">
+      <UniqueIdentifier>{7b90d24a-34a1-4807-8523-58a1cafbbf0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_libs\Reflection_Headers\lib">
+      <UniqueIdentifier>{a4fdc2e2-a3d4-459b-82f3-21b0a7c0e49c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
@@ -113,6 +122,12 @@
     </Library>
     <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
       <Filter>_libs\Shared\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
+      <Filter>_libs\Reflection_Headers\lib</Filter>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
+      <Filter>_libs\Reflection_Headers\lib</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -892,6 +907,27 @@
     </ClInclude>
     <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
       <Filter>_libs\Shared\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h">
+      <Filter>_libs\Reflection_Headers\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

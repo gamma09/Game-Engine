@@ -190,7 +190,7 @@ void ReflectedType::AddVariable( const char* inName, const char* type, FeedbackC
 	}
 	else
 	{
-		this->variables.emplace_back( name, type );
+		this->variables.emplace_back( inName, type );
 	}
 }
 
@@ -198,6 +198,7 @@ void ReflectedType::SetFile( const char* inFile, FeedbackContext& context )
 {
 	GameAssert( this->name );
 	GameAssert( inFile );
+	if( this->file != nullptr && _stricmp( this->file, inFile ) == 0 ) return;
 	GameAssert( this->file == nullptr );
 
 	if( strlen( inFile ) == 0 )

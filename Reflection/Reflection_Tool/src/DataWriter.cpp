@@ -22,12 +22,27 @@ static void Write_Includes( FileHandle fh, ReflectionData* data )
 	Write_String( fh, true, "#include <Variable.h>" );
 	Write_String( fh, true, "#include <Writeable.h>" );
 	Write_String( fh, true, "#include <Readable.h>" );
+	Write_String( fh, true, "#include <Reflection.h>" );
 
 	for( const ReflectedType& type : data->GetTypes() )
 	{
 		if( !type.IsPrimitive() )
 		{
-			Write_String( fh, true, string( "#include \"" ) + type.GetFile() + "\"" );
+			string file = type.GetFile();
+			auto iter = file.begin();
+			while( iter != file.end() )
+			{
+				if( *iter == '"' )
+				{
+					iter = file.erase( iter );
+				}
+				else
+				{
+					iter++;
+				}
+			}
+
+			Write_String( fh, true, string( "#include \"" ) + file + "\"" );
 		}
 	}
 }
@@ -72,7 +87,7 @@ static void Write_Class_Loader( FileHandle fh, ReflectionData* data )
 
 		for( const ReflectedVariable& var : type.GetVariables() )
 		{
-			Write_String( fh, true, string("			Instance->variableHead = new Variable( \"") + var.GetName() + "\", *LoadClass<" + var.GetTypeName() + ">(), offsetOf( &" + type.GetName() + "::" + var.GetName() + " ), " + type.GetName() + "Instance->variableHead );" );
+			Write_String( fh, true, string("			Instance->variableHead = new Variable( \"") + var.GetName() + "\", *LoadClass<" + var.GetTypeName() + ">(), offsetOf( &" + type.GetName() + "::" + var.GetName() + " ), Instance->variableHead );" );
 		}
 
 		Write_String( fh, true, "		}" );
@@ -85,17 +100,13 @@ static void Write_Class_Loader( FileHandle fh, ReflectionData* data )
 
 static void Write_Load_Class_Global_Functions( FileHandle fh, ReflectionData* data )
 {
-	Write_String( fh, true, "template< typename T >" );
-	Write_String( fh, true, "const Class<T>* Load_Class()" );
-	Write_String( fh, true, "{" );
-	Write_String( fh, true, "	return nullptr;" );
-	Write_String( fh, true, "}" );
-
 	for( const ReflectedType& type : data->GetTypes() )
 	{
-		Write_String( fh, true, string("template<> const Class<") + type.GetName() + ">* Load_Class<" + type.GetName() + ">()");
+		//Write_String( fh, true, string("template<> const Class<") + type.GetName() + ">* Load_Class<" + type.GetName() + ">()");
+		//Write_String( fh, true, string( "template<> const Class<" ) + type.GetName() + ">* Load_Class<>()" );
+		Write_String( fh, true, string( "template<> const Class<" ) + type.GetName() + ">& Class<" + type.GetName() + ">::Load()" );
 		Write_String( fh, true, "{" );
-		Write_String( fh, true, string("	return ClassLoader::LoadClass<") + type.GetName() + ">();" );
+		Write_String( fh, true, string("	return *ClassLoader::LoadClass<") + type.GetName() + ">();" );
 		Write_String( fh, true, "}" );
 	}
 }

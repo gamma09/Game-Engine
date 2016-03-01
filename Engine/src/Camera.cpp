@@ -184,10 +184,10 @@ void Camera::_set_orientation(const OrientationData& orientation)
 {
 	this->pos = orientation.pos;
 
-	this->facing = orientation.pos - orientation.lookAt;
+	this->facing = (Vect)orientation.pos - orientation.lookAt;
 	this->facing.norm();
 
-	this->right = orientation.up.cross(this->facing);
+	this->right = ((Vect)(orientation.up)).cross(this->facing);
 	this->right.norm();
 	
 	this->up = this->facing.cross(this->right);

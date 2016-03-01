@@ -62,9 +62,16 @@ void ClassFilter::Write( TiXmlDocument& doc, FeedbackContext& context )
 
 	set<string> recursiveRemovals;
 	recursiveRemovals.emplace( "function" );
+	recursiveRemovals.emplace( "function_decl" );
+	recursiveRemovals.emplace( "constructor_decl" );
+	recursiveRemovals.emplace( "destructor_decl" );
+	recursiveRemovals.emplace( "struct_decl" );
+	recursiveRemovals.emplace( "union_decl" );
 	recursiveRemovals.emplace( "constructor" );
 	recursiveRemovals.emplace( "destructor" );
 	recursiveRemovals.emplace( "class_decl" );
+	recursiveRemovals.emplace( "private" );
+	recursiveRemovals.emplace( "protected" );
 
 	RemoveRecursive( unit, recursiveRemovals );
 

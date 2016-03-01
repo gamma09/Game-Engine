@@ -2,9 +2,11 @@
 
 #include <MathEngine.h>
 #include <ManagedObject.h>
+#include <Reflection.h>
 
 #include "ReferencedObject.h"
 #include "Moveable.h"
+#include "ReflectedVect.h"
 
 struct PerspectiveData
 {
@@ -29,9 +31,11 @@ struct ViewportData
 
 struct OrientationData
 {
-	Vect pos;
-	Vect lookAt;
-	Vect up;
+	REFLECTED_CLASS( OrientationData );
+
+	REFLECTED( ReflVect, pos );
+	REFLECTED( ReflVect, lookAt );
+	REFLECTED( ReflVect, up );
 };
 
 class Camera : public ManagedObject, public ReferencedObject, public Moveable

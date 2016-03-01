@@ -446,6 +446,9 @@
     <ClInclude Include="src\AppInfo.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\ReflectedVect.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="glsl\LightingTexture.fs.glsl">

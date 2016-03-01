@@ -4,10 +4,11 @@
 
 #include <Timer.h>
 #include <Time.h>
+#include <Camera.h>
 
 #include "Actor.h"
 
-class Camera;
+
 class Heap;
 class DirectionLight;
 

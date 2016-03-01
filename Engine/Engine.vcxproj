@@ -115,6 +115,7 @@
     <ClInclude Include="src\ModelBase.h" />
     <ClInclude Include="src\ModelBaseManager.h" />
     <ClInclude Include="src\Moveable.h" />
+    <ClInclude Include="src\ReflectedVect.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderFactory.h" />
     <ClInclude Include="src\ShaderManager.h" />

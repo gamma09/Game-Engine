@@ -119,8 +119,8 @@ void Engine::PreLoadContent()
 	glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 	glfwOpenWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
 	glfwOpenWindowHint( GLFW_FSAA_SAMPLES, info->samples );
-	glfwOpenWindowHint( GLFW_STEREO, info->flags & FLAG_STEREO ? GL_TRUE : GL_FALSE );
-	if( info->flags & FLAG_FULLSCREEN )
+	glfwOpenWindowHint( GLFW_STEREO, info->flags.stereo ? GL_TRUE : GL_FALSE );
+	if( info->flags.fullscreen )
 	{
 		if( info->windowWidth == 0 || info->windowHeight == 0 )
 		{
@@ -130,7 +130,7 @@ void Engine::PreLoadContent()
 			info->windowHeight = mode.Height;
 		}
 		glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN );
-		glfwSwapInterval( info->flags & FLAG_VSYNC );
+		glfwSwapInterval( info->flags.vsync );
 	}
 	else
 	{
@@ -143,9 +143,9 @@ void Engine::PreLoadContent()
 
 	glfwSetWindowTitle( info->title );
 	glfwSetWindowSizeCallback( glfw_onResize );
-	( info->flags & FLAG_CURSOR ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
+	( info->flags.cursor ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
 
-	info->flags = ( info->flags & ~FLAG_STEREO ) | ( glfwGetWindowParam( GLFW_STEREO ) ? FLAG_STEREO : 0 );
+	info->flags.stereo = glfwGetWindowParam( GLFW_STEREO );
 
 	gl3wInit();
 
@@ -155,7 +155,7 @@ void Engine::PreLoadContent()
 	out( "RENDERER: %s\n", (char *) glGetString( GL_RENDERER ) );
 #endif
 
-	if( info->flags & FLAG_DEBUG )
+	if( info->flags.stereo )
 	{
 		if( gl3wIsSupported( 4, 3 ) )
 		{
@@ -223,10 +223,11 @@ info( new AppInfo() )
 	info->minorVersion = 0;
 
 	info->samples = 0;
-	info->flags = FLAG_CURSOR;
+	info->flags.all = 0;
+	info->flags.cursor = 1;
 
 #ifdef _DEBUG
-	info->flags |= FLAG_DEBUG;
+	info->flags.debug = 1;
 #endif
 
 }
@@ -331,8 +332,8 @@ void GLFWCALL Engine::glfw_onResize( int w, int h )
 
 void Engine::setVsync( bool enable )
 {
-	info->flags = ( info->flags & ~FLAG_VSYNC ) | ( enable ? FLAG_VSYNC : 0 );
-	glfwSwapInterval( (int) info->flags & FLAG_VSYNC );
+	info->flags.vsync = enable ? 1 : 0;
+	glfwSwapInterval( info->flags.vsync );
 }
 
 void APIENTRY Engine::debug_callback( GLenum source,

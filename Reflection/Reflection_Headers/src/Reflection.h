@@ -9,17 +9,10 @@
 
 #else
 
-// This function will ultimately be implemented for each and every reflected type by the Reflection Tool.
-// If there is a linker error to do with not finding an implementation of this function, then it means
-// either the GeneratedReflectionDatabase.cpp file wasn't compiled into the current compilation unit,
-// or there is a bug with the reflection tool.
-template<typename T>
-extern const Class<T>* Load_Class();
-
 // None of the functions or macros in this class are to be used outside of the Reflection
 // package.
 
-#define REFL_CLASS_DECLARATION( T ) public: const Class<T>& GetClass() const { return *Load_Class<T>(); }
+#define REFL_CLASS_DECLARATION( T ) public: const Class<T>& GetClass() const { return Class<T>::Load(); }
 #define REFL_VAR_DECLARATION( type, name ) type name;
 
 // REFL_CLASS_DECLARATION( Type ) expands to:

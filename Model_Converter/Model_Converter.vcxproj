@@ -43,14 +43,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ExternLibs\MathEngine\lib;$(SolutionDir)ExternLibs\Shared\lib;$(SolutionDir)ExternLibs\Reflection_Headers\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,6 +65,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)libs\fbx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -89,6 +90,7 @@
       <OpenMPSupport>false</OpenMPSupport>
       <AdditionalIncludeDirectories>$(ProjectDir)libs\fbx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +123,12 @@
     <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Library>
     <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Library>
@@ -136,6 +144,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h" />
+    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\Execute.h" />
     <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h" />

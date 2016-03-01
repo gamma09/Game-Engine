@@ -30,6 +30,8 @@ public:
 		DeserializeClass<T>( myInstance, reader );
 	}
 
+	static const Class<T>& Load();
+
 private:
 	Class( const char* name, const BaseClass* parent ) : BaseClass( name, parent, sizeof( T ) ) { }
 	virtual ~Class() { }
