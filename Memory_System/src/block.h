@@ -1,5 +1,4 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#pragma once
 
 // defines for the heap name length
 #define TrackingBlockNameLength 32
@@ -8,7 +7,7 @@
 class TrackingBlock
 {
 public:
-   TrackingBlock(const char * const inName, int lineNum );
+   TrackingBlock(const char* inName, int lineNum );
 
 public:
    // Tracking data -----------------------------------------------------------------
@@ -26,6 +25,3 @@ public:
 // -----------------------------------------------------------------------------------
 	TrackingBlock* topPtrPlaceholder; // Reserve 4 bytes for the magic ptr, just in case we dont need to do any alignment correction
 };
-
-
-#endif

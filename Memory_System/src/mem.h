@@ -1,5 +1,4 @@
-#ifndef MEM_H
-#define MEM_H
+#pragma once
 
 #include "Enums.h"
 
@@ -41,65 +40,53 @@ class Mem
 public:
 	// Public Interface ------------------------------   for the customers
 
-	// initialize the mem system
-	// TODO why not do initialize at object construction, ye dum-dum? method is unnecessary
-	static MemReturnCode initialize();
-	static MemReturnCode destroy();
+	// Create an Heap from the heap system
+	static MemReturnCode createVariableBlockHeap( Heap*& newHeap, int heapSize );
+	static MemReturnCode createFixBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock );
 
 	// Create an Heap from the heap system
-	static MemReturnCode createHeap(Heap *&newHeap, int heapSize, const char * const heapName);
-	static MemReturnCode createFixBlockHeap(Heap *&newHeap, int numBlocks, int sizePerBlock, const char * const heapName);
-   
-	// Create an Heap from the heap system
-	static MemReturnCode destroyHeap(Heap *inHeap);
+	static MemReturnCode destroyHeap( Heap* inHeap );
 
 	// get mem information
-	static MemReturnCode getInfo(MemInfo &info);
-	static MemReturnCode getHeapByAddr(Heap *&pHeap, const void *p);
-	
-// TODO uncomment this directive after milestone 1
-//#ifdef _DEBUG
+	inline static const MemInfo& getInfo() { return Mem::instance().memInfo; }
+	static MemReturnCode getHeapByAddr( Heap*& pHeap, const void* p );
+
+#ifdef _DEBUG
 
 	// Hidden -----------------  only accessible for debug mode
 	// get heap information
-	static Heap *DebugGetHeapHead();
+	inline static Heap* DebugGetHeapHead() { return Mem::instance().heapHead; }
 
 	// get tracking Block head
-	static TrackingBlock *DebugGetGlobalTrackingHead();
+	inline static TrackingBlock* DebugGetGlobalTrackingHead() { return Mem::instance().globalTrackingBlockHead; }
 
-// TODO uncomment this directive after milestone 1
-//#endif
+#endif
 
-// -----------------------------------------------------------------------------------
-// Add extra data or methods below this line
-// -----------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
+	// Add extra data or methods below this line
+	// -----------------------------------------------------------------------------------
 private:
 	Mem();
-	Mem(const Mem& mem);
-	Mem& operator=(const Mem& mem);
+	Mem( const Mem& mem ) = delete;
+	Mem& operator=( const Mem& mem ) = delete;
 	~Mem();
 
 	static Mem& instance();
 
-	MemReturnCode privCreateHeap(Heap*& newHeap, int heapSize, const char * const heapName);
-	MemReturnCode privCreateFixedBlockHeap(Heap *&newHeap, int numBlocks, int sizePerBlock, const char * const heapName);
-	MemReturnCode privDestroyHeap(Heap* inHeap);
+	MemReturnCode privCreateVariableBlockHeap( Heap*& newHeap, int heapSize );
+	MemReturnCode privCreateFixedBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock );
+	MemReturnCode privDestroyHeap( Heap* inHeap );
 
 private:
 	// data -----------------------------------------------------------------------
 
-// TODO uncomment this directive after milestone 1
-//#ifdef _DEBUG
-	TrackingBlock	*globalTrackingBlockHead;
-// TODO uncomment this directive after milestone 1
-//#endif
-	Heap			*heapHead;
+#ifdef _DEBUG
+	TrackingBlock* globalTrackingBlockHead;
+#endif
 
-	MemInfo			memInfo;
-	bool			initialized; // TODO fucking useless shit (why not do it on construction, ye dum-dum?)
+	Heap*   heapHead;
+	MemInfo memInfo;
 
 	friend class VariableBlockHeap;
 	friend class FixedBlockHeap;
 };
-
-#endif //MEM_H

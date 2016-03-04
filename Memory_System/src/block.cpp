@@ -1,4 +1,3 @@
-   
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -8,7 +7,7 @@
 #include "heap.h"
 
 
-TrackingBlock::TrackingBlock(const char * const inName, int in_lineNum) :
+TrackingBlock::TrackingBlock(const char* inName, int in_lineNum) :
 	lineNum(in_lineNum),
 	gPrev(0),
 	gNext(0),

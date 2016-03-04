@@ -1,5 +1,3 @@
-
-// TODO: next two lines have some dependency, need to straighten out later
 #include "Engine.h"
 #include <string.h>
 #include <DebuggerSetup.h>
@@ -22,7 +20,7 @@
 #include "TextureManager.h"
 
 
-Engine * Engine::app = 0;
+Engine* Engine::app = 0;
 
 //------------------------------------------------------------------
 // Engine::Run()
