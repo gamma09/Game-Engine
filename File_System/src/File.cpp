@@ -4,9 +4,9 @@
 #include "File.h"
 #include "WinFileWrapper.h"
 
-FileError File::open(FileHandle &fh, const char * const fileName, FileMode mode)
+FileError File::open( FileHandle& fh, const char* fileName, FileMode mode )
 {
-	if (fileName == 0)
+	if( fileName == 0 )
 		return FILE_OPEN_FAIL;
 
 	// Yes, these are temporaries, but the CreateFile operation will take a long time anyway, so what's 3 more operations?
@@ -14,7 +14,7 @@ FileError File::open(FileHandle &fh, const char * const fileName, FileMode mode)
 	DWORD sharedAccess = 0;
 	DWORD creationBehavior = 0;
 
-	switch (mode)
+	switch( mode )
 	{
 		case FILE_READ:
 			// If we're just opening to read, allow others to open to read
@@ -40,47 +40,46 @@ FileError File::open(FileHandle &fh, const char * const fileName, FileMode mode)
 		default:
 			// Should never happen
 			// Did you add an additional FileMode to the enum, but forget to add it to this switch statement?
-			GameAssert(0);
+			GameAssert( 0 );
 	}
 
 
-	fh = Create_File(fileName, desiredAccess, sharedAccess, creationBehavior);
+	fh = Create_File( fileName, desiredAccess, sharedAccess, creationBehavior );
 
-	if (fh == INVALID_HANDLE_VALUE)
+	if( fh == INVALID_HANDLE_VALUE )
 		return FILE_OPEN_FAIL;
 
 	return FILE_SUCCESS;
 }
 
-FileError File::close(const FileHandle fh)
+FileError File::close( FileHandle fh )
 {
-	if (!Is_Open(fh) || !Close_File(fh))
+	if( !Is_Open( fh ) || !Close_File( fh ) )
 		return FILE_CLOSE_FAIL;
 	else
 		return FILE_SUCCESS;
 }
 
-FileError File::write(FileHandle fh, const void * const buffer, const size_t inSize)
+FileError File::write( FileHandle fh, const void* buffer, size_t inSize )
 {
-	if (!Is_Open(fh) || !Write_Bytes(fh, buffer, inSize))
+	if( !Is_Open( fh ) || !Write_Bytes( fh, buffer, inSize ) )
 		return FILE_WRITE_FAIL;
 	else
 		return FILE_SUCCESS;
 }
 
-FileError File::read(FileHandle fh,  void * const buffer, const size_t inSize)
+FileError File::read( FileHandle fh, void* buffer, size_t inSize )
 {
-	if (!Is_Open(fh) || !Read_Bytes(fh, buffer, inSize))
+	if( !Is_Open( fh ) || !Read_Bytes( fh, buffer, inSize ) )
 		return FILE_READ_FAIL;
 	else
 		return FILE_SUCCESS;
 }
 
-// TODO switch to unsigned long after milestone 1
-FileError File::seek(FileHandle fh, FileSeek seek, int offset)
+FileError File::seek( FileHandle fh, FileSeek seek, int offset )
 {
 	DWORD moveMethod = 0;
-	switch (seek)
+	switch( seek )
 	{
 		case FILE_SEEK_BEGIN:
 			moveMethod = FILE_BEGIN;
@@ -97,49 +96,51 @@ FileError File::seek(FileHandle fh, FileSeek seek, int offset)
 		default:
 			// Should never happen
 			// Did you add an additional seek method without updating this switch statement?
-			GameAssert(0);
+			GameAssert( 0 );
 	}
 
-	if (!Is_Open(fh) || !Seek_Position(fh, offset, moveMethod))
+	if( !Is_Open( fh ) || !Seek_Position( fh, offset, moveMethod ) )
 		return FILE_SEEK_FAIL;
 	else
 		return FILE_SUCCESS;
 }
 
-// TODO switch to DWORD after milestone 1...
 // why is it even an int to begin with? you can't have NEGATIVE file offsets...
-FileError File::tell(FileHandle fh, int &offset)
+FileError File::tell( FileHandle fh, unsigned long& offset )
 {
 	DWORD position;
 
-	if (!Is_Open(fh) || !Tell_Position(fh, position)) {
+	if( !Is_Open( fh ) || !Tell_Position( fh, position ) )
+	{
 		return FILE_TELL_FAIL;
-	}else{
+	}
+	else
+	{
 		offset = position;
 		return FILE_SUCCESS;
 	}
 }
 
-FileError File::flush(FileHandle fh)
+FileError File::flush( FileHandle fh )
 {
-	if (!Is_Open(fh) || !Flush_File(fh))
+	if( !Is_Open( fh ) || !Flush_File( fh ) )
 		return FILE_FLUSH_FAIL;
 	else
 		return FILE_SUCCESS;
 }
 
-FileError File::size(FileHandle fh, int& size)
+FileError File::size( FileHandle fh, unsigned long& size )
 {
-	int currentLocation;
-	FileError status = File::tell(fh, currentLocation);
-	if (status != FILE_SUCCESS)
+	unsigned long currentLocation;
+	FileError status = File::tell( fh, currentLocation );
+	if( status != FILE_SUCCESS )
 		return status;
 
-	status = File::seek(fh, FILE_SEEK_END, 0);
-	if (status == FILE_SUCCESS)
-		status = File::tell(fh, size);
+	status = File::seek( fh, FILE_SEEK_END, 0 );
+	if( status == FILE_SUCCESS )
+		status = File::tell( fh, size );
 
-	File::seek(fh, FILE_SEEK_BEGIN, currentLocation);
+	File::seek( fh, FILE_SEEK_BEGIN, currentLocation );
 
 	return status;
 }

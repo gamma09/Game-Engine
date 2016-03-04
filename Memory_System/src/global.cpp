@@ -5,50 +5,50 @@
 #include "heap.h"
 
 // operator new
-void* operator new(size_t inSize, Heap *pHeap, Align align, const char * const inName, int lineNum)
+void* operator new( size_t inSize, Heap* pHeap, Align align, const char* inName, int lineNum )
 {
-	GameAssert(pHeap != 0);
-	GameAssert(inName != 0);
-	GameAssert(lineNum > 0);
+	GameAssert( pHeap != 0 );
+	GameAssert( inName != 0 );
+	GameAssert( lineNum > 0 );
 
-	return pHeap->alloc(inSize, align, inName, lineNum);
+	return pHeap->alloc( inSize, align, inName, lineNum );
 }
 
 // operator delete
-void operator delete(void* p, Heap*, Align, const char* const, int)
+void operator delete( void* p, Heap*, Align, const char*, int )
 {
-	operator delete(p);
+	operator delete( p );
 }
 
 // operator delete
-void operator delete(void *p)
+void operator delete( void* p )
 {
 	Heap* heap;
-	if (Mem::getHeapByAddr(heap, p) == Mem_OK)
-		heap->free(p);
+	if( Mem::getHeapByAddr( heap, p ) == Mem_OK )
+		heap->free( p );
 	else
-		free(p);
+		free( p );
 }
 
-void* operator new[](size_t inSize, Heap* pHeap, Align align, const char* const inName, int lineNum)
+void* operator new[]( size_t inSize, Heap* pHeap, Align align, const char* inName, int lineNum )
 {
-	GameAssert(pHeap != 0);
-	GameAssert(inName != 0);
-	GameAssert(lineNum > 0);
+	GameAssert( pHeap != 0 );
+	GameAssert( inName != 0 );
+	GameAssert( lineNum > 0 );
 
-	return pHeap->alloc(inSize, align, inName, lineNum);
+	return pHeap->alloc( inSize, align, inName, lineNum );
 }
 
-void operator delete[](void *p, Heap*, Align, const char * const, int)
+void operator delete[]( void* p, Heap*, Align, const char*, int )
 {
-	operator delete[](p);
+	operator delete[]( p );
 }
 
-void operator delete[]( void *p )
+void operator delete[]( void* p )
 {
 	Heap* heap;
-	if (Mem::getHeapByAddr(heap, p) == Mem_OK)
-		heap->free(p);
+	if( Mem::getHeapByAddr( heap, p ) == Mem_OK )
+		heap->free( p );
 	else
-		free(p);
+		free( p );
 }

@@ -123,6 +123,9 @@
     <ClCompile Include="src\Engine.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\GLWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Actor.h">
@@ -232,6 +235,12 @@
     </ClInclude>
     <ClInclude Include="src\ReflectedVect.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EngineMessages.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLWindow.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

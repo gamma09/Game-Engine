@@ -31,6 +31,7 @@
     <ClCompile Include="src\DrawStrategy.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\GlobalHeaps.cpp" />
+    <ClCompile Include="src\GLWindow.cpp" />
     <ClCompile Include="src\HierarchyElement.cpp" />
     <ClCompile Include="src\KeyBinding.cpp" />
     <ClCompile Include="src\KeyBindingManager.cpp" />
@@ -62,7 +63,9 @@
     <ClInclude Include="src\DrawInfo.h" />
     <ClInclude Include="src\DrawStrategy.h" />
     <ClInclude Include="src\Engine.h" />
+    <ClInclude Include="src\EngineMessages.h" />
     <ClInclude Include="src\GlobalHeaps.h" />
+    <ClInclude Include="src\GLWindow.h" />
     <ClInclude Include="src\HierarchyElement.h" />
     <ClInclude Include="src\KeyAction.h" />
     <ClInclude Include="src\KeyBinding.h" />

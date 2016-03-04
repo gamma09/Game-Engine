@@ -1,5 +1,4 @@
-#ifndef HEAP_H
-#define HEAP_H
+#pragma once
 
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
@@ -7,22 +6,15 @@
 #include "Enums.h"
 
 // forward declaration
-// TODO uncomment these directives after milestone 1
-//#ifdef _DEBUG
+#ifdef _DEBUG
 class TrackingBlock;
-//#endif
-class Mem;
+#endif
 
-// defines for the heap name length
-// TODO refactor these defines away after milestone 1
-#define HeapNameLength 32
-#define HeapNameNumChar (HeapNameLength-1)
+class Mem;
 
 // heap info structure
 struct HeapInfo
 {
-// TODO refactor heap name away after milestone 1
-	char heapName[HeapNameLength];
 	unsigned int heapStartAddr;
 	unsigned int heapEndAddr;
 	unsigned int totalHeapSize;
@@ -32,60 +24,33 @@ struct HeapInfo
 	unsigned int currBytesUsed;
 
 	HeapInfo();
-	HeapInfo(unsigned int size, const char* const _name, unsigned int startAddr);
-	HeapInfo(const HeapInfo& info);
-	HeapInfo& operator=(const HeapInfo& rhs);
+	HeapInfo( unsigned int size, unsigned int startAddr );
+	HeapInfo( const HeapInfo& info );
+	HeapInfo& operator=( const HeapInfo& rhs );
 	~HeapInfo();
 };
-
-// TODO Refactor this enum away after milestone 1
-// types of heap
-enum HeapTypeEnum
-{
-	HeapType_Normal,
-	HeapType_Fixed,
-	HeapType_Dword = 0x7fffffff
-};
-
-// TODO Refactor to multiple classes after milestone 1
-// Refactored class tree:
-// Heap
-// - FixedBlockHeap
-// - VariableBlockHeap
 
 // Heap class
 class Heap
 {
 public:
 	// Public Interface ------------------------------   for the customers
-  
-	void getInfo(HeapInfo &info) const;
 
-	// getTrackingBlockHead
-	// TODO remove this blockhead after milestone 1 completely
-	virtual TrackingBlock* DebugGetHeapTrackingHead() const abstract;
+	inline const HeapInfo& getInfo() const { return this->heapInfo; }
 
-// TODO uncomment this directive after milestone 1
-//#ifdef _DEBUG
-	// Hidden -----------------  only accessible for debug mode 
+	// -----------------------------------------------------------------------------------
+	// Add extra data or methods below this line
+	// -----------------------------------------------------------------------------------
 
-	// Data inside the heap Header
-	// TODO should basically never be accessed ever...
-	Heap* getNextHeap() const;
-	Heap* getPrevHeap() const;
-	
-// TODO uncomment this directive after milestone 1
-//#endif
+	virtual void* alloc( size_t size, Align align, const char* name, int lineNum ) abstract;
+	virtual void free( void* p ) abstract;
 
-// -----------------------------------------------------------------------------------
-// Add extra data or methods below this line
-// -----------------------------------------------------------------------------------
-
-	virtual void* alloc(size_t size, Align align, const char* const name, int lineNum) abstract;
-	virtual void free(void* p) abstract;
+#ifdef _DEBUG
+	virtual TrackingBlock* DebugGetHeapTrackingHead() const { return nullptr; }
+#endif
 
 protected:
-	Heap(HANDLE win32Heap, unsigned int size, const char* const name, Mem* mem);
+	Heap( HANDLE win32Heap, unsigned int size, Mem* mem );
 
 protected:
 	// data -----------------------------------------------------------------------
@@ -94,7 +59,7 @@ protected:
 	Heap*    prevHeap;
 	HANDLE   winHeapHandle;
 	HeapInfo heapInfo;
-	
+
 	// Back link to the memory system (You may not need this field)
 	Mem     *mem;
 
@@ -105,23 +70,22 @@ class VariableBlockHeap : protected Heap
 {
 public:
 
-	VariableBlockHeap(unsigned int size, const char* const name, HANDLE hWin32Heap, Mem* mem);
+	VariableBlockHeap( unsigned int size, HANDLE hWin32Heap, Mem* mem );
 
-	virtual void* alloc(size_t size, Align align, const char* const name, int lineNum);
-	virtual void free(void* p);
+	virtual void* alloc( size_t size, Align align, const char* name, int lineNum ) override;
+	virtual void free( void* p ) override;
 
 	// getTrackingBlockHead
-	// TODO unvirtualize this after MS1
-	virtual TrackingBlock* DebugGetHeapTrackingHead() const;
+	virtual TrackingBlock* DebugGetHeapTrackingHead() const override;
 
 private:
-// TODO uncomment this directive after milestone 1
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	TrackingBlock     *trackingBlockHead;
-//#endif
+#endif
 };
 
-struct FreeBlock {
+struct FreeBlock
+{
 	FreeBlock* next;
 };
 
@@ -129,20 +93,13 @@ class FixedBlockHeap : protected Heap
 {
 public:
 
-	FixedBlockHeap(unsigned int numBlocks, unsigned int blockSize, const char* const name, HANDLE hWin32Heap, Mem* mem);
+	FixedBlockHeap( unsigned int numBlocks, unsigned int blockSize, HANDLE hWin32Heap, Mem* mem );
 
-	// getTrackingBlockHead
-	// TODO remove this blockhead completely after milestone 1
-	virtual TrackingBlock* DebugGetHeapTrackingHead() const;
-	
-	virtual void* alloc(size_t size, Align align, const char* const name, int lineNum);
-	virtual void free(void* p);
+	virtual void* alloc( size_t size, Align align, const char* name, int lineNum ) override;
+	virtual void free( void* p ) override;
 
 private:
 	unsigned int blockSize;
 	void* blocks;
 	FreeBlock* alignedFreeHead;
 };
-
-
-#endif

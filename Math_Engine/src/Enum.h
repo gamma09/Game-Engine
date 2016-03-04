@@ -3,33 +3,25 @@
 enum x_enum
 {
 	x = 0,
-	X = 0,
-	vect_x = 0, // TODO remove
-	VECT_X = 0  // TODO remove
+	X = 0
 };
 
 enum y_enum
 {
 	y = 0,
-	Y = 0,
-	vect_y = 0, // TODO remove
-	VECT_Y = 0  // TOOD remove
+	Y = 0
 };
 
 enum z_enum
 {
 	z = 0,
-	Z = 0,
-	vect_z = 0, // TODO remove
-	VECT_Z = 0  // TODO remove
+	Z = 0
 };
 
 enum w_enum
 {
 	w = 0,
-	W = 0,
-	real = 0,
-	REAL = 0
+	W = 0
 };
 
 enum m0_enum
