@@ -3,15 +3,16 @@
 #include <assert.h>
 
 
-
 #define GameAssert(a) assert(a)
 
 #if defined(_DEBUG) || defined(DEBUG)
 
-	#include <crtdbg.h>
+#define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
+#include <Windows.h>
 	
 	#define GameVerify(a) assert(a)
-	#define GameCheckFatal( a, msg ) (void) ((!!(a)) || (1 != _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, NULL, "%s", msg)) || (_CrtDbgBreak(), 0))
+#define GameCheckFatal( a, msg ) _ASSERT_EXPR( a, msg )
 
 #else
 

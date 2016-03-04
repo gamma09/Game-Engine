@@ -35,8 +35,7 @@
 //		Editor Engine Constructor
 //-----------------------------------------------------------------------------
 Editor::Editor( const char* windowName, const int Width, const int Height ) :
-Engine( windowName, Width, Height ),
-wasCulled( false )
+Engine( windowName, Width, Height )
 {
 	// Do nothing
 }
@@ -127,8 +126,6 @@ void Editor::LoadContent()
 
 	this->light = DirectionLightManager::Instance()->Add( -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f );
 	this->light->Add_Reference();
-
-
 }
 
 const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );

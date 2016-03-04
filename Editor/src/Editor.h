@@ -35,5 +35,4 @@ private:
 	Camera* moveableCamera;
 	Actor* actor[4];
 	DirectionLight* light;
-	bool wasCulled;
 };

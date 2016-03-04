@@ -1,34 +1,32 @@
 del /F /S *.sdf
 del /F /S /A:H *.v12.suo
 
-rmdir /S /Q ExternLibs
+rmdir /S /Q Shaders
 rmdir /S /Q Debug
 rmdir /S /Q Release
 rmdir /S /Q Game\GeneratedFiles
 rmdir /S /Q Editor\GeneratedFiles
 
-call :SubFolderClean Archive\Archive_Reader
-call :SubFolderClean Archive\Chunkify
-call :SubFolderClean Archive\Unify
+call :SubFolderClean Archive_Reader
+call :SubFolderClean Chunkify
+call :SubFolderClean Unify
 
-call :SubFolderClean Display\FLTK
-call :SubFolderClean Display\GL3W
-call :SubFolderClean Display\GLFW
-call :SubFolderClean Display\GUI
+call :SubFolderClean GL3W
+call :SubFolderClean GLFW
 
 call :SubFolderClean Editor
 call :SubFolderClean Engine
 call :SubFolderClean File_System
 call :SubFolderClean Game
-call :SubFolderClean Math
+call :SubFolderClean Math_Engine
 call :SubFolderClean Memory_System
 call :SubFolderClean Model_Converter
 call :SubFolderClean Object_Management
 call :SubFolderClean PCS_Tree
 
-call :SubFolderClean Reflection\Reflection_Headers
-call :SubFolderClean Reflection\Reflection_Tool
-call :SubFolderClean Reflection\TinyXML
+call :SubFolderClean Reflection_Headers
+call :SubFolderClean Reflection_Tool
+call :SubFolderClean TinyXML
 
 call :SubFolderClean Shared
 call :SubFolderClean Time

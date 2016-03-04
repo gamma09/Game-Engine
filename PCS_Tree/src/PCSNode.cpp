@@ -1,33 +1,27 @@
 #include <string.h>
 #include <stdio.h>
-#include <assert.h>
+#include <GameAssert.h>
 
-#include "PCSTree.h"
 #include "PCSNode.h"
 
 
-#ifdef PCS_DEBUG
-	// --------------------------------------------------
-	// Internal functions
-	// --------------------------------------------------
-	PCSNodeReturnCode copy_string(const char* const src, char* const dst, int bufferSize)
+#ifdef _DEBUG
+// --------------------------------------------------
+// Internal functions
+// --------------------------------------------------
+static void Copy_String( char*& dest, const char* src )
+{
+	if( src == nullptr )
 	{
-		if (src == 0 || dst == 0) {
-			return PCSNode_FAIL_NULL_PTR;
-		}else{
-			memset(dst, 0, bufferSize);
-
-			for (int i = 0; i < bufferSize - 1; i++) {
-				char c = src[i];
-				if (c == 0)
-					break;
-				else
-					dst[i] = c;
-			}
-		
-			return PCSNode_SUCCESS;
-		}
+		dest = nullptr;
 	}
+	else
+	{
+		unsigned int length = strlen( src ) + 1;
+		dest = new char[length];
+		strcpy_s( dest, length, src );
+	}
+}
 #endif
 
 
@@ -39,169 +33,215 @@
 // --------------------------------------------------
 
 // constructor
-PCSNode::PCSNode() :
-	parent(0),
-	child(0),
-	sibling(0)
+PCSNode::PCSNode( const char* inName ) :
+	parent( nullptr ),
+	child( nullptr ),
+	sibling( nullptr )
 {
-#ifdef PCS_DEBUG
-	memset(this->name, 0, PCSNODE_NAME_SIZE);
-#endif
-}
-   
-// copy constructor
-PCSNode::PCSNode(const PCSNode &in) :
-	parent(in.parent),
-	child(in.child),
-	sibling(in.sibling)
-{
-#ifdef PCS_DEBUG
-	memcpy(this->name, in.name, PCSNODE_NAME_SIZE);
+	inName;
+
+#ifdef _DEBUG
+	Copy_String( this->name, inName );
 #endif
 }
 
-#ifdef PCS_DEBUG
-	// Specialize Constructor
-	PCSNode::PCSNode(PCSNode * const inParent, PCSNode * const inChild, PCSNode * const inSibling, const char * const inName)
-		: parent(inParent), child(inChild), sibling(inSibling)
-	{
-		copy_string(inName, this->name, PCSNODE_NAME_SIZE);
-	}
-   
-	PCSNode::PCSNode(const char * const inName)
-		: parent(0), child(0), sibling(0)
-	{
-		copy_string(inName, this->name, PCSNODE_NAME_SIZE);
-	}
-#else
-	PCSNode::PCSNode(PCSNode * const inParent, PCSNode * const inChild, PCSNode * const inSibling) :
-		parent(inParent),
-		child(inChild),
-		sibling(inSibling)
-	{
-		// Do nothing
-	}
+// Specialize Constructor
+PCSNode::PCSNode( PCSNode* inParent, PCSNode* inChild, PCSNode* inSibling, const char* inName ) :
+	parent( inParent ),
+	child( inChild ),
+	sibling( inSibling )
+{
+	inName;
+
+#ifdef _DEBUG
+	Copy_String( this->name, inName );
 #endif
-   
+}
+
+// copy constructor
+PCSNode::PCSNode( const PCSNode& in ) :
+	parent( in.parent ),
+	child( in.child ),
+	sibling( in.sibling )
+{
+#ifdef _DEBUG
+	Copy_String( this->name, in.name );
+#endif
+}
+
+PCSNode::PCSNode( PCSNode&& in ) :
+	parent( in.parent ),
+	child( in.child ),
+	sibling( in.sibling )
+{
+#ifdef _DEBUG
+	this->name = in.name;
+	in.name = nullptr;
+#endif
+}
+
+
+
 // destructor
 PCSNode::~PCSNode()
 {
-	// Do nothing
+#ifdef _DEBUG
+	if( this->name != nullptr )
+	{
+		delete this->name;
+	}
+#endif
 }
 
 // assignment operator
-PCSNode &PCSNode::operator = (const PCSNode &in)
+PCSNode& PCSNode::operator= ( const PCSNode& in )
 {
 	this->parent = in.parent;
 	this->child = in.child;
 	this->sibling = in.sibling;
-	
-#ifdef PCS_DEBUG
-	memcpy(this->name, in.name, PCSNODE_NAME_SIZE);
+
+#ifdef _DEBUG
+	if( this->name != nullptr )
+	{
+		delete this->name;
+	}
+
+	Copy_String( this->name, in.name );
 #endif
 
 	return *this;
 }
 
+PCSNode& PCSNode::operator=( PCSNode&& in )
+{
+	memcpy( this, &in, sizeof( PCSNode ) );
+	memset( &in, 0, sizeof( PCSNode ) );
 
-void PCSNode::setParent(PCSNode * const in)
+	return *this;
+}
+
+
+void PCSNode::setParent( PCSNode* in )
 {
 	this->parent = in;
 }
 
-void PCSNode::setChild(PCSNode * const in)
+void PCSNode::setChild( PCSNode* in )
 {
 	this->child = in;
 }
 
-void PCSNode::setSibling(PCSNode * const in)
+void PCSNode::setSibling( PCSNode* in )
 {
 	this->sibling = in;
 }
 
 
-PCSNode *PCSNode::getParent() const
+PCSNode* PCSNode::getParent() const
 {
 	return this->parent;
 }
 
-PCSNode *PCSNode::getChild() const
+PCSNode* PCSNode::getChild() const
 {
 	return this->child;
 }
 
-PCSNode *PCSNode::getSibling() const
+PCSNode* PCSNode::getSibling() const
 {
 	return this->sibling;
 }
 
-#ifdef PCS_DEBUG
-	PCSNodeReturnCode PCSNode::setName(const char * const inName)
+#ifdef _DEBUG
+void PCSNode::setName( const char* inName )
+{
+	if( this->name != nullptr )
 	{
-		return copy_string(inName, this->name, PCSNODE_NAME_SIZE);
+		delete this->name;
+	}
+	Copy_String( this->name, inName );
+}
+
+const char* PCSNode::getName() const
+{
+	return this->name;
+}
+
+void PCSNode::printNode() const
+{
+	if( this->name != nullptr )
+	{
+		printf( "%s\n", this->name );
+	}
+	else
+	{
+		printf( "Anonymous node\n" );
 	}
 
+	printf( "Address: 0x%p\n", this );
+	printf( "Parent:  0x%p", this->parent );
 
-	PCSNodeReturnCode PCSNode::getName(char * const outBuffer, int sizeOutBuffer) const
+	if( this->parent == 0 )
 	{
-		return copy_string(this->name, outBuffer, sizeOutBuffer);
+		printf( "\n" );
+	}
+	else
+	{
+		printf( " (%s)\n", this->parent->name );
 	}
 
-	void PCSNode::printNode() const
+	printf( "Child:   0x%p", this->child );
+
+	if( this->child == 0 )
 	{
-		printf("%s\n", this->name);
-		printf("Address: 0x%p\n", this);
-		printf("Parent:  0x%p", this->parent);
-
-		if (this->parent == 0) {
-			printf("\n");
-		}else{
-			printf(" (%s)\n", this->parent->name);
-		}
-
-		printf("Child:   0x%p", this->child);
-	
-		if (this->child == 0) {
-			printf("\n");
-		}else{
-			printf(" (%s)\n", this->child->name);
-		}
-
-		printf("Sibling: 0x%p", this->sibling);
-		if (this->sibling == 0) {
-			printf("\n");
-		}else{
-			printf(" (%s)\n", this->sibling->name);
-		}
-
-		printf("\n");
+		printf( "\n" );
+	}
+	else
+	{
+		printf( " (%s)\n", this->child->name );
 	}
 
-	void PCSNode::printChildren() const
+	printf( "Sibling: 0x%p", this->sibling );
+	if( this->sibling == 0 )
 	{
-		if (this->child != 0) {
-			this->child->printNode();
-			this->child->printSiblings();
-		}
+		printf( "\n" );
+	}
+	else
+	{
+		printf( " (%s)\n", this->sibling->name );
 	}
 
+	printf( "\n" );
+}
 
-	void PCSNode::printSiblings() const
+void PCSNode::printChildren() const
+{
+	if( this->child != 0 )
 	{
-		if (this->sibling != 0) {
-			this->sibling->printNode();
-			this->sibling->printSiblings();
-		}
+		this->child->printNode();
+		this->child->printSiblings();
 	}
+}
+
+
+void PCSNode::printSiblings() const
+{
+	if( this->sibling != 0 )
+	{
+		this->sibling->printNode();
+		this->sibling->printSiblings();
+	}
+}
 #endif
 
 int PCSNode::getNumSiblings() const
 {
-	const PCSNode* brother = (this->parent == 0) ? this : this->parent->child;
+	const PCSNode* brother = this->parent == 0 ? this : this->parent->child;
 
 	int count = 0;
-	
-	while (brother != 0) {
+
+	while( brother != 0 )
+	{
 		count++;
 		brother = brother->sibling;
 	}
@@ -211,5 +251,5 @@ int PCSNode::getNumSiblings() const
 
 int PCSNode::getNumChildren() const
 {
-	return (this->child == 0) ? (0) : (this->child->getNumSiblings());
+	return this->child == 0 ? 0  : this->child->getNumSiblings();
 }

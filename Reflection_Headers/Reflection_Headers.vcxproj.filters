@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{ff80a9f2-88c6-4226-bb88-e1c584b11787}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Reflection.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BaseClass.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Variable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Writeable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Readable.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BaseClass.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Variable.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

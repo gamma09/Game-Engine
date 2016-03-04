@@ -22,15 +22,6 @@
     <Filter Include="FBX">
       <UniqueIdentifier>{af84ede8-49c3-4070-bdcf-542a802ceb27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Math">
-      <UniqueIdentifier>{37cb33e0-aa25-48fb-8c7e-9efa7b9e4674}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Math\include">
-      <UniqueIdentifier>{65c01a63-6678-40a1-8bc9-1da34ba8721f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Math\lib">
-      <UniqueIdentifier>{f33fc4ef-1686-417f-9f86-860f8bc6fdac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model\Geometry">
       <UniqueIdentifier>{79667d1d-60fa-4f00-9ad1-b67ad2e206d7}</UniqueIdentifier>
     </Filter>
@@ -85,50 +76,9 @@
     <Filter Include="_libs\fbx\include\fbxsdk\utils">
       <UniqueIdentifier>{7fef9818-a02f-4cac-9ce7-cb3185347fd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Shared">
-      <UniqueIdentifier>{389fe501-a6c6-4389-bd27-394f424dc5fa}</UniqueIdentifier>
+    <Filter Include="_libs\fbx\dll">
+      <UniqueIdentifier>{9373672c-887d-41f2-ae40-c0afcc47a294}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs\Shared\include">
-      <UniqueIdentifier>{55d91e1f-2ecf-4487-ab85-3d0280da78ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Shared\lib">
-      <UniqueIdentifier>{4db548ff-4a0e-46a7-8e93-d44aeafe4da4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Reflection_Headers">
-      <UniqueIdentifier>{131aea26-7edb-4c5f-850b-f455c31ff81f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Reflection_Headers\include">
-      <UniqueIdentifier>{7b90d24a-34a1-4807-8523-58a1cafbbf0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Reflection_Headers\lib">
-      <UniqueIdentifier>{a4fdc2e2-a3d4-459b-82f3-21b0a7c0e49c}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Debug.lib">
-      <Filter>_libs\Math\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\MathEngine\lib\MathEngine_Release.lib">
-      <Filter>_libs\Math\lib</Filter>
-    </Library>
-    <Library Include="libs\fbx\lib\libfbxsdk-mt_d32.lib">
-      <Filter>_libs\fbx\lib</Filter>
-    </Library>
-    <Library Include="libs\fbx\lib\libfbxsdk-mt_r32.lib">
-      <Filter>_libs\fbx\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Debug.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Shared\lib\Shared_Release.lib">
-      <Filter>_libs\Shared\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Debug.lib">
-      <Filter>_libs\Reflection_Headers\lib</Filter>
-    </Library>
-    <Library Include="..\ExternLibs\Reflection_Headers\lib\Reflection_Headers_Release.lib">
-      <Filter>_libs\Reflection_Headers\lib</Filter>
-    </Library>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -184,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="src\Execute.h">
       <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\MathEngine\include\MathEngine.h">
-      <Filter>_libs\Math\include</Filter>
     </ClInclude>
     <ClInclude Include="src\Triangle.h">
       <Filter>Model\Geometry</Filter>
@@ -896,38 +843,21 @@
     <ClInclude Include="libs\fbx\include\fbxsdk\utils\fbxusernotification.h">
       <Filter>_libs\fbx\include\fbxsdk\utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\BaseClass.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Class.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Object.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Readable.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Reflection.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Variable.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Reflection_Headers\include\Writeable.h">
-      <Filter>_libs\Reflection_Headers\include</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\fbx\lib\libfbxsdk_d32.lib">
+      <Filter>_libs\fbx\lib</Filter>
+    </Library>
+    <Library Include="libs\fbx\lib\libfbxsdk_r32.lib">
+      <Filter>_libs\fbx\lib</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libs\fbx\dll\libfbxsdk_d32.dll">
+      <Filter>_libs\fbx\dll</Filter>
+    </None>
+    <None Include="libs\fbx\dll\libfbxsdk_r32.dll">
+      <Filter>_libs\fbx\dll</Filter>
+    </None>
   </ItemGroup>
 </Project>

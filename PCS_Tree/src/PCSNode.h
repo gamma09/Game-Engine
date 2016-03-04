@@ -1,55 +1,38 @@
-#ifndef PCSNODE_H
-#define PCSNODE_H
-
-#include "PCSConfig.h"
-
-#define PCSNODE_NAME_SIZE (20)
-#define PCSNODE_VERSION 1.4
-
-// Return codes
-enum PCSNodeReturnCode
-{
-	PCSNode_SUCCESS,
-	PCSNode_FAIL_NULL_PTR,
-	PCSNode_FAIL_RETURN_NOT_INITIALIZED,
-	PCSNode_DWORD = 0x7fffffff
-};
+#pragma once
 
 class PCSNode
 {
-public:
+protected:
 	// constructor
-	PCSNode();
+	PCSNode( const char* inName = nullptr );
+	PCSNode( PCSNode* inParent, PCSNode* inChild, PCSNode* inSibling, const char* inName = nullptr );
 
 	// copy constructor
-	PCSNode(const PCSNode &in );
+	PCSNode( const PCSNode& in );
+	PCSNode( PCSNode&& in );
 
-	// Specialize Constructor
-#ifdef PCS_DEBUG
-	PCSNode( PCSNode * const inParent, PCSNode * const inChild, PCSNode * const inSibling, const char * const inName);
-	PCSNode( const char * const inName );
-#else
-	PCSNode(PCSNode* const inParent, PCSNode* const inChild, PCSNode* const inSibling);
-#endif
-
+	// assignment operator
+	PCSNode& operator= ( const PCSNode& in );
+	PCSNode& operator= ( PCSNode&& in );
+	
+public:
 	// destructor
 	virtual ~PCSNode();
 
-	// assignment operator
-	PCSNode &operator = (const PCSNode &in);
+	
 
 	// accessors
-	void setParent( PCSNode * const in );
-	void setChild( PCSNode * const in );
-	void setSibling( PCSNode * const in );
-	PCSNode *getParent( void ) const;
-	PCSNode *getChild( void ) const;
-	PCSNode *getSibling( void ) const;
+	void setParent( PCSNode* in );
+	void setChild( PCSNode* in );
+	void setSibling( PCSNode* in );
+	PCSNode* getParent( void ) const;
+	PCSNode* getChild( void ) const;
+	PCSNode* getSibling( void ) const;
 
-#ifdef PCS_DEBUG
+#ifdef _DEBUG
 	// name
-	PCSNodeReturnCode setName(const char * const inName );
-	PCSNodeReturnCode getName(char * const outBuffer, int sizeOutBuffer ) const;
+	void setName( const char* inName );
+	const char* getName() const;
 
 	// print
 	void printNode() const;
@@ -62,14 +45,11 @@ public:
 	int getNumChildren() const;
 
 private:
-	PCSNode *parent;
-	PCSNode *child;
-	PCSNode *sibling;
+	PCSNode* parent;
+	PCSNode* child;
+	PCSNode* sibling;
 
-#ifdef PCS_DEBUG
-	char     name[PCSNODE_NAME_SIZE];
+#ifdef _DEBUG
+	char* name;
 #endif
 };
-
-
-#endif

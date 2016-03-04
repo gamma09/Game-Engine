@@ -4,15 +4,6 @@
     <Filter Include="File">
       <UniqueIdentifier>{e75368e5-bde4-4b0f-9f1e-5a3191c308f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="_libs">
-      <UniqueIdentifier>{bb0d3b8c-d134-47d8-b7fa-9216afc0d928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Shared">
-      <UniqueIdentifier>{089e4a48-f081-4b69-8189-ba5956c21f59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="_libs\Shared\include">
-      <UniqueIdentifier>{46c96bf9-8bd1-49e9-ac09-0ccb9e14ee0d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\File.cpp">
@@ -28,18 +19,6 @@
     </ClInclude>
     <ClInclude Include="src\WinFileWrapper.h">
       <Filter>File</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\ChunkHeader.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\GameAssert.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\PackageHeader.h">
-      <Filter>_libs\Shared\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ExternLibs\Shared\include\Execute.h">
-      <Filter>_libs\Shared\include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
