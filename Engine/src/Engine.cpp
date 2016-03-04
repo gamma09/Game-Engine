@@ -1,7 +1,6 @@
 
 // TODO: next two lines have some dependency, need to straighten out later
 #include "Engine.h"
-#include <GL/glext.h>
 #include <string.h>
 #include <DebuggerSetup.h>
 #include <GameAssert.h>
@@ -25,27 +24,6 @@
 
 Engine * Engine::app = 0;
 
-
-
-int IsExtensionSupported( const char * extname )
-{
-	GLint numExtensions;
-	GLint i;
-
-	glGetIntegerv( GL_NUM_EXTENSIONS, &numExtensions );
-
-	for( i = 0; i < numExtensions; i++ )
-	{
-		const GLubyte * e = glGetStringi( GL_EXTENSIONS, i );
-		if( !strcmp( (const char *) e, extname ) )
-		{
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
 //------------------------------------------------------------------
 // Engine::Run()
 //		This is the internal game loop that the engine runs on.
@@ -60,33 +38,34 @@ void Engine::run()
 
 	LoadContent();
 
-	while( glfwGetWindowParam( GLFW_OPENED ) != GL_FALSE )
-	{
-		// moving
-		Update();
+	// TODO while window is open (requires information from the message pump)
+	//while( glfwGetWindowParam( GLFW_OPENED ) != GL_FALSE )
+	//{
+	// moving
+	Update();
 
-		// rendering
-		ClearBufferFunc();
-		Draw();
+	// rendering
+	ClearBufferFunc();
+	Draw();
 
-		glfwSwapBuffers();
-	}
+	//TODO swap buffers
+	//	glfwSwapBuffers();
+	//}
 
 	UnLoadContent();
 
 	this->PostUnLoadContent();
 
-	glfwTerminate();
+	// TODO shut down OpenGL
+	// glfwTerminate();
 }
 
 void Engine::PreInitialize()
 {
-	//app = the_app;
 	app = this;
-
-	if( !glfwInit() )
+	if( GLEW_OK != glewInit() )
 	{
-		out( "Failed to initialize GLFW\n" );
+		out( "Failed to initialize GLEW\n" );
 		return;
 	}
 
@@ -110,44 +89,41 @@ void Engine::PreInitialize()
 void Engine::PreLoadContent()
 {
 
-	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MAJOR, info->majorVersion );
-	glfwOpenWindowHint( GLFW_OPENGL_VERSION_MINOR, info->minorVersion );
+	// TODO do we need to set up opengl version major and minor?
+	// info->majorVersion
+	// info->minorVersion
 
-#ifdef _DEBUG
-	glfwOpenWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );
-#endif /* _DEBUG */
-	glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-	glfwOpenWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
-	glfwOpenWindowHint( GLFW_FSAA_SAMPLES, info->samples );
-	glfwOpenWindowHint( GLFW_STEREO, info->flags.stereo ? GL_TRUE : GL_FALSE );
+	// TODO setup 
+	// TODO glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+	// TODO glfwOpenWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
+	// TODO glfwOpenWindowHint( GLFW_FSAA_SAMPLES, info->samples );
+	// TODO glfwOpenWindowHint( GLFW_STEREO, info->flags.stereo ? GL_TRUE : GL_FALSE );
 	if( info->flags.fullscreen )
 	{
 		if( info->windowWidth == 0 || info->windowHeight == 0 )
 		{
-			GLFWvidmode mode;
-			glfwGetDesktopMode( &mode );
-			info->windowWidth = mode.Width;
-			info->windowHeight = mode.Height;
+			// TODO GLFWvidmode mode;
+			// TODO glfwGetDesktopMode( &mode );
+			// TODO info->windowWidth = mode.Width;
+			// TODO info->windowHeight = mode.Height;
 		}
-		glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN );
-		glfwSwapInterval( info->flags.vsync );
+		// TODO glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN );
+		// TODO glfwSwapInterval( info->flags.vsync );
 	}
 	else
 	{
-		if( !glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_WINDOW ) )
+		// TODO if( !glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_WINDOW ) )
 		{
 			out( "Failed to open window\n" );
 			return;
 		}
 	}
 
-	glfwSetWindowTitle( info->title );
-	glfwSetWindowSizeCallback( glfw_onResize );
-	( info->flags.cursor ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
+	// TODO glfwSetWindowTitle( info->title );
+	// TODO glfwSetWindowSizeCallback( glfw_onResize );
+	// TODO ( info->flags.cursor ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
 
-	info->flags.stereo = glfwGetWindowParam( GLFW_STEREO );
-
-	gl3wInit();
+	// TODO info->flags.stereo = glfwGetWindowParam( GLFW_STEREO );
 
 #ifdef _DEBUG
 	out( "VENDOR: %s\n", (char *) glGetString( GL_VENDOR ) );
@@ -157,16 +133,16 @@ void Engine::PreLoadContent()
 
 	if( info->flags.stereo )
 	{
-		if( gl3wIsSupported( 4, 3 ) )
+		if( GLEW_VERSION_4_3 )
 		{
 			glDebugMessageCallback( debug_callback, this );
 			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
 		}
-		else if( IsExtensionSupported( "GL_ARB_debug_output" ) )
-		{
-			glDebugMessageCallbackARB( debug_callback, this );
-			glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB );
-		}
+
+#if GL_ARB_debug_output
+		glDebugMessageCallbackARB( debug_callback, this );
+		glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB );
+#endif
 	}
 
 	TextureManager::Instance()->Create_Default_Texture();
@@ -242,29 +218,6 @@ Engine::~Engine()
 
 
 
-void * sb6GetProcAddress( const char * funcname )
-{
-	return gl3wGetProcAddress( funcname );
-}
-
-int sb6IsExtensionSupported( const char * extname )
-{
-	GLint numExtensions;
-	GLint i;
-
-	glGetIntegerv( GL_NUM_EXTENSIONS, &numExtensions );
-
-	for( i = 0; i < numExtensions; i++ )
-	{
-		const GLubyte * e = glGetStringi( GL_EXTENSIONS, i );
-		if( !strcmp( (const char *) e, extname ) )
-		{
-			return 1;
-		}
-	}
-
-	return 0;
-}
 
 
 void Engine::onResize( int w, int h )
@@ -318,22 +271,24 @@ void Engine::onDebugMessage( GLenum source,
 
 void Engine::getMousePosition( int& x, int& y )
 {
-	glfwGetMousePos( &x, &y );
+	x;
+	y;
+	// TODO glfwGetMousePos( &x, &y );
 }
 
 
 
 
-void GLFWCALL Engine::glfw_onResize( int w, int h )
+/* TODO void GLFWCALL Engine::glfw_onResize( int w, int h )
 {
-	app->onResize( w, h );
-}
+app->onResize( w, h );
+} */
 
 
 void Engine::setVsync( bool enable )
 {
 	info->flags.vsync = enable ? 1 : 0;
-	glfwSwapInterval( info->flags.vsync );
+	// TODO glfwSwapInterval( info->flags.vsync );
 }
 
 void APIENTRY Engine::debug_callback( GLenum source,
@@ -342,7 +297,7 @@ void APIENTRY Engine::debug_callback( GLenum source,
 									  GLenum severity,
 									  GLsizei length,
 									  const GLchar* message,
-									  GLvoid* userParam )
+									  const void* )
 {
-	reinterpret_cast<Engine *>( userParam )->onDebugMessage( source, type, id, severity, length, message );
+	Engine::app->onDebugMessage( source, type, id, severity, length, message );
 }

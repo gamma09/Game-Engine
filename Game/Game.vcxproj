@@ -73,7 +73,7 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
-    <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,7 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
@@ -273,11 +273,8 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ProjectReference Include="..\File_System\File_System.vcxproj">
       <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\GL3W\GL3W.vcxproj">
-      <Project>{addff1e2-c5d4-4217-a5b3-96eced2c3584}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GLFW\GLFW.vcxproj">
-      <Project>{4da03747-f505-4a98-9124-03b3b73b9b3b}</Project>
+    <ProjectReference Include="..\GLEW\GLEW.vcxproj">
+      <Project>{3c1cfba4-f2cb-4c0c-90f9-d967d214d8d6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Math_Engine\Math_Engine.vcxproj">
       <Project>{5122b556-8547-48d7-acf6-1466c0180ff4}</Project>
@@ -296,6 +293,9 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{af0d953c-be31-4f51-96bf-6649c455a2be}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SOIL\SOIL.vcxproj">
+      <Project>{4b365839-616a-4f70-a1a2-0393d38710ff}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Time\Time.vcxproj">
       <Project>{f980f363-fcc0-44d2-ae62-83bf4476c968}</Project>

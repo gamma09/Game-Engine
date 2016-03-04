@@ -146,14 +146,14 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)SOIL\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)SOIL\src;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>

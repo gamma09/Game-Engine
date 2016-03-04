@@ -1,7 +1,7 @@
 #include <math.h>
 #include <GameAssert.h>
 
-#include <GL/gl3w.h>
+#include <GL\glew.h>
 #include <Quat.h>
 
 #include "Camera.h"

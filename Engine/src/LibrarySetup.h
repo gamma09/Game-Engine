@@ -8,13 +8,7 @@
 	#define WIN32_EXTRA_LEAN
 	#include <Windows.h>
 
-	#ifdef _DEBUG
-		#pragma comment (lib, "GLFW_Debug.lib")
-		#pragma comment (lib, "GL3W_Debug.lib")
-	#else
-		#pragma comment (lib, "GLFW_Release.lib")
-		#pragma comment (lib, "GL3W_Release.lib")
-	#endif
+	#include <GL\glew.h>
 
 	#pragma comment (lib, "OpenGL32.lib")
 #endif

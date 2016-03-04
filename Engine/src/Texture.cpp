@@ -2,8 +2,8 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <GL/gl3w.h>
-#include <GL/glfw.h>
+#include <GL/glew.h>
+#include <SOIL.h>
 #include <asset_reader.h>
 
 #include "MemorySetup.h"
@@ -25,9 +25,10 @@ void Texture::Set(const char* archiveFile, const char* textureName)
 
 	if (status)
 	{
-		GLFWimage image;
-		int imageReadSuccessfully = glfwReadMemoryImage(bytes, size, &image, 0);
-		if (imageReadSuccessfully != GL_TRUE)
+		int width, height;
+		int channels;
+		unsigned char* image = SOIL_load_image_from_memory( bytes, size, &width, &height, &channels, SOIL_LOAD_AUTO );
+		if ( image )
 		{
 			this->using_default_texture = true;
 			this->texture_obj = TextureManager::Instance()->Default_Texture()->Get_Texture_ID();
@@ -48,19 +49,16 @@ void Texture::Set(const char* archiveFile, const char* textureName)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-			int s = sizeof(*image.Data);
-			s;
-
 			// Interpret file as texture data
-			if (image.BytesPerPixel == 3)
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.Data);
-			else if (image.BytesPerPixel == 4)
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.Data);
+			if (channels == 3)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+			else if (channels == 4)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 			else
 				GameAssert(0); // should not happen, unless tga format works differently than we think
 		}
 		
-		glfwFreeImage(&image);
+		SOIL_free_image_data( image );
 		delete[] bytes;
 	}
 	else
@@ -120,18 +118,19 @@ Texture::Texture(const char* defaultArchive, const char* textureName) :
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Interpret file as texture data
-	GLFWimage image;
-	GameVerify( GL_TRUE == glfwReadMemoryImage(bytes, size, &image, 0) );
+	int width, height, channels;
+	unsigned char* image = SOIL_load_image_from_memory( bytes, size, &width, &height, &channels, SOIL_LOAD_AUTO );
+	GameVerify( image != nullptr );
 	delete[] bytes;
 
-	if (image.BytesPerPixel == 3)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, image.Data);
-	else if (image.BytesPerPixel == 4)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.Width, image.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.Data);
+	if (channels == 3)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	else if (channels == 4)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	else
 		GameAssert(0);
 
-	glfwFreeImage(&image);
+	SOIL_free_image_data( image );
 }
 
 Texture::Texture() :

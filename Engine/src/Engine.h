@@ -1,12 +1,7 @@
 #pragma once
 
 #include "LibrarySetup.h"
-
-#define GLFW_NO_GLU 1
-#define GLFW_INCLUDE_GLCOREARB 1
-#include "GL/gl3w.h"
-#include "GL/glfw.h"
-
+#include <GL\GL.h>
 
 #include <cstdio>
 #include <cstring>
@@ -26,6 +21,7 @@ public:
 	virtual void Update() abstract;
 	virtual void Draw() abstract;
 	virtual void UnLoadContent() abstract;
+	virtual void onDebugMessage( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message );
 
 	// optional overloading
 	virtual void ClearBufferFunc();
@@ -49,7 +45,6 @@ public:
 	virtual void onMouseButton(int button, int action);
 	virtual void onMouseMove(int x, int y);
 	virtual void onMouseWheel(int pos);
-	virtual void onDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message);
 	static void getMousePosition(int& x, int& y);
 
 public:
@@ -63,10 +58,11 @@ protected:
 
 	static Engine* app;
 
-
-	static void GLFWCALL glfw_onResize(int w, int h);
+	// TODO code on resize equivalent in message pump
+	//static void GLFWCALL glfw_onResize(int w, int h);
 
 	void setVsync(bool enable);
-	static void APIENTRY debug_callback(GLenum source,GLenum type, GLuint id, GLenum severity,GLsizei length,const GLchar* message,GLvoid* userParam);
+
+	static void APIENTRY debug_callback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam );
 };
 

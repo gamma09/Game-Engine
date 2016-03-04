@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ManagedObject.h>
-#include <GL/gl3w.h>
+#include <GL/glew.h>
 
 class Texture : public ManagedObject
 {

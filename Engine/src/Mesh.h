@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include <GL/gl3w.h>
+#include <GL/glew.h>
 
 struct Mesh
 {

@@ -11,8 +11,9 @@ call :SubFolderClean Archive_Reader
 call :SubFolderClean Chunkify
 call :SubFolderClean Unify
 
-call :SubFolderClean GL3W
+call :SubFolderClean GLEW
 call :SubFolderClean GLFW
+call :SubFolderClean SOIL
 
 call :SubFolderClean Editor
 call :SubFolderClean Engine
