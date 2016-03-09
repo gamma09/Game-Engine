@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
 #include <Windows.h>
+#include <crtdbg.h>
 	
 	#define GameVerify(a) assert(a)
 #define GameCheckFatal( a, msg ) _ASSERT_EXPR( a, msg )

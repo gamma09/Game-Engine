@@ -8,6 +8,7 @@
 
 class Heap;
 struct AppInfo;
+class GLWindow;
 
 class Engine abstract
 {
@@ -40,28 +41,13 @@ private:
 	void PostUnLoadContent();
 
 public:
-	virtual void onResize(int w, int h);
-	virtual void onKey(int key, int action);
-	virtual void onMouseButton(int button, int action);
-	virtual void onMouseMove(int x, int y);
-	virtual void onMouseWheel(int pos);
-	static void getMousePosition(int& x, int& y);
 
-public:
-	
-
-protected:
-
+	GLWindow* window;
 	AppInfo* info;
 	Heap* managerHeap;
 	Heap* materialHeap;
 
 	static Engine* app;
-
-	// TODO code on resize equivalent in message pump
-	//static void GLFWCALL glfw_onResize(int w, int h);
-
-	void setVsync(bool enable);
 
 	static void APIENTRY debug_callback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam );
 };

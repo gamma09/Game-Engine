@@ -4,27 +4,42 @@
 #define WIN32_EXTRA_LEAN
 #include <Windows.h>
 
+#include <atomic>
+
+struct AppInfo;
+
 // This class creates a new thread for the window
 class GLWindow
 {
 public:
-	GLWindow( const char* title, int width, int height );
+	GLWindow( const AppInfo* info );
 	~GLWindow();
+
+	void PreDraw();
+	void PostDraw();
+	inline bool IsOpen() const { return this->isOpen; }
 
 private:
 	DWORD Run();
 	void MessagePump();
+	void CreateGLWindow();
+	void CreateDeviceContext();
+	void CreateRenderContext();
 	static DWORD WINAPI WindowThreadEntry( LPVOID lpParameter );
 	static LRESULT CALLBACK WindowCallback( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
 
 private:
-	HANDLE hThread;
 	HWND hWindow;
-	char* title;
-	int width;
-	int height;
+	HGLRC hRenderContext;
+	bool isOpen;
 
+	HANDLE hThread;
+	HDC hDeviceContext;
+
+	const AppInfo* info;
+	
+	std::atomic<bool> ready;
 
 private:
 	GLWindow( const GLWindow& wnd ) = delete;

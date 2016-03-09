@@ -4,6 +4,7 @@
 #include <GameAssert.h>
 #include <mem.h>
 
+#include "GLWindow.h"
 #include "GlobalHeaps.h"
 #include "AppInfo.h"
 #include "TextureMaterial.h"
@@ -36,26 +37,22 @@ void Engine::run()
 
 	LoadContent();
 
-	// TODO while window is open (requires information from the message pump)
-	//while( glfwGetWindowParam( GLFW_OPENED ) != GL_FALSE )
-	//{
-	// moving
-	Update();
+	while( this->window->IsOpen() )
+	{
+		// moving
+		Update();
 
-	// rendering
-	ClearBufferFunc();
-	Draw();
+		// rendering
+		this->window->PreDraw();
+		ClearBufferFunc();
+		Draw();
 
-	//TODO swap buffers
-	//	glfwSwapBuffers();
-	//}
+		this->window->PostDraw();
+	}
 
 	UnLoadContent();
 
 	this->PostUnLoadContent();
-
-	// TODO shut down OpenGL
-	// glfwTerminate();
 }
 
 void Engine::PreInitialize()
@@ -67,12 +64,10 @@ void Engine::PreInitialize()
 		return;
 	}
 
-	GameVerify( Mem_OK == Mem::initialize() );
-
 	TemporaryHeap::Create();
 
-	GameVerify( Mem_OK == Mem::createHeap( this->managerHeap, 4096, "Manager Heap" ) );
-	GameVerify( Mem_OK == Mem::createHeap( this->materialHeap, 4096, "Material Heap" ) );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->managerHeap, 4096 ) );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->materialHeap, 4096 ) );
 
 	ShaderManager::Create( this->managerHeap, 4, 1 );
 	ModelBaseManager::Create( this->managerHeap, 7, 1 );
@@ -86,42 +81,16 @@ void Engine::PreInitialize()
 
 void Engine::PreLoadContent()
 {
-
-	// TODO do we need to set up opengl version major and minor?
-	// info->majorVersion
-	// info->minorVersion
-
-	// TODO setup 
-	// TODO glfwOpenWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-	// TODO glfwOpenWindowHint( GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE );
-	// TODO glfwOpenWindowHint( GLFW_FSAA_SAMPLES, info->samples );
-	// TODO glfwOpenWindowHint( GLFW_STEREO, info->flags.stereo ? GL_TRUE : GL_FALSE );
-	if( info->flags.fullscreen )
+	if( info->fullscreen )
 	{
 		if( info->windowWidth == 0 || info->windowHeight == 0 )
 		{
-			// TODO GLFWvidmode mode;
-			// TODO glfwGetDesktopMode( &mode );
-			// TODO info->windowWidth = mode.Width;
-			// TODO info->windowHeight = mode.Height;
-		}
-		// TODO glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_FULLSCREEN );
-		// TODO glfwSwapInterval( info->flags.vsync );
-	}
-	else
-	{
-		// TODO if( !glfwOpenWindow( info->windowWidth, info->windowHeight, 8, 8, 8, 0, 32, 0, GLFW_WINDOW ) )
-		{
-			out( "Failed to open window\n" );
-			return;
+			info->windowWidth = GetSystemMetrics( SM_CXSCREEN );
+			info->windowHeight = GetSystemMetrics( SM_CYSCREEN );
 		}
 	}
 
-	// TODO glfwSetWindowTitle( info->title );
-	// TODO glfwSetWindowSizeCallback( glfw_onResize );
-	// TODO ( info->flags.cursor ? glfwEnable : glfwDisable )( GLFW_MOUSE_CURSOR );
-
-	// TODO info->flags.stereo = glfwGetWindowParam( GLFW_STEREO );
+	this->window = new GLWindow( this->info );
 
 #ifdef _DEBUG
 	out( "VENDOR: %s\n", (char *) glGetString( GL_VENDOR ) );
@@ -129,7 +98,7 @@ void Engine::PreLoadContent()
 	out( "RENDERER: %s\n", (char *) glGetString( GL_RENDERER ) );
 #endif
 
-	if( info->flags.stereo )
+	if( info->stereo )
 	{
 		if( GLEW_VERSION_4_3 )
 		{
@@ -170,7 +139,7 @@ void Engine::PostUnLoadContent()
 
 	TemporaryHeap::Destroy();
 
-	GameVerify( Mem_OK == Mem::destroy() );
+	delete this->window;
 }
 
 //------------------------------------------------------------------
@@ -194,14 +163,18 @@ info( new AppInfo() )
 	info->windowHeight = Height;
 
 	info->majorVersion = 4;
-	info->minorVersion = 0;
+	info->minorVersion = 3;
 
 	info->samples = 0;
-	info->flags.all = 0;
-	info->flags.cursor = 1;
+	info->cursor = true;
+	info->fullscreen = false;
+	info->stereo = false;
+	info->vsync = true;
 
 #ifdef _DEBUG
-	info->flags.debug = 1;
+	info->debug = true;
+#else
+	info->debug = false;
 #endif
 
 }
@@ -218,34 +191,6 @@ Engine::~Engine()
 
 
 
-void Engine::onResize( int w, int h )
-{
-	info->windowWidth = w;
-	info->windowHeight = h;
-}
-
-void Engine::onKey( int key, int action )
-{
-	key;//not used
-	action;//not used
-}
-
-void Engine::onMouseButton( int button, int action )
-{
-	button;//not used
-	action;//not used
-}
-
-void Engine::onMouseMove( int x, int y )
-{
-	x; /*not used*/
-	y;/* not used*/
-}
-
-void Engine::onMouseWheel( int pos )
-{
-	pos; /*not used*/
-}
 
 void Engine::onDebugMessage( GLenum source,
 							 GLenum type,
@@ -267,27 +212,9 @@ void Engine::onDebugMessage( GLenum source,
 #endif /* _WIN32 */
 }
 
-void Engine::getMousePosition( int& x, int& y )
-{
-	x;
-	y;
-	// TODO glfwGetMousePos( &x, &y );
-}
 
 
 
-
-/* TODO void GLFWCALL Engine::glfw_onResize( int w, int h )
-{
-app->onResize( w, h );
-} */
-
-
-void Engine::setVsync( bool enable )
-{
-	info->flags.vsync = enable ? 1 : 0;
-	// TODO glfwSwapInterval( info->flags.vsync );
-}
 
 void APIENTRY Engine::debug_callback( GLenum source,
 									  GLenum type,
