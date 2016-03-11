@@ -134,7 +134,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>COPY "$(SolutionDir)Shaders\*.glsl" "$(TargetDir)\."</Command>
+      <Command>COPY "$(SolutionDir)Shaders\*.cso" "$(TargetDir)\."</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -200,7 +200,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>COPY "$(SolutionDir)Shaders\*.glsl" "$(TargetDir)\."</Command>
+      <Command>COPY "$(SolutionDir)Shaders\*.cso" "$(TargetDir)\."</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
@@ -272,9 +272,6 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </ProjectReference>
     <ProjectReference Include="..\File_System\File_System.vcxproj">
       <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GLEW\GLEW.vcxproj">
-      <Project>{3c1cfba4-f2cb-4c0c-90f9-d967d214d8d6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Math_Engine\Math_Engine.vcxproj">
       <Project>{5122b556-8547-48d7-acf6-1466c0180ff4}</Project>

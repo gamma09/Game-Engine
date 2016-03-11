@@ -16,9 +16,33 @@ private:
 	TemporaryHeap();
 	~TemporaryHeap();
 
+	TemporaryHeap( const TemporaryHeap& ) = delete;
+	TemporaryHeap& operator=( const TemporaryHeap& ) = delete;
+
 
 private:
 	Heap* heap;
 
 	static TemporaryHeap* instance;
+};
+
+class ConstantBufferHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	ConstantBufferHeap();
+	~ConstantBufferHeap();
+
+	ConstantBufferHeap( const ConstantBufferHeap& ) = delete;
+	ConstantBufferHeap& operator=( const ConstantBufferHeap& ) = delete;
+
+private:
+	Heap* heap;
+
+	static ConstantBufferHeap* instance;
 };

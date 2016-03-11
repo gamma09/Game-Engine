@@ -1,14 +1,15 @@
 #pragma once
 
-#include "LibrarySetup.h"
-#include <GL\GL.h>
-
-#include <cstdio>
-#include <cstring>
+#define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
+#include <Windows.h>
+#include <d3d11_1.h>
+#include <thread>
+#include <stdio.h>
+#include <string.h>
 
 class Heap;
 struct AppInfo;
-class GLWindow;
 
 class Engine abstract
 {
@@ -22,18 +23,23 @@ public:
 	virtual void Update() abstract;
 	virtual void Draw() abstract;
 	virtual void UnLoadContent() abstract;
-	virtual void onDebugMessage( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message );
-
-	// optional overloading
-	virtual void ClearBufferFunc();
 
 	void run();
+
+private:
+	void CreateEngineWindow();
+	void SetupDirect3D();
+
+	static void UpdateThreadEntry( Engine* engine );
+	static LRESULT CALLBACK WindowCallback( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
 
 	// private: --------------------------------------
 private:
 	// force to use the appropriate constructor
 	Engine() = delete;
+	Engine( const Engine& ) = delete;
+	Engine& operator=( const Engine& ) = delete;
 
 	// private functions
 	void PreInitialize();
@@ -41,14 +47,27 @@ private:
 	void PostUnLoadContent();
 
 public:
+	ID3D11Device* device;
+	ID3D11DeviceContext* deviceContext;
 
-	GLWindow* window;
-	AppInfo* info;
+private:
+	IDXGISwapChain* swapChain;
+	ID3D11RenderTargetView* renderTarget;
+	ID3D11Texture2D* depthStencil;
+	ID3D11DepthStencilView* depthStencilView;
+	// ID3D11RasterizerState* rasterizer; front is CW
+	unsigned int vsyncInterval;
+
+	HWND hWindow;
+	bool isOpen;
+	std::thread updateThread;
+
+public:
 	Heap* managerHeap;
 	Heap* materialHeap;
 
-	static Engine* app;
+	AppInfo info;
 
-	static void APIENTRY debug_callback( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam );
+	static Engine* app;
 };
 

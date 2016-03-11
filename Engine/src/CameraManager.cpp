@@ -70,7 +70,7 @@ CameraManager::CameraManager(uint32_t initialReserve, uint32_t refillSize) :
 	activeCamera(0)
 {
 	// Hey, might as well allocate a whole page of memory...
-	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Camera Heap" ) );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, 4096 ) );
 
 	this->Init(initialReserve);
 }

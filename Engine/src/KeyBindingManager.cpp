@@ -63,7 +63,7 @@ KeyBindingManager::KeyBindingManager(const uint32_t initialReserve, const uint32
 	Manager(refillSize)
 {
 	// Hey, might as well allocate a whole page of memory...
-	GameVerify( Mem_OK == Mem::createHeap(this->heap, 4096, "Keybinding Heap") );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap(this->heap, 4096) );
 
 	this->Init(initialReserve);
 }
