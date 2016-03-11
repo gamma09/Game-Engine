@@ -57,7 +57,7 @@ ActorManager::ActorManager(uint32_t initialReserve, uint32_t refillSize) :
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! Actor needs to be 16-byte aligned...
-	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Actor Heap" ) );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, 4096 ) );
 
 	this->Init(initialReserve);
 }

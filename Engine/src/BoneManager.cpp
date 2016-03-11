@@ -56,7 +56,7 @@ void BoneManager::Delete_Object(ManagedObject* obj) const
 BoneManager::BoneManager(uint32_t initialReserve, uint32_t refillSize) :
 	Manager(refillSize)
 {
-	GameVerify( Mem_OK == Mem::createFixBlockHeap( this->heap, MAX_BONES_CREATED, sizeof( Bone ), "Boneyard/Heap" ) );
+	GameVerify( Mem_OK == Mem::createFixBlockHeap( this->heap, MAX_BONES_CREATED, sizeof( Bone ) ) );
 	this->Init(initialReserve);
 }
 

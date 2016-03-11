@@ -3,18 +3,18 @@
 
 #include "GlobalHeaps.h"
 
-TemporaryHeap* TemporaryHeap::instance;
+TemporaryHeap* TemporaryHeap::instance = nullptr;
 
 void TemporaryHeap::Create()
 {
-	GameAssert(instance == 0);
+	GameAssert( instance == 0 );
 
 	instance = new TemporaryHeap();
 }
 
 void TemporaryHeap::Destroy()
 {
-	GameAssert(instance != 0);
+	GameAssert( instance != 0 );
 
 	delete instance;
 	instance = 0;
@@ -22,23 +22,60 @@ void TemporaryHeap::Destroy()
 
 Heap* TemporaryHeap::Instance()
 {
-	GameAssert(instance != 0);
+	GameAssert( instance != 0 );
 
 	return instance->heap;
 }
 
 // We might need A LOT of memory, depending on what is using this heap...
 // Throw down with 128 MB first...
-#define TEMPORARY_HEAP_SIZE 4096
-// 128 * 1024 * 1024
+#define TEMPORARY_HEAP_SIZE 134217728
+// 128 * 1024 * 1024 = 134,217,728
 
 TemporaryHeap::TemporaryHeap()
 {
-	
-	GameVerify( Mem_OK == Mem::createHeap(this->heap, TEMPORARY_HEAP_SIZE, "Temporary Allocations Heap") );
+
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, TEMPORARY_HEAP_SIZE ) );
 }
 
 TemporaryHeap::~TemporaryHeap()
 {
-	GameVerify( Mem_OK == Mem::destroyHeap(this->heap) );
+	GameVerify( Mem_OK == Mem::destroyHeap( this->heap ) );
+}
+
+ConstantBufferHeap* ConstantBufferHeap::instance = nullptr;
+
+void ConstantBufferHeap::Create()
+{
+	GameAssert( instance == nullptr );
+	
+	instance = new ConstantBufferHeap();
+}
+
+void ConstantBufferHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* ConstantBufferHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// Start with 2 pages of memory
+#define CONSTANT_BUFFER_HEAP_SIZE 8192
+
+ConstantBufferHeap::ConstantBufferHeap()
+{
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, CONSTANT_BUFFER_HEAP_SIZE ) );
+}
+
+ConstantBufferHeap::~ConstantBufferHeap()
+{
+	GameVerify( Mem_OK == Mem::destroyHeap( this->heap ) );
 }

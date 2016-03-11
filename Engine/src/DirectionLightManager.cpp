@@ -57,7 +57,7 @@ DirectionLightManager::DirectionLightManager(uint32_t initialReserve, uint32_t r
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! DirectionLight needs to be 16-byte aligned...
-	GameVerify( Mem_OK == Mem::createHeap( this->heap, 4096, "Direction Light Heap" ) );
+	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, 4096 ) );
 
 	this->Init(initialReserve);
 }
