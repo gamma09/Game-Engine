@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommandArguments>"$(SolutionDir)." "$(SolutionDir)Game\." "$(SolutionDir)Game\GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;_MBCS;_WINDOWS;ADD_META_TAGS" "$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)" "Debug"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>"$(SolutionDir)." "$(SolutionDir)Game\." "$(SolutionDir)Game\GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;_MBCS;_WINDOWS;ADD_META_TAGS" "$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)" "Debug"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommandArguments>"$(SolutionDir)." "$(SolutionDir)Game\." "$(SolutionDir)Game\GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;NDEBUG;_WINDOWS;_MBCS;_WINDOWS" "$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)" "Release"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>"$(SolutionDir)." "$(SolutionDir)Game\." "$(SolutionDir)Game\GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;NDEBUG;_WINDOWS;_MBCS;_WINDOWS" "$(SolutionDir)ExternLibs\GLFW\include;$(SolutionDir)ExternLibs\FileSystem\include;$(SolutionDir)ExternLibs\MathEngine\include;$(SolutionDir)ExternLibs\Memory\include;$(SolutionDir)ExternLibs\PCSTree\include;$(SolutionDir)ExternLibs\GL3W\include;$(SolutionDir)ExternLibs\ObjectManagement\include;$(SolutionDir)ExternLibs\Archive_Reader\include;$(SolutionDir)ExternLibs\Time\include;$(SolutionDir)ExternLibs\Shared\include;$(SolutionDir)ExternLibs\Reflection_Headers\include;$(SolutionDir)ExternLibs\Engine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)" "Release"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>
