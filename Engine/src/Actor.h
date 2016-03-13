@@ -8,16 +8,17 @@
 #include "ReferencedObject.h"
 
 class UpdateStrategy;
+class Material;
 struct DrawInfo;
 
 class Actor : public PCSNode, public ManagedObject, public ReferencedObject
 {
 public:
-	void Set(ModelBase* modelBase, UpdateStrategy* strategy);
+	void Set( Material* material, ModelBase* modelBase, UpdateStrategy* strategy );
 	virtual void Reset();
 
-	void Update(const uint32_t& timeDelta);
-	const bool Draw(DrawInfo& info) const;
+	void Update( const uint32_t& timeDelta );
+	bool Draw( DrawInfo& info ) const;
 
 	void Update_Model_Matrix();
 	Model& Get_Model();
@@ -34,8 +35,8 @@ private:
 	friend class ActorManager;
 
 	// Copying not allowed!
-	Actor(const Actor& actor);
-	Actor& operator=(const Actor& actor);
+	Actor( const Actor& actor );
+	Actor& operator=( const Actor& actor );
 
 private:
 	Model model;

@@ -4,6 +4,7 @@
 #include <Matrix.h>
 
 #include "HierarchyElement.h"
+#include "Material.h"
 
 struct DrawInfo;
 class ModelBase;
@@ -11,23 +12,26 @@ class ModelBase;
 class Bone : public HierarchyElement, public ManagedObject
 {
 public:
-	
-	virtual void Set(const uint32_t& meshIndex);
+
+	virtual void Set( const uint32_t& meshIndex );
 	virtual void Reset() override;
 
 	virtual const Matrix& Get_Matrix() const override;
 
-	void Set_Frame(const ModelBase* const model, const uint32_t& animationID, const uint32_t& frameTimeMillis);
-	void Draw(DrawInfo& info) const;
-	void Bind_Pose(bool isFirstGeneration);
+	void Set_Frame( const ModelBase* const model, const uint32_t& animationID, const uint32_t& frameTimeMillis );
+	void Draw( DrawInfo& info, const Material& material ) const;
+	void Bind_Pose( bool isFirstGeneration );
 
 
 
 private:
 	Bone();
-	Bone(const Bone& b);
-	Bone& operator=(const Bone& b);
-	virtual ~Bone();
+	virtual ~Bone() override;
+
+
+
+	Bone( const Bone& b ) = delete;
+	Bone& operator=( const Bone& b ) = delete;
 
 	friend class BoneManager;
 

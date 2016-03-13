@@ -30,6 +30,9 @@
     <ClInclude Include="src\MemoryEngine.h">
       <Filter>Mem\Includes</Filter>
     </ClInclude>
+    <ClInclude Include="src\LowLevelHeap.h">
+      <Filter>Mem\Includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\block.cpp">
@@ -42,6 +45,9 @@
       <Filter>Mem\src</Filter>
     </ClCompile>
     <ClCompile Include="src\mem.cpp">
+      <Filter>Mem\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LowLevelHeap.cpp">
       <Filter>Mem\src</Filter>
     </ClCompile>
   </ItemGroup>

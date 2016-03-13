@@ -1,30 +1,25 @@
 #pragma once
-#include <GL/glew.h>
 
-class Shader;
-struct DrawInfo;
-class Heap;
+#include "Material.h"
 
-class WireframeMaterial
+class WireframeMaterial : public Material
 {
 public:
-	static void Create_Material(Heap* materialHeap);
-	static void Destroy_Material();
-
-	static void Draw(const DrawInfo& info);
-
-private:
 	WireframeMaterial();
-	~WireframeMaterial();
+	virtual ~WireframeMaterial() override;
 
-	WireframeMaterial(const WireframeMaterial& material);
-	WireframeMaterial& operator=(const WireframeMaterial& material);
+	WireframeMaterial( ID3D11Device* device );
+
+protected:
+	virtual void PrepareBuffers( const DrawInfo& info ) const override;
 
 
 private:
-	Shader* shader;
-	GLint world_location;
-	GLint projection_view_location;
+	void SetupVertexShaderBuffers( ID3D11Device* device );
+	void SetupPixelShaderBuffers( ID3D11Device* device );
+	void SetupPixelShaderSamplers( ID3D11Device* device );
 
-	static WireframeMaterial* instance;
+
+	WireframeMaterial( const WireframeMaterial& ) = delete;
+	WireframeMaterial& operator=( const WireframeMaterial& ) = delete;
 };

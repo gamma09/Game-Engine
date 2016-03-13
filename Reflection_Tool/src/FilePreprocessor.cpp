@@ -32,7 +32,7 @@ static void TrimString( char* str )
 	}
 }
 
-void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context )
+bool FilePreprocessor::PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context )
 {
 	context.SetCurrentFile( filename.c_str() );
 
@@ -58,7 +58,7 @@ void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string
 	delete out;
 	delete error;
 
-	FEEDBACK_CHECK_RETURN( context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "cl.exe returned an error." );
+	FEEDBACK_CHECK_RETURN_VALUE( false, context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "cl.exe returned an error." );
 
 	exitCode = Exec::Execute( src2srcmlCommandLine.c_str(), nullptr, &out, &error );
 	TrimString( out );
@@ -77,12 +77,12 @@ void FilePreprocessor::PreprocessFile( const string& clCommandLine, const string
 	delete out;
 	delete error;
 
-	FEEDBACK_CHECK_RETURN( context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "srcml.exe returned an error." );
+	FEEDBACK_CHECK_RETURN_VALUE( false, context, exitCode == 0, MessageType::MSG_TYPE_ERROR, "srcml.exe returned an error." );
 
 	TiXmlDocument doc( srcmlFile );
 
-	FEEDBACK_CHECK_RETURN( context, doc.LoadFile(), MessageType::MSG_TYPE_ERROR, (std::string("Error ") + std::to_string(doc.ErrorId()) + " when loading XML document: " + doc.ErrorDesc()).c_str() );
+	FEEDBACK_CHECK_RETURN_VALUE( false, context, doc.LoadFile(), MessageType::MSG_TYPE_ERROR, (std::string("Error ") + std::to_string(doc.ErrorId()) + " when loading XML document: " + doc.ErrorDesc()).c_str() );
 
 	// Write will clean up the data pointer when it is finished with it
-	this->out->Write( doc, context );
+	return this->out->Write( doc, context );
 }

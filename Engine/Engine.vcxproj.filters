@@ -19,9 +19,6 @@
     <Filter Include="Model">
       <UniqueIdentifier>{49da30c7-2f5b-4a37-ba30-b3d0ee36dce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shading">
-      <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{9d97b1ae-80b7-441e-a873-5c9977405686}</UniqueIdentifier>
     </Filter>
@@ -34,7 +31,10 @@
     <Filter Include="Core\Update">
       <UniqueIdentifier>{3c3182cf-217e-49cb-bc73-a1180da780f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shading\HLSL">
+    <Filter Include="Material">
+      <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material\HLSL">
       <UniqueIdentifier>{72344d0a-69c5-43b1-846e-346972e97a29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -44,9 +44,6 @@
     </ClCompile>
     <ClCompile Include="src\ActorManager.cpp">
       <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DrawStrategy.cpp">
-      <Filter>Core\Draw</Filter>
     </ClCompile>
     <ClCompile Include="src\Moveable.cpp">
       <Filter>Core\Update</Filter>
@@ -68,15 +65,6 @@
     </ClCompile>
     <ClCompile Include="src\DirectionLightManager.cpp">
       <Filter>Lighting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LightingTextureMaterial.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureMaterial.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WireframeMaterial.cpp">
-      <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
       <Filter>Texture</Filter>
@@ -108,15 +96,6 @@
     <ClCompile Include="src\ModelBaseManager.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>Shading</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderFactory.cpp">
-      <Filter>Shading</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderManager.cpp">
-      <Filter>Shading</Filter>
-    </ClCompile>
     <ClCompile Include="src\GlobalHeaps.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -125,6 +104,18 @@
     </ClCompile>
     <ClCompile Include="src\AppInfo.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LitTextureMaterial.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UnlitTextureMaterial.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WireframeMaterial.cpp">
+      <Filter>Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +126,6 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="src\DrawInfo.h">
-      <Filter>Core\Draw</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DrawStrategy.h">
       <Filter>Core\Draw</Filter>
     </ClInclude>
     <ClInclude Include="src\Moveable.h">
@@ -166,15 +154,6 @@
     </ClInclude>
     <ClInclude Include="src\DirectionLightManager.h">
       <Filter>Lighting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LightingTextureMaterial.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TextureMaterial.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WireframeMaterial.h">
-      <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="src\Texture.h">
       <Filter>Texture</Filter>
@@ -209,15 +188,6 @@
     <ClInclude Include="src\ModelBaseManager.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader.h">
-      <Filter>Shading</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderFactory.h">
-      <Filter>Shading</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderManager.h">
-      <Filter>Shading</Filter>
-    </ClInclude>
     <ClInclude Include="src\GlobalHeaps.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -233,25 +203,37 @@
     <ClInclude Include="src\ReflectedVect.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\LitTextureMaterial.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UnlitTextureMaterial.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WireframeMaterial.h">
+      <Filter>Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="hlsl\LitTexture.vs.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\UnlitTexture.vs.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\UnlitTexture.ps.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\LitTexture.ps.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\Wireframe.vs.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\Wireframe.ps.hlsl">
-      <Filter>Shading\HLSL</Filter>
+      <Filter>Material\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

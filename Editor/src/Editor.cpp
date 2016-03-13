@@ -1,8 +1,8 @@
 #include <cmath>
 
+#include <MemorySetup.h>
 #include <GameAssert.h>
 #include <Timer.h>
-#include <LibrarySetup.h>
 #include <ActorManager.h>
 #include <CameraManager.h>
 #include <KeyBindingManager.h>
@@ -12,12 +12,9 @@
 #include <Camera.h>
 #include <DirectionLight.h>
 #include <DrawInfo.h>
-#include <DrawStrategy.h>
 #include <DebuggerSetup.h>
-#include <MemorySetup.h>
+
 #include <WireframeMaterial.h>
-#include <TextureMaterial.h>
-#include <LightingTextureMaterial.h>
 
 #include "Editor.h"
 
@@ -35,20 +32,10 @@
 //		Editor Engine Constructor
 //-----------------------------------------------------------------------------
 Editor::Editor( const char* windowName, const int Width, const int Height ) :
-Engine( windowName, Width, Height )
+Engine( windowName, Width, Height ),
+wasCulled( false )
 {
 	// Do nothing
-}
-
-//-----------------------------------------------------------------------------
-// Editor::Initialize()
-//		Allows the engine to perform any initialization it needs to before 
-//      starting to run.  This is where it can query for any required services 
-//      and load any non-graphic related content. 
-//-----------------------------------------------------------------------------
-void Editor::Initialize()
-{
-
 }
 
 //-----------------------------------------------------------------------------
@@ -58,18 +45,10 @@ void Editor::Initialize()
 //-----------------------------------------------------------------------------
 void Editor::LoadContent()
 {
-	glEnable( GL_DEPTH_TEST );
-	glDepthFunc( GL_LEQUAL );
-
-	ViewportData viewport;
-	viewport.x = 0;
-	viewport.y = 0;
-	viewport.width = info->windowWidth;
-	viewport.height = info->windowHeight;
 
 	PerspectiveData perspective;
 	perspective.fov_Y = 50.0f * MATH_PI_180;
-	perspective.aspect_ratio = (float) info->windowWidth / (float) info->windowHeight;
+	perspective.aspect_ratio = (float) info[Window_Width] / (float) info[Window_Height];
 	perspective.near_distance = 0.1f;
 	perspective.far_distance = 1000.0f;
 
@@ -78,7 +57,7 @@ void Editor::LoadContent()
 	orientation.lookAt = Vect( 0.0f, 0.0f, 0.0f );
 	orientation.up = Vect( 0.0f, 1.0f, 0.0f );
 
-	this->moveableCamera = CameraManager::Instance()->Add( viewport, perspective, orientation );
+	this->moveableCamera = CameraManager::Instance()->Add( perspective, orientation );
 
 
 	// W - move forward
@@ -90,33 +69,31 @@ void Editor::LoadContent()
 	// D - move right
 	KeyBindingManager::Instance()->Add( 0x44, new( TemporaryHeap::Instance(), ALIGN_4 ) MoveAction( this->moveableCamera, 1.0f, 0.0f, 0.0f ) );
 
-	GlobalDrawState::Change_Draw_Types( DRAW_TEXTURE_ONLY, DRAW_WIREFRAME );
-
 	UpdateStrategy* updater = new( TemporaryHeap::Instance(), ALIGN_4 ) AnimatingStrategy();
 
-	ModelBase* model = ModelBaseManager::Instance()->Add( "../resources/soldier_animated_jump.spu" );
-	this->actor[0] = ActorManager::Instance()->Add( model, updater );
+	ModelBase* model = ModelBaseManager::Instance()->Add( this->device, "../resources/soldier_animated_jump.spu" );
+	this->actor[0] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
 	this->actor[0]->Add_Reference();
 	this->actor[0]->Get_Model().Change_Active_Texture( 1 );
 	this->actor[0]->Update_Model_Matrix();
 	this->actor[0]->Get_Model().Start_Animation( 0, 0 );
 
-	this->actor[1] = ActorManager::Instance()->Add( model, updater );
+	this->actor[1] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
 	this->actor[1]->Add_Reference();
 	this->actor[1]->position[X] = -125.0f;
 	this->actor[1]->Get_Model().Change_Active_Texture( 1 );
 	this->actor[1]->Update_Model_Matrix();
 	this->actor[1]->Get_Model().Start_Animation( 500, 0 );
 
-	ModelBase* model2 = ModelBaseManager::Instance()->Add( "../resources/teddy_tga.spu" );
-	this->actor[2] = ActorManager::Instance()->Add( model2, updater );
+	ModelBase* model2 = ModelBaseManager::Instance()->Add( this->device, "../resources/teddy_tga.spu" );
+	this->actor[2] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
 	this->actor[2]->Add_Reference();
 	this->actor[2]->position[Y] = -175.0f;
 	this->actor[2]->Get_Model().Change_Active_Texture( 1 );
 	this->actor[2]->Update_Model_Matrix();
 	this->actor[2]->Get_Model().Start_Animation( 0, 0 );
 
-	this->actor[3] = ActorManager::Instance()->Add( model2, updater );
+	this->actor[3] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
 	this->actor[3]->Add_Reference();
 	this->actor[3]->position[Y] = -175.0f;
 	this->actor[3]->position[X] = -125.0f;
@@ -126,6 +103,8 @@ void Editor::LoadContent()
 
 	this->light = DirectionLightManager::Instance()->Add( -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f );
 	this->light->Add_Reference();
+
+
 }
 
 const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
@@ -165,6 +144,7 @@ void Editor::Draw()
 	DrawInfo info;
 	info.camera = CameraManager::Instance()->Get_Active_Camera();
 	info.light = this->light;
+	info.context = this->deviceContext;
 
 	this->actor[0]->Draw( info );
 	this->actor[1]->Draw( info );
@@ -185,18 +165,4 @@ void Editor::UnLoadContent()
 	this->actor[3]->Remove_Reference();
 
 	this->light->Remove_Reference();
-}
-
-
-//------------------------------------------------------------------
-// Editor::ClearBufferFunc()
-// Allows user to change the way the clear buffer function works
-//------------------------------------------------------------------
-void Editor::ClearBufferFunc()
-{
-	const GLfloat grey[] ={ 0.4f, 0.4f, 0.8f, 1.0f };
-	const GLfloat one = 1.0f;
-
-	glClearBufferfv( GL_COLOR, 0, grey );
-	glClearBufferfv( GL_DEPTH, 0, &one );
 }

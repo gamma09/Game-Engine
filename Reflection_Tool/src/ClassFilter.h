@@ -9,7 +9,7 @@ public:
 	ClassFilter( SourceCodePipe* out );
 	virtual ~ClassFilter();
 
-	virtual void Write( TiXmlDocument& doc, FeedbackContext& context ) override;
+	virtual bool Write( TiXmlDocument& doc, FeedbackContext& context ) override;
 	virtual void Finish() override;
 
 private:

@@ -5,9 +5,11 @@
 #include <malloc.h>
 #include <new>
 #include <asset_reader.h>
-#include <cstdio>
+#include <stdio.h>
 #include <utility>
+#include <d3d11_1.h>
 
+#include "DrawInfo.h"
 #include "ModelBase.h"
 #include "ModelBaseManager.h"
 #include "Texture.h"
@@ -19,18 +21,18 @@
 #include "Bone.h"
 #include "KeyFrame.h"
 
-ModelBase::ModelBase() :
-	ManagedObject(),
+ModelBase::ModelBase()
+	: ManagedObject(),
 	ReferencedObject(),
-	boneCount(0),
-	boneMeshes(0),
-	animCount(0),
-	anims(0),
-	boneParentList(0),
-	textureCount(0),
-	textureHead(0),
+	boneCount( 0 ),
+	boneMeshes( nullptr ),
+	animCount( 0 ),
+	anims( nullptr ),
+	boneParentList( nullptr ),
+	textureCount( 0 ),
+	textureHead( nullptr ),
 	boundsMatrix(),
-	boundingRadius(0.0f)
+	boundingRadius( 0.0f )
 {
 	// Do nothing
 }
@@ -58,6 +60,7 @@ struct Vertex
 	float x;
 	float y;
 	float z;
+	float w;
 
 	float u;
 	float v;
@@ -65,6 +68,7 @@ struct Vertex
 	float normX;
 	float normY;
 	float normZ;
+	float normW;
 };
 
 
@@ -78,146 +82,136 @@ struct Triangle
 
 const static Triangle pyramidTriList[] =
 {
-	{0,2,1}, // Good
-	{1,2,3}, // Good
-	
-	{4,5,6}, // Good
-	{7,6,5}, // Good
+	{ 0, 2, 1 }, // Good
+	{ 1, 2, 3 }, // Good
 
-	{8,9,10}, // Good
-	{9,11,10}, // Good
+	{ 4, 5, 6 }, // Good
+	{ 7, 6, 5 }, // Good
 
-	{12,14,13}, // Good
-	{13,14,15}, // Good
-	
-	{16,17,18}, // Good
-	{17,19,18}, // Good
+	{ 8, 9, 10 }, // Good
+	{ 9, 11, 10 }, // Good
 
-	{20,22,21}, // Good
-	{21,22,23} // Good
+	{ 12, 14, 13 }, // Good
+	{ 13, 14, 15 }, // Good
+
+	{ 16, 17, 18 }, // Good
+	{ 17, 19, 18 }, // Good
+
+	{ 20, 22, 21 }, // Good
+	{ 21, 22, 23 } // Good
 };
 
 const static Vertex cubeData[] =
 {
 	// left face
-	{-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.6f, -0.6f, -0.6f},
-	{-0.5f, -0.5f,  0.5f,	0.0f, 1.0f,		-0.6f, -0.6f,  0.6f},
-	{-0.5f,  0.5f, -0.5f,	1.0f, 0.0f,		-0.6f,  0.6f, -0.6f},
-	{-0.5f,  0.5f,  0.5f,	1.0f, 1.0f,		-0.6f,  0.6f,  0.6f},
+	{ -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -0.6f, -0.6f, -0.6f, 0.0f },
+	{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, -0.6f, -0.6f, 0.6f, 0.0f },
+	{ -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, -0.6f, 0.6f, -0.6f, 0.0f },
+	{ -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, -0.6f, 0.6f, 0.6f, 0.0f },
 
 
 	// right face
-	{ 0.5f, -0.5f, -0.5f,   1.0f, 0.0f,		 0.6f, -0.6f, -0.6f},
-	{ 0.5f, -0.5f,  0.5f,   0.0f, 1.0f,		 0.6f, -0.6f,  0.6f},
-	{ 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 0.6f,  0.6f, -0.6f},
-	{ 0.5f,  0.5f,  0.5f,	0.0f, 0.0f,		 0.6f,  0.6f,  0.6f},
+	{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f, -0.6f, -0.6f, 0.0f },
+	{ 0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 0.6f, -0.6f, 0.6f, 0.0f },
+	{ 0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.6f, 0.6f, -0.6f, 0.0f },
+	{ 0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.6f, 0.6f, 0.6f, 0.0f },
 
 	// bottom face
-	{-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.6f, -0.6f, -0.6f},
-	{-0.5f, -0.5f,  0.5f,	0.0f, 1.0f,		-0.6f, -0.6f,  0.6f},
-	{ 0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		 0.6f, -0.6f, -0.6f},
-	{ 0.5f, -0.5f,  0.5f,	1.0f, 1.0f,		 0.6f, -0.6f,  0.6f},
+	{ -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -0.6f, -0.6f, -0.6f, 0.0f },
+	{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 1.0f, -0.6f, -0.6f, 0.6f, 0.0f },
+	{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f, -0.6f, -0.6f, 0.0f },
+	{ 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.6f, -0.6f, 0.6f, 0.0f },
 
 	// top face
-	{-0.5f,  0.5f, -0.5f,	0.0f, 0.0f,		-0.6f,  0.6f, -0.6f},
-	{-0.5f,  0.5f,  0.5f,	0.0f, 1.0f,		-0.6f,  0.6f,  0.6f},
-	{ 0.5f,  0.5f, -0.5f,	1.0f, 0.0f,		 0.6f,  0.6f, -0.6f},
-	{ 0.5f,  0.5f,  0.5f,	1.0f, 1.0f,		 0.6f,  0.6f,  0.6f},
+	{ -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -0.6f, 0.6f, -0.6f, 0.0f },
+	{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, -0.6f, 0.6f, 0.6f, 0.0f },
+	{ 0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f, 0.6f, -0.6f, 0.0f },
+	{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.6f, 0.6f, 0.6f, 0.0f },
 
 	// front face
-	{-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,		-0.6f, -0.6f,  0.6f},
-	{-0.5f,  0.5f,  0.5f,	0.0f, 1.0f,		-0.6f,  0.6f,  0.6f},
-	{ 0.5f, -0.5f,  0.5f,	1.0f, 0.0f,		 0.6f, -0.6f,  0.6f},
-	{ 0.5f,  0.5f,  0.5f,	1.0f, 1.0f,		 0.6f,  0.6f,  0.6f},
+	{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, -0.6f, -0.6f, 0.6f, 0.0f },
+	{ -0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 1.0f, -0.6f, 0.6f, 0.6f, 0.0f },
+	{ 0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.6f, -0.6f, 0.6f, 0.0f },
+	{ 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 0.6f, 0.6f, 0.6f, 0.0f },
 
 	// back face
-	{-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.6f, -0.6f, -0.6f},
-	{-0.5f,  0.5f, -0.5f,	0.0f, 1.0f,		-0.6f,  0.6f, -0.6f},
-	{ 0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		 0.6f, -0.6f, -0.6f},
-	{ 0.5f,  0.5f, -0.5f,	1.0f, 1.0f,		 0.6f,  0.6f, -0.6f}
+	{ -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, -0.6f, -0.6f, -0.6f, 0.0f },
+	{ -0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 1.0f, -0.6f, 0.6f, -0.6f, 0.0f },
+	{ 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f, -0.6f, -0.6f, 0.0f },
+	{ 0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.6f, 0.6f, -0.6f, 0.0f }
 };
 
 
-void ModelBase::Set(const char* const archiveFile)
+void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 {
 	unsigned char* modelName = nullptr;
 	int modelNameSize;
-	GameVerify( read_asset(archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize) );
+	GameVerify( read_asset( archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize ) );
 
 	unsigned char* modelData = nullptr;
 	int modelSize;
-	GameVerify( read_asset(archiveFile, VERTS_TYPE, reinterpret_cast<char*>(modelName), modelData, modelSize) );
+	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize ) );
 
-	Header* header = reinterpret_cast<Header*>(modelData);
-	this->boneParentList = reinterpret_cast<int*>(modelData + sizeof(Header));
+	Header* header = reinterpret_cast<Header*>( modelData );
+	this->boneParentList = reinterpret_cast<int*>( modelData + sizeof( Header ) );
 	this->boneMeshes = new Mesh[header->boneCount];
 	this->boneCount = header->boneCount;
-	unsigned char* animData = reinterpret_cast<unsigned char*>(this->boneParentList) + header->boneCount * sizeof(int);
+	unsigned char* animData = reinterpret_cast<unsigned char*>( this->boneParentList ) + header->boneCount * sizeof( int );
 
 	this->animCount = header->animCount;
 	this->anims = new Animation[this->animCount];
-	for (unsigned int i = 0; i < header->animCount; i++)
+	for( unsigned int i = 0; i < header->animCount; i++ )
 	{
-		this->anims[i] = std::move(Animation(header->boneCount, animData));
-		animData += 4 + this->anims[i].Get_KeyFrame_Count() * (4 + header->boneCount * sizeof(Transform));
+		this->anims[i] = std::move( Animation( header->boneCount, animData ) );
+		animData += 4 + this->anims[i].Get_KeyFrame_Count() * ( 4 + header->boneCount * sizeof( Transform ) );
 	}
 
-	Vertex* vertices = reinterpret_cast<Vertex*>(animData);
-	Triangle* triangles = reinterpret_cast<Triangle*>(reinterpret_cast<unsigned char*>(vertices) + header->vertexCount * sizeof(Vertex));
+	Vertex* vertices = reinterpret_cast<Vertex*>( animData );
+	Triangle* triangles = reinterpret_cast<Triangle*>( reinterpret_cast<unsigned char*>(vertices) +header->vertexCount * sizeof( Vertex ) );
 
 	this->boundingRadius = header->radius;
-	Matrix scale(SCALE, header->radius, header->radius, header->radius);
-	Matrix translate(TRANS, header->boundsCenterX, header->boundsCenterY, header->boundsCenterZ);
+	Matrix scale( SCALE, header->radius, header->radius, header->radius );
+	Matrix translate( TRANS, header->boundsCenterX, header->boundsCenterY, header->boundsCenterZ );
 	this->boundsMatrix = scale * translate;
 
 	this->textureCount = header->textureCount;
 	this->textureHead = 0;
 
-	char* ptr = reinterpret_cast<char*>(triangles) + header->triangleCount * sizeof(Triangle);
+	char* ptr = reinterpret_cast<char*>(triangles) +header->triangleCount * sizeof( Triangle );
 	Texture* tail = 0;
-	if (header->textureCount != 0)
+	if( header->textureCount != 0 )
 	{
-		this->textureHead = TextureManager::Instance()->Add(archiveFile, ptr);
+		this->textureHead = TextureManager::Instance()->Add( device, archiveFile, ptr );
 		tail = this->textureHead;
-		ptr += strlen(ptr) + 1;
+		ptr += strlen( ptr ) + 1;
 
-		for (unsigned int i = 1; i < header->textureCount; i++)
+		for( unsigned int i = 1; i < header->textureCount; i++ )
 		{
-			Texture* texture = TextureManager::Instance()->Add(archiveFile, ptr);
+			Texture* texture = TextureManager::Instance()->Add( device, archiveFile, ptr );
 			tail->nextTexture = texture;
 			tail = texture;
-			ptr += strlen(ptr) + 1;
+			ptr += strlen( ptr ) + 1;
 		}
 	}
-	
+
 	// TODO remove this when ready to skin
-	glGenVertexArrays(1, &this->boneMeshes[0].vao);
-	glBindVertexArray(this->boneMeshes[0].vao);
+	D3D11_BUFFER_DESC vertexBufferDesc ={ sizeof( Vertex ) * 24, D3D11_USAGE_DEFAULT, D3D11_BIND_VERTEX_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA vertexBufferInitData ={ cubeData, 0, 0 };
 
-	glGenBuffers(1, &this->boneMeshes[0].vboVertices);
-	glBindBuffer(GL_ARRAY_BUFFER, this->boneMeshes[0].vboVertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 24, cubeData, GL_STATIC_DRAW);
+	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &vertexBufferDesc, &vertexBufferInitData, &this->boneMeshes[0].verticesBuffer ) ), "Couldn't create vertex buffer." );
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (3 * sizeof(float)));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (5 * sizeof(float)));
+	D3D11_BUFFER_DESC indexBufferDesc ={ sizeof( Triangle ) * 12, D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA indexBufferInitData ={ pyramidTriList, 0, 0 };
 
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &indexBufferDesc, &indexBufferInitData, &this->boneMeshes[0].indicesBuffer ) ), "Couldn't create index buffer." );
 
-	glGenBuffers(1, &this->boneMeshes[0].vboIndices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->boneMeshes[0].vboIndices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Triangle) * 12, pyramidTriList, GL_STATIC_DRAW);
-	glBindVertexArray(0);
 	this->boneMeshes[0].triangleVertexCount = 36;
 
-	for (unsigned int i = 1; i < header->boneCount; i++)
+	for( unsigned int i = 1; i < this->boneCount; i++ )
 	{
 		this->boneMeshes[i].triangleVertexCount = this->boneMeshes[0].triangleVertexCount;
-		this->boneMeshes[i].vao = this->boneMeshes[0].vao;
-		this->boneMeshes[i].vboIndices = this->boneMeshes[0].vboIndices;
-		this->boneMeshes[i].vboVertices = this->boneMeshes[0].vboVertices;
+		this->boneMeshes[i].verticesBuffer = this->boneMeshes[0].verticesBuffer;
+		this->boneMeshes[i].indicesBuffer = this->boneMeshes[0].indicesBuffer;
 	}
 	// TODO stop removing here
 
@@ -250,51 +244,38 @@ void ModelBase::Set(const char* const archiveFile)
 void ModelBase::Reset()
 {
 	ManagedObject::Reset();
-	GameAssert(this->Get_Reference_Count() == 0);
+	GameAssert( this->Get_Reference_Count() == 0 );
 
-	// TODO remove this and replace it with the commented stuff
-	glDeleteBuffers(1, &this->boneMeshes[0].vboIndices);
-	glDeleteBuffers(1, &this->boneMeshes[0].vboVertices);
-	glDeleteVertexArrays(1, &this->boneMeshes[0].vao);
+	// TODO change this to release buffers in every bone mesh when skinning
+	this->boneMeshes[0].indicesBuffer->Release();
+	this->boneMeshes[0].verticesBuffer->Release();
 
-	this->boneMeshes[0].vboIndices = 0;
-	this->boneMeshes[0].vboVertices = 0;
-	this->boneMeshes[0].vao = 0;
+	delete this->anims;
+	delete this->boneMeshes;
 
-	//for (int i = 0; i < this->boneCount; i++)
-	//{
-	//	glDeleteBuffers(1, &this->boneMeshes[i].vboIndices);
-	//	glDeleteBuffers(1, &this->boneMeshes[i].vboVertices);
-	//	glDeleteVertexArrays(1, &this->boneMeshes[i].vao);
-
-	//	this->boneMeshes[i].vboIndices = 0;
-	//	this->boneMeshes[i].vboVertices = 0;
-	//	this->boneMeshes[i].vao = 0;
-	//}
-
-	while (this->textureHead != 0)
+	while( this->textureHead != nullptr )
 	{
 		Texture* head = this->textureHead;
 		this->textureHead = head->nextTexture;
-		TextureManager::Instance()->Remove(head);
+		TextureManager::Instance()->Remove( head );
 	}
 
-	
+
 }
 
 void ModelBase::Free_Me()
 {
-	ModelBaseManager::Instance()->Remove(this);
+	ModelBaseManager::Instance()->Remove( this );
 }
 
-const Texture* ModelBase::Get_Texture(const uint32_t textureID) const
+const Texture* ModelBase::Get_Texture( const uint32_t textureID ) const
 {
-	if (textureID >= this->textureCount)
+	if( textureID >= this->textureCount )
 		return TextureManager::Instance()->Default_Texture();
 	else
 	{
 		Texture* curr = this->textureHead;
-		for (unsigned int i = 0; i < textureID; i++)
+		for( unsigned int i = 0; i < textureID; i++ )
 			curr = curr->nextTexture;
 
 		return curr;
@@ -306,67 +287,69 @@ const Matrix& ModelBase::Get_Bounding_Matrix() const
 	return this->boundsMatrix;
 }
 
-const float ModelBase::Get_Bounding_Radius() const
+float ModelBase::Get_Bounding_Radius() const
 {
 	return this->boundingRadius;
 }
 
-void ModelBase::Draw(const uint32_t boneIndex) const
+const static unsigned int VERTEX_SIZE = sizeof( Vertex );
+const static unsigned int VERTEX_BUFFER_OFFSET = 0;
+
+void ModelBase::Draw( const DrawInfo& info ) const
 {
-	GameAssert(boneIndex < this->boneCount);
+	GameAssert( info.boneIndex < this->boneCount );
 
-	glBindVertexArray(this->boneMeshes[boneIndex].vao);
-	glBindBuffer(GL_ARRAY_BUFFER, this->boneMeshes[boneIndex].vboVertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->boneMeshes[boneIndex].vboIndices);
-	glDrawElements(GL_TRIANGLES, this->boneMeshes[boneIndex].triangleVertexCount, GL_UNSIGNED_INT, 0);
 
-	glBindVertexArray(0);
+	info.context->IASetVertexBuffers( 0, 1, &this->boneMeshes[info.boneIndex].verticesBuffer, &VERTEX_SIZE, &VERTEX_BUFFER_OFFSET );
+	info.context->IASetIndexBuffer( this->boneMeshes[info.boneIndex].indicesBuffer, DXGI_FORMAT_R32_UINT, 0 );
+	info.context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+	info.context->DrawIndexed( this->boneMeshes[info.boneIndex].triangleVertexCount, 0, 0 );
 }
 
 Bone* const ModelBase::Create_Skeleton_From_Model() const
 {
 	Bone** boneyard = new Bone*[this->boneCount];
-	for (unsigned int i = 0; i < this->boneCount; i++)
-		boneyard[i] = BoneManager::Instance()->Add(i);
+	for( unsigned int i = 0; i < this->boneCount; i++ )
+		boneyard[i] = BoneManager::Instance()->Add( i );
 
 	Bone* root = 0;
-	for (unsigned int i = 0; i < this->boneCount; i++)
+	for( unsigned int i = 0; i < this->boneCount; i++ )
 	{
 		int parent = this->boneParentList[i];
-		if (parent == -1)
+		if( parent == -1 )
 		{
-			if (root == 0)
+			if( root == 0 )
 			{
 				root = boneyard[i];
 			}
 			else
 			{
-				boneyard[i]->setSibling(root);
+				boneyard[i]->setSibling( root );
 				root = boneyard[i];
 			}
 		}
 		else
 		{
-			boneyard[i]->setSibling(boneyard[parent]->getChild());
-			boneyard[parent]->setChild(boneyard[i]);
-			boneyard[i]->setParent(boneyard[parent]);
+			boneyard[i]->setSibling( boneyard[parent]->getChild() );
+			boneyard[parent]->setChild( boneyard[i] );
+			boneyard[i]->setParent( boneyard[parent] );
 		}
 	}
 
 	return root;
 }
 
-const Matrix ModelBase::Get_Bone_Transform(const uint32_t animID, const uint32_t boneIndex, const uint32_t time) const
+Matrix ModelBase::Get_Bone_Transform( const uint32_t animID, const uint32_t boneIndex, const uint32_t time ) const
 {
-	GameAssert(animID < this->animCount);
-	GameAssert(boneIndex < this->boneCount);
+	GameAssert( animID < this->animCount );
+	GameAssert( boneIndex < this->boneCount );
 
-	return this->anims[animID].Get_Transform(time, boneIndex);
+	return this->anims[animID].Get_Transform( time, boneIndex );
 }
 
-const Animation& ModelBase::Get_Animation(const uint32_t animID) const
+const Animation& ModelBase::Get_Animation( const uint32_t animID ) const
 {
-	GameAssert(animID < this->animCount);
+	GameAssert( animID < this->animCount );
 
 	return this->anims[animID];
 }

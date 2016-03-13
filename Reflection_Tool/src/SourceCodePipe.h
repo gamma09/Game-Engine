@@ -16,6 +16,6 @@ protected:
 public:
 	virtual ~SourceCodePipe() { }
 	
-	virtual void Write( TiXmlDocument& doc, FeedbackContext& context ) abstract;
+	virtual bool Write( TiXmlDocument& doc, FeedbackContext& context ) abstract;
 	virtual void Finish() abstract;
 };

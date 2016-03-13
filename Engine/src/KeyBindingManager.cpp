@@ -24,9 +24,6 @@ void KeyBindingManager::Create(Heap* managerHeap, uint32_t initialReserve, uint3
 void KeyBindingManager::Destroy()
 {
 	GameAssert(instance != 0);
-
-	instance->Destroy_Objects();
-	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -63,12 +60,13 @@ KeyBindingManager::KeyBindingManager(const uint32_t initialReserve, const uint32
 	Manager(refillSize)
 {
 	// Hey, might as well allocate a whole page of memory...
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap(this->heap, 4096) );
+	Mem::createVariableBlockHeap(this->heap, 4096);
 
 	this->Init(initialReserve);
 }
 
 KeyBindingManager::~KeyBindingManager()
 {
-	// Do nothing
+	Destroy_Objects();
+	Mem::destroyHeap( heap );
 }

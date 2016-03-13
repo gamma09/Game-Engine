@@ -2,13 +2,12 @@
 
 #include <cstdint>
 
-#include <GL/glew.h>
+struct ID3D11Buffer;
 
 struct Mesh
 {
-	GLuint vao;
-	GLuint vboVertices;
-	GLuint vboIndices;
+	ID3D11Buffer* verticesBuffer;
+	ID3D11Buffer* indicesBuffer;
 
 	uint32_t triangleVertexCount;
 };

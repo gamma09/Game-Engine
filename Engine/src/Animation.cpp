@@ -7,34 +7,34 @@
 #include "Animation.h"
 #include "KeyFrame.h"
 
-Animation::Animation() :
-	keyFrameCount(0),
-	keyFrames(0)
+Animation::Animation()
+	: keyFrameCount( 0 ),
+	keyFrames( nullptr )
 {
 	// Do nothing
 }
 
-Animation::Animation(const uint32_t& boneCount, const unsigned char* frameData)
+Animation::Animation( uint32_t boneCount, const unsigned char* frameData )
 {
-	this->keyFrameCount = *reinterpret_cast<const uint32_t*>(frameData);
+	this->keyFrameCount = *reinterpret_cast<const uint32_t*>( frameData );
 	this->keyFrames = new KeyFrame[this->keyFrameCount];
 
-	const unsigned char* framePtr = frameData + sizeof(uint32_t) / sizeof(unsigned char);
-	const uint32_t frameSize = (sizeof(uint32_t) + boneCount * sizeof(Transform)) / sizeof(unsigned char);
+	const unsigned char* framePtr = frameData + sizeof( uint32_t ) / sizeof( unsigned char );
+	const uint32_t frameSize = ( sizeof( uint32_t ) + boneCount * sizeof( Transform ) ) / sizeof( unsigned char );
 
-	for (uint32_t i = 0; i < this->keyFrameCount; i++, framePtr += frameSize)
-		this->keyFrames[i] = std::move(KeyFrame(boneCount, framePtr));
+	for( uint32_t i = 0; i < this->keyFrameCount; i++, framePtr += frameSize )
+		this->keyFrames[i] = std::move( KeyFrame( boneCount, framePtr ) );
 }
 
-Animation::Animation(Animation&& anim) :
-	keyFrameCount(anim.keyFrameCount),
-	keyFrames(anim.keyFrames)
+Animation::Animation( Animation&& anim ) :
+keyFrameCount( anim.keyFrameCount ),
+keyFrames( anim.keyFrames )
 {
 	anim.keyFrameCount = 0;
 	anim.keyFrames = 0;
 }
 
-Animation& Animation::operator=(Animation&& anim)
+Animation& Animation::operator=( Animation&& anim )
 {
 	this->keyFrameCount = anim.keyFrameCount;
 	this->keyFrames = anim.keyFrames;
@@ -46,15 +46,15 @@ Animation& Animation::operator=(Animation&& anim)
 
 Animation::~Animation()
 {
-	if (this->keyFrames != 0)
+	if( this->keyFrames != 0 )
 		delete[] this->keyFrames;
 }
 
-const Matrix Animation::Get_Transform(const uint32_t& time, const uint32_t& boneIndex) const
+Matrix Animation::Get_Transform( uint32_t time, uint32_t boneIndex ) const
 {
-	GameAssert(this->keyFrameCount > 0);
-	GameAssert(this->keyFrames != 0);
-	GameAssert(time <= this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time());
+	GameAssert( this->keyFrameCount > 0 );
+	GameAssert( this->keyFrames != 0 );
+	GameAssert( time <= this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time() );
 
 	KeyFrame* prevFramePtr = 0;
 	KeyFrame* nextFramePtr = this->keyFrames;
@@ -62,7 +62,7 @@ const Matrix Animation::Get_Transform(const uint32_t& time, const uint32_t& bone
 	uint32_t prevFrameTime = 0;
 	uint32_t nextFrameTime = nextFramePtr->Get_Frame_Time();
 
-	while (nextFrameTime < time)
+	while( nextFrameTime < time )
 	{
 		prevFramePtr = nextFramePtr++;
 
@@ -70,40 +70,40 @@ const Matrix Animation::Get_Transform(const uint32_t& time, const uint32_t& bone
 		nextFrameTime = nextFramePtr->Get_Frame_Time();
 	}
 
-	if (nextFrameTime > time)
+	if( nextFrameTime > time )
 	{
-		const float factor = ((float) (time - prevFrameTime)) / ((float) (nextFrameTime - prevFrameTime));
+		const float factor = ( (float) ( time - prevFrameTime ) ) / ( (float) ( nextFrameTime - prevFrameTime ) );
 
-		const Transform* const prev = prevFramePtr->Get_Transform(boneIndex);
-		const Transform* const next = nextFramePtr->Get_Transform(boneIndex);
+		const Transform* const prev = prevFramePtr->Get_Transform( boneIndex );
+		const Transform* const next = nextFramePtr->Get_Transform( boneIndex );
 
-		Matrix result(SCALE, VectApp::Lerp(prev->scale, next->scale, factor));
-		
+		Matrix result( SCALE, VectApp::Lerp( prev->scale, next->scale, factor ) );
+
 		Quat rotation;
-		QuatApp::Slerp(rotation, prev->rotation, next->rotation, factor);
+		QuatApp::Slerp( rotation, prev->rotation, next->rotation, factor );
 		result *= rotation;
-		result *= Matrix(TRANS, VectApp::Lerp(prev->translation, next->translation, factor));
+		result *= Matrix( TRANS, VectApp::Lerp( prev->translation, next->translation, factor ) );
 		return result;
 	}
 	else // nextFrameTime == time
 	{
-		const Transform* const transform = nextFramePtr->Get_Transform(boneIndex);
-		Matrix result(SCALE, transform->scale);
+		const Transform* const transform = nextFramePtr->Get_Transform( boneIndex );
+		Matrix result( SCALE, transform->scale );
 		result *= transform->rotation;
-		result *= Matrix(TRANS, transform->translation);
+		result *= Matrix( TRANS, transform->translation );
 		return result;
 	}
 }
 
-const uint32_t Animation::Get_KeyFrame_Count() const
+uint32_t Animation::Get_KeyFrame_Count() const
 {
 	return this->keyFrameCount;
 }
 
-const uint32_t Animation::Get_Animation_Length() const
+uint32_t Animation::Get_Animation_Length() const
 {
-	GameAssert(this->keyFrameCount > 0);
-	GameAssert(this->keyFrames != 0);
+	GameAssert( this->keyFrameCount > 0 );
+	GameAssert( this->keyFrames != 0 );
 
 	return this->keyFrames[this->keyFrameCount - 1].Get_Frame_Time();
 }

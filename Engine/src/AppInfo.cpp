@@ -1,3 +1,6 @@
+#define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
+#include <Windows.h>
 #include <GameAssert.h>
 #include "AppInfo.h"
 
@@ -5,7 +8,7 @@ static bool IsPowerOfTwo( unsigned int x )
 {
 	if( x == 0 ) return false;
 
-	while( x & 1 == 0 )
+	while( (x & 1) == 0 )
 	{
 		x = x << 1;
 	}
@@ -29,7 +32,7 @@ AppInfo::AppInfo( const char* inTitle, unsigned int inSamples )
 	strcpy_s( this->title, inTitle );
 
 	// We only allow 1, 2, 4, 8, 16, etc.
-	GameAssert( IsPowerOfTwo( inSamples ) );
+	GameCheckFatal( IsPowerOfTwo( inSamples ), "MSAA sample count must be a power of two." );
 }
 
 AppInfo::AppInfo( const AppInfo& info )
@@ -48,6 +51,8 @@ AppInfo::AppInfo( const AppInfo& info )
 AppInfo& AppInfo::operator=( const AppInfo& info )
 {
 	memcpy( this, &info, sizeof( AppInfo ) );
+
+	return *this;
 }
 
 AppInfo::~AppInfo()
@@ -57,12 +62,12 @@ AppInfo::~AppInfo()
 
 void AppInfo::SetSamples( unsigned int inSamples )
 {
-	GameAssert( IsPowerOfTwo( inSamples ) );
+	GameCheckFatal( IsPowerOfTwo( inSamples ), "MSAA sample count must be a power of two." );
 	this->samples = inSamples;
 }
 
 void AppInfo::DecreaseSampleCount()
 {
-	GameAssert( this->samples != 1 );
+	GameCheckFatal( this->samples != 1, "MSAA sample count may not be decreased below 1 - something must be horribly wrong with the graphics card." );
 	this->samples = this->samples >> 1;
 }

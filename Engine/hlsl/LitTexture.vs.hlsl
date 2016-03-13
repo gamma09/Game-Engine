@@ -4,22 +4,14 @@
 // Shader "Uniforms" (they're called constant buffers in DirectX)
 //*****************************************************************************
 
-cbuffer cbViewMatrix : register( b0 )
+cbuffer cbCameraMatrices : register( b0 )
 {
 	float4x4 View;
-};
-
-cbuffer cbProjectionMatrix : register( b1 )
-{
 	float4x4 Projection;
-};
-
-cbuffer cbWorldMatrix : register( b2 )
-{
 	float4x4 World;
 };
 
-cbuffer cbLightData : register( b3 )
+cbuffer cbLightData : register( b1 )
 {
 	float4 LightPosition;
 	float4 LightColor;

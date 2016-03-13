@@ -21,14 +21,6 @@ struct PerspectiveData
 	float far_distance;
 };
 
-struct ViewportData
-{
-	int x;
-	int y;
-	int width;
-	int height;
-};
-
 struct OrientationData
 {
 	REFLECTED_CLASS( OrientationData );
@@ -41,20 +33,20 @@ struct OrientationData
 class Camera : public ManagedObject, public ReferencedObject, public Moveable
 {
 public:
-	
-	void Set(const ViewportData& viewport, const PerspectiveData& perspective, const OrientationData& orientation);
+
+	void Set( const PerspectiveData& perspective, const OrientationData& orientation );
 	virtual void Reset();
 
-	const bool Should_Be_Drawn(const Vect& position, const float boundingRadius) const;
+	const bool Should_Be_Drawn( const Vect& position, const float boundingRadius ) const;
 
 	const Vect Get_Position() const;
-	void Set_Position(const Vect& pos);
+	void Set_Position( const Vect& pos );
 
 	const Matrix& Get_Projection_View() const;
 	const Matrix& Get_Projection() const;
 	const Matrix& Get_View() const;
 
-	virtual void Update_Position(const uint32_t& time) override;
+	virtual void Update_Position( const uint32_t& time ) override;
 
 protected:
 	virtual void Free_Me() override;
@@ -67,15 +59,14 @@ private:
 	virtual ~Camera();
 
 	// Copying of a camera is not allowed
-	Camera(const Camera& cam);
-	Camera& operator=(const Camera& cam);
+	Camera( const Camera& cam ) = delete;
+	Camera& operator=( const Camera& cam ) = delete;
 
 
 private:
 	// Internal helper methods
-	void _set_perspective(const PerspectiveData& perspective);
-	void _set_viewport(const ViewportData& viewport);
-	void _set_orientation(const OrientationData& orientation);
+	void _set_perspective( const PerspectiveData& perspective );
+	void _set_orientation( const OrientationData& orientation );
 
 	void _calculate_frustum();
 	void _calculate_view_matrix();
@@ -87,8 +78,8 @@ private:
 	Matrix projection;
 	Matrix view;
 	Matrix projection_view_matrix;
-	
-	
+
+
 	/********************************************************************************
 	 * facing is actually the reverse of where the camera is pointing
 	 * in the below picture, the camera is pointing down, so facing is pointing up
@@ -108,7 +99,7 @@ private:
 	Vect nearTopLeft;
 	Vect nearTopRight;
 	Vect nearBottomLeft;
-	Vect nearBottomRight;	
+	Vect nearBottomRight;
 	Vect farTopLeft;
 	Vect farTopRight;
 	Vect farBottomLeft;
@@ -121,7 +112,7 @@ private:
 	Vect leftNorm;
 	Vect topNorm;
 	Vect bottomNorm;
-	
+
 	// Screen size in world space
 	float near_height;
 	float near_width;

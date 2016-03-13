@@ -29,24 +29,21 @@
     <ClCompile Include="src\CameraManager.cpp" />
     <ClCompile Include="src\DirectionLight.cpp" />
     <ClCompile Include="src\DirectionLightManager.cpp" />
-    <ClCompile Include="src\DrawStrategy.cpp" />
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\GlobalHeaps.cpp" />
     <ClCompile Include="src\HierarchyElement.cpp" />
     <ClCompile Include="src\KeyBinding.cpp" />
     <ClCompile Include="src\KeyBindingManager.cpp" />
     <ClCompile Include="src\KeyFrame.cpp" />
-    <ClCompile Include="src\LightingTextureMaterial.cpp" />
+    <ClCompile Include="src\LitTextureMaterial.cpp" />
+    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\ModelBase.cpp" />
     <ClCompile Include="src\ModelBaseManager.cpp" />
     <ClCompile Include="src\Moveable.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\ShaderFactory.cpp" />
-    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
-    <ClCompile Include="src\TextureMaterial.cpp" />
+    <ClCompile Include="src\UnlitTextureMaterial.cpp" />
     <ClCompile Include="src\WireframeMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +58,6 @@
     <ClInclude Include="src\DirectionLight.h" />
     <ClInclude Include="src\DirectionLightManager.h" />
     <ClInclude Include="src\DrawInfo.h" />
-    <ClInclude Include="src\DrawStrategy.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\GlobalHeaps.h" />
     <ClInclude Include="src\HierarchyElement.h" />
@@ -69,7 +65,8 @@
     <ClInclude Include="src\KeyBinding.h" />
     <ClInclude Include="src\KeyBindingManager.h" />
     <ClInclude Include="src\KeyFrame.h" />
-    <ClInclude Include="src\LightingTextureMaterial.h" />
+    <ClInclude Include="src\LitTextureMaterial.h" />
+    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\MemorySetup.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
@@ -77,12 +74,9 @@
     <ClInclude Include="src\ModelBaseManager.h" />
     <ClInclude Include="src\Moveable.h" />
     <ClInclude Include="src\ReflectedVect.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\ShaderFactory.h" />
-    <ClInclude Include="src\ShaderManager.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureManager.h" />
-    <ClInclude Include="src\TextureMaterial.h" />
+    <ClInclude Include="src\UnlitTextureMaterial.h" />
     <ClInclude Include="src\UpdateStrategy.h" />
     <ClInclude Include="src\WireframeMaterial.h" />
   </ItemGroup>
@@ -200,14 +194,14 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)SOIL\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)GLFW\include;$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GL3W\include;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)SOIL\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
@@ -233,6 +227,9 @@
     </Link>
     <PostBuildEvent />
     <PostBuildEvent />
+    <Lib>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -278,6 +275,9 @@ COPY "$(ProjectDir)glsl\*.glsl" "$(SolutionDir)Shaders\"</Command>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent />
+    <Lib>
+      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

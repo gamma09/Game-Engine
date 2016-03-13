@@ -26,9 +26,6 @@ void DirectionLightManager::Create(Heap* managerHeap, uint32_t initialReserve, u
 void DirectionLightManager::Destroy()
 {
 	GameAssert(instance != 0);
-
-	instance->Destroy_Objects();
-	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	instance = 0;
 }
@@ -57,12 +54,13 @@ DirectionLightManager::DirectionLightManager(uint32_t initialReserve, uint32_t r
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! DirectionLight needs to be 16-byte aligned...
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, 4096 ) );
+	Mem::createVariableBlockHeap( this->heap, 4096 );
 
 	this->Init(initialReserve);
 }
 
 DirectionLightManager::~DirectionLightManager()
 {
-	// Do nothing
+	Destroy_Objects();
+	Mem::destroyHeap( heap );
 }

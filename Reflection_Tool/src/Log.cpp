@@ -1,7 +1,8 @@
 #include "Log.h"
 
-#ifdef _DEBUG
+std::ofstream logStream;
 
-std::ofstream logStream( "log.out", std::ofstream::out | std::ofstream::trunc );
-
-#endif
+void InitLogStream( const char* file )
+{
+	logStream = std::ofstream( file, std::ofstream::out | std::ofstream::trunc );
+}

@@ -53,12 +53,12 @@ ClassFilter::~ClassFilter()
 	delete this->out;
 }
 
-void ClassFilter::Write( TiXmlDocument& doc, FeedbackContext& context )
+bool ClassFilter::Write( TiXmlDocument& doc, FeedbackContext& context )
 {
 	TiXmlElement* unit = doc.RootElement();
 
-	FEEDBACK_CHECK_RETURN_XML( context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml.", doc );
-	FEEDBACK_CHECK_RETURN_XML( context, strcmp( unit->Value(), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, (string("Unknown root element type in srcml: ") + unit->Value() ).c_str(), *unit );
+	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml.", doc );
+	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( unit->Value(), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, (string("Unknown root element type in srcml: ") + unit->Value() ).c_str(), *unit );
 
 	set<string> recursiveRemovals;
 	recursiveRemovals.emplace( "function" );
@@ -79,7 +79,7 @@ void ClassFilter::Write( TiXmlDocument& doc, FeedbackContext& context )
 	regularRemovals.emplace( "decl_stmt" );
 	Remove( unit, regularRemovals );
 
-	this->out->Write( doc, context );
+	return this->out->Write( doc, context );
 }
 
 void ClassFilter::Finish()

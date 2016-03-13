@@ -7,21 +7,24 @@
 class TrackingBlock
 {
 public:
-   TrackingBlock(const char* inName, int lineNum );
+	TrackingBlock( const char* inName, int lineNum );
 
 public:
-   // Tracking data -----------------------------------------------------------------
-   TrackingBlock* hNext;
-   TrackingBlock* hPrev;
-   TrackingBlock* gNext;
-   TrackingBlock* gPrev;
-   char           fileName[TrackingBlockNameLength];
-   int            lineNum;
-   int            allocIndex;
-   int            allocSize;  // squirrel away the size
+	// Tracking data -----------------------------------------------------------------
+	TrackingBlock* hNext;
+	TrackingBlock* hPrev;
+	TrackingBlock* gNext;
+	TrackingBlock* gPrev;
 
-// -----------------------------------------------------------------------------------
-// Add extra data or methods below this line
-// -----------------------------------------------------------------------------------
+#ifdef _DEBUG
+	char           fileName[TrackingBlockNameLength];
+	int            lineNum;
+#endif
+	int            allocIndex;
+	int            allocSize;  // squirrel away the size
+
+	// -----------------------------------------------------------------------------------
+	// Add extra data or methods below this line
+	// -----------------------------------------------------------------------------------
 	TrackingBlock* topPtrPlaceholder; // Reserve 4 bytes for the magic ptr, just in case we dont need to do any alignment correction
 };

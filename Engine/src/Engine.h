@@ -8,8 +8,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "LitTextureMaterial.h"
+#include "UnlitTextureMaterial.h"
+#include "WireframeMaterial.h"
+#include "AppInfo.h"
+
+class bad_function_call;
 class Heap;
-struct AppInfo;
 
 class Engine abstract
 {
@@ -18,7 +23,6 @@ public:
 	virtual ~Engine();
 
 	// required overloading
-	virtual void Initialize() abstract;
 	virtual void LoadContent() abstract;
 	virtual void Update() abstract;
 	virtual void Draw() abstract;
@@ -42,13 +46,15 @@ private:
 	Engine& operator=( const Engine& ) = delete;
 
 	// private functions
-	void PreInitialize();
 	void PreLoadContent();
-	void PostUnLoadContent();
 
 public:
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
+
+	LitTextureMaterial* litTextureMaterial;
+	UnlitTextureMaterial* unlitTextureMaterial;
+	WireframeMaterial* wireframeMaterial;
 
 private:
 	IDXGISwapChain* swapChain;
@@ -64,10 +70,7 @@ private:
 
 public:
 	Heap* managerHeap;
-	Heap* materialHeap;
 
 	AppInfo info;
-
-	static Engine* app;
 };
 

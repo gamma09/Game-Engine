@@ -60,7 +60,6 @@ int main( int argc, char** argv )
 #ifdef _DEBUG
 	while( !IsDebuggerPresent() )
 		Sleep( 10 );
-#endif
 
 	cerr << "Command line: " << argc << ": ";
 	for( int i = 0; i < argc; i++ )
@@ -69,6 +68,8 @@ int main( int argc, char** argv )
 	}
 
 	cerr << endl;
+
+#endif
 
 	if ( argc != 8 )
 	{
@@ -84,6 +85,8 @@ int main( int argc, char** argv )
 		return 1;
 	}
 
+	InitLogStream( ( string( "obj\\" ) + argv[7] + "\\ReflectionTool.log" ).c_str() );
+
 	std::string preprocFile = std::string("obj\\") + argv[7] + "\\preprocess.cpp";
 	std::string srcmlFile   = std::string("obj\\") + argv[7] + "\\srcml.xml";
 
@@ -94,11 +97,13 @@ int main( int argc, char** argv )
 	std::string formattedIncludes = Format_Argument_String( "/I \"", includes, "\"", ";" );
 	std::string formattedDefines = Format_Argument_String( "/D \"", defines, "\"", ";" );
 
-	std::string cl = std::string( "\"" ) + executable + "\" " + formattedIncludes + " " + formattedDefines + " /nologo /P /EP /Fi" + preprocFile + " ";
+	std::string cl = std::string( "\"" ) + executable + "\" " + formattedIncludes + " " + formattedDefines + " /nologo /TP /P /EP /Fi" + preprocFile + " ";
 	std::string srcml = std::string( solutionDir ) + "\\src2srcml\\srcml.exe -o " + srcmlFile + " " + preprocFile;
 
+#ifdef _DEBUG
 	cerr << "cl = " << cl << endl;
 	cerr << "srcml = " << srcml.c_str() << endl;
+#endif
 
 	GameAssert( srcml[0] != '(' );
 
@@ -109,12 +114,14 @@ int main( int argc, char** argv )
 
 	WIN32_FIND_DATA foundFileData;
 	HANDLE hFileSearch = FindFirstFile( "src\\*.h", &foundFileData );
+	bool preprocessSuccessful = true;
 	if( hFileSearch != INVALID_HANDLE_VALUE )
 	{
 		BOOL bSuccess = TRUE;
-		while( bSuccess )
+		
+		while( bSuccess && preprocessSuccessful )
 		{
-			preprocessor->PreprocessFile( cl, srcml, std::string( "src\\" ) + foundFileData.cFileName, srcmlFile.c_str(), context );
+			preprocessSuccessful = preprocessor->PreprocessFile( cl, srcml, std::string( "src\\" ) + foundFileData.cFileName, srcmlFile.c_str(), context );
 
 			bSuccess = FindNextFile( hFileSearch, &foundFileData );
 		}
@@ -122,10 +129,18 @@ int main( int argc, char** argv )
 		FindClose( hFileSearch );
 	}
 
-	data.CheckVariableTypeLinks( context );
+	if( preprocessSuccessful )
+	{
+		data.CheckVariableTypeLinks( context );
 
-	std::string outputFile = std::string( argv[3] ) + "\\GeneratedReflectionCode.cpp";
-	Write_Reflection_Data( outputFile.c_str(), &data );
+		std::string outputFile = std::string( argv[3] ) + "\\GeneratedReflectionCode.cpp";
+		Write_Reflection_Data( outputFile.c_str(), &data );
+	}
 
-	return 0;
+	if( context.GetNumErrors() > 0 || context.GetNumWarnings() > 0 )
+	{
+		cerr << "Found an error or warning - the srcml chunk that caused the error may be found in ReflectionTool.log in the intermediate directory." << endl;
+	}
+
+	return context.GetNumErrors();
 }

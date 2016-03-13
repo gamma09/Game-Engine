@@ -30,29 +30,27 @@ void ModelBaseManager::Create( Heap* managerHeap, uint32_t initialReserve, uint3
 void ModelBaseManager::Destroy()
 {
 	GameAssert( instance != 0 );
-
-	instance->Destroy_Objects();
-	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
 	delete instance;
 	ModelBaseManager::instance = 0;
 }
 
-ModelBaseManager::ModelBaseManager( uint32_t initialReserve, uint32_t refillSize ) :
-Manager( refillSize )
+ModelBaseManager::ModelBaseManager( uint32_t initialReserve, uint32_t refillSize )
+	: Manager( refillSize )
 {
-	GameVerify( Mem_OK == Mem::createFixBlockHeap( this->heap, MAX_MODEL_BASES_CREATED, sizeof( ModelBase ) ) );
+	Mem::createFixBlockHeap( this->heap, MAX_MODEL_BASES_CREATED, sizeof( ModelBase ) );
 	this->Init( initialReserve );
 }
 
 ModelBaseManager::~ModelBaseManager()
 {
-	// Do nothing
+	Destroy_Objects();
+	Mem::destroyHeap( heap );
 }
 
-ModelBase* ModelBaseManager::Add( const char* archiveFilename )
+ModelBase* ModelBaseManager::Add( ID3D11Device* device, const char* archiveFilename )
 {
 	ModelBase* model = static_cast<ModelBase*>( this->Add_Object() );
-	model->Set( archiveFilename );
+	model->Set( device, archiveFilename );
 	return model;
 }
 

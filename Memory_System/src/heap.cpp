@@ -1,16 +1,24 @@
-#include <GameAssert.h>
+#include <utility>
 #include <new.h>  // for placement new
 #include <math.h>
+#include <string.h>
+
+#include <GameAssert.h>
 
 #include "heap.h"
 #include "mem.h"
 #include "block.h"
+
+// Cuz this is turned off in stdlib for C++ (and we don't want to include all the junk that comes with Windows.h just for this)
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
 
 
 static inline unsigned int get_alignment( Align align )
 {
 	return (unsigned int) align;
 }
+
+
 
 // --------------------------------------------------------------
 // HeapInfo implementation
@@ -20,8 +28,8 @@ HeapInfo::HeapInfo()
 	// Do nothing
 }
 
-HeapInfo::HeapInfo( unsigned int size, unsigned int startAddr ) :
-	heapStartAddr( startAddr ),
+HeapInfo::HeapInfo( unsigned int size, unsigned int startAddr )
+	: heapStartAddr( startAddr ),
 	heapEndAddr( startAddr + size ),
 	totalHeapSize( size ),
 	peakNumAlloc( 0 ),
@@ -53,10 +61,10 @@ HeapInfo::~HeapInfo()
 // Heap implementation
 // --------------------------------------------------------------
 
-Heap::Heap( HANDLE win32Heap, unsigned int size, Mem* _mem ) :
-	winHeapHandle( win32Heap ),
-	nextHeap( 0 ),
-	prevHeap( 0 ),
+Heap::Heap( LowLevelHeap&& inLowLevelHeap, unsigned int size, Mem* _mem )
+	: lowLevelHeap( std::move( inLowLevelHeap ) ),
+	nextHeap( nullptr ),
+	prevHeap( nullptr ),
 	mem( _mem ),
 	heapInfo( size, ( unsigned int ) this )
 {
@@ -69,9 +77,9 @@ Heap::Heap( HANDLE win32Heap, unsigned int size, Mem* _mem ) :
 // --------------------------------------------------------------
 // VariableBlockHeap implementation
 // --------------------------------------------------------------
-VariableBlockHeap::VariableBlockHeap( unsigned int _size, HANDLE hWin32Heap, Mem* _mem ) :
-	Heap( hWin32Heap, _size, _mem ),
-	trackingBlockHead( 0 )
+VariableBlockHeap::VariableBlockHeap( unsigned int _size, LowLevelHeap&& inLowLevelHeap, Mem* _mem )
+	: Heap( std::move( inLowLevelHeap ), _size, _mem ),
+	trackingBlockHead( nullptr )
 {
 }
 
@@ -80,8 +88,8 @@ void* VariableBlockHeap::alloc( size_t size, Align align, const char* name, int 
 	unsigned int alignment = get_alignment( align );
 	unsigned int alignedSize = size + sizeof( TrackingBlock ) + alignment - 1;
 
-	void* ptr = HeapAlloc( this->winHeapHandle, 0, alignedSize );
-	TrackingBlock* block = new( ptr ) TrackingBlock( name, lineNum );
+	void* ptr = this->lowLevelHeap.Allocate( alignedSize );
+	TrackingBlock* block = new(ptr) TrackingBlock( name, lineNum );
 	block->allocIndex = ++this->mem->memInfo.currAllocIndex;
 	block->allocSize = alignedSize;
 
@@ -121,7 +129,7 @@ void* VariableBlockHeap::alloc( size_t size, Align align, const char* name, int 
 
 void VariableBlockHeap::free( void* p )
 {
-	TrackingBlock* block = *( (TrackingBlock**) p - 1 );
+	TrackingBlock* block = *( ( (TrackingBlock**) p ) - 1 );
 
 	if( block->gNext != 0 )
 		block->gNext->gPrev = block->gPrev;
@@ -145,25 +153,29 @@ void VariableBlockHeap::free( void* p )
 	if( this->mem->globalTrackingBlockHead == block )
 		this->mem->globalTrackingBlockHead = block->gNext;
 
-	HeapFree( this->winHeapHandle, 0, block );
+	this->lowLevelHeap.Free( block );
 }
 
-TrackingBlock* VariableBlockHeap::DebugGetHeapTrackingHead() const
+#ifdef _DEBUG
+TrackingBlock* VariableBlockHeap::GetHeapTrackingHead() const
 {
 	return this->trackingBlockHead;
 }
+#endif
 
 
 
 // --------------------------------------------------------------
 // FixedBlockHeap implementation
 // --------------------------------------------------------------
-FixedBlockHeap::FixedBlockHeap( unsigned int numBlocks, unsigned int _blockSize, HANDLE hWin32Heap, Mem* _mem ) :
-	Heap( hWin32Heap, numBlocks * max( (int) ceil( _blockSize / 4.0f ) * 4, sizeof( FreeBlock ) ), _mem ),
+FixedBlockHeap::FixedBlockHeap( unsigned int numBlocks, unsigned int _blockSize, LowLevelHeap&& heap, Mem* _mem )
+	: Heap( std::move( heap ), sizeof( LowLevelUsedBlock ) + numBlocks * max( (int) ceil( _blockSize / 4.0f ) * 4, sizeof( FreeBlock ) ), _mem ),
 	blockSize( max( (int) ceil( _blockSize / 4.0f ) * 4, sizeof( FreeBlock ) ) )
 {
-	this->blocks = HeapAlloc( hWin32Heap, 0, this->blockSize * numBlocks + 3 );
-	this->alignedFreeHead = (FreeBlock*) ( ( ( unsigned int ) this->blocks + 3 ) & ~3 );
+	this->blocks = this->lowLevelHeap.Allocate( this->blockSize * numBlocks );
+	// Malloc should have returned memory that was 4-byte aligned - just make sure this is so
+	GameAssert( ((size_t) this->blocks & 3) == 0 );
+	this->alignedFreeHead = (FreeBlock*) this->blocks;
 	FreeBlock* curr = this->alignedFreeHead;
 
 	for( unsigned int i = 0; i < numBlocks - 1; i++ )

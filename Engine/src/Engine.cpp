@@ -1,38 +1,22 @@
-#include "Engine.h"
+
 #include <DirectXColors.h>
 #include <string.h>
 #include <DebuggerSetup.h>
 #include <GameAssert.h>
 #include <mem.h>
 
+#include "Engine.h"
 #include "GlobalHeaps.h"
-#include "AppInfo.h"
-#include "TextureMaterial.h"
-#include "LightingTextureMaterial.h"
-#include "WireframeMaterial.h"
-
 #include "ActorManager.h"
 #include "BoneManager.h"
 #include "CameraManager.h"
 #include "DirectionLightManager.h"
 #include "KeyBindingManager.h"
 #include "ModelBaseManager.h"
-#include "ShaderManager.h"
 #include "TextureManager.h"
 
-
-Engine* Engine::app = 0;
-
-//------------------------------------------------------------------
-// Engine::Run()
-//		This is the internal game loop that the engine runs on.
-//------------------------------------------------------------------
 void Engine::run()
 {
-	this->PreInitialize();
-
-	Initialize();
-
 	this->PreLoadContent();
 
 	LoadContent();
@@ -40,7 +24,7 @@ void Engine::run()
 	this->updateThread = std::thread( UpdateThreadEntry, this );
 
 	MSG msg ={ 0 };
-	while( WM_QUIT != msg.message > 0 )
+	while( WM_QUIT != msg.message )
 	{
 		if( PeekMessage( &msg, this->hWindow, 0, 0, PM_REMOVE ) )
 		{
@@ -62,8 +46,6 @@ void Engine::run()
 	this->updateThread.join();
 
 	UnLoadContent();
-
-	this->PostUnLoadContent();
 }
 
 void Engine::UpdateThreadEntry( Engine* engine )
@@ -88,6 +70,12 @@ LRESULT CALLBACK Engine::WindowCallback( HWND hWnd, UINT message, WPARAM wParam,
 			PostQuitMessage( 0 );
 			break;
 
+		case WM_PAINT:
+			PAINTSTRUCT ps;
+			BeginPaint( window->hWindow, &ps );
+			EndPaint( window->hWindow, &ps );
+			break;
+
 		default:
 			return DefWindowProc( hWnd, message, wParam, lParam );
 	}
@@ -95,66 +83,19 @@ LRESULT CALLBACK Engine::WindowCallback( HWND hWnd, UINT message, WPARAM wParam,
 	return 0;
 }
 
-void Engine::PreInitialize()
-{
-	app = this;
-	
-	TemporaryHeap::Create();
-	ConstantBufferHeap::Create();
-
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->managerHeap, 4096 ) );
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->materialHeap, 4096 ) );
-
-	ShaderManager::Create( this->managerHeap, 4, 1 );
-	ModelBaseManager::Create( this->managerHeap, 7, 1 );
-	CameraManager::Create( this->managerHeap, 1, 1 );
-	TextureManager::Create( this->managerHeap, 10, 3 );
-	ActorManager::Create( this->managerHeap, 12, 1 );
-	DirectionLightManager::Create( this->managerHeap, 1, 1 );
-	KeyBindingManager::Create( this->managerHeap, 4, 2 );
-	BoneManager::Create( this->managerHeap, 100, 10 );
-}
-
 void Engine::PreLoadContent()
 {
 	this->CreateEngineWindow();
 	this->SetupDirect3D();
 
-	TextureManager::Instance()->Create_Default_Texture();
+	this->litTextureMaterial = new LitTextureMaterial( this->device );
+	this->unlitTextureMaterial = new UnlitTextureMaterial( this->device );
+	this->wireframeMaterial = new WireframeMaterial( this->device );
 
-	WireframeMaterial::Create_Material( this->materialHeap );
-	TextureMaterial::Create_Material( this->materialHeap );
-	LightingTextureMaterial::Create_Material( this->materialHeap );
+	TextureManager::Instance()->Create_Default_Texture( this->device );
 }
 
-void Engine::PostUnLoadContent()
-{
-	TextureMaterial::Destroy_Material();
-	WireframeMaterial::Destroy_Material();
-	LightingTextureMaterial::Destroy_Material();
-
-	KeyBindingManager::Destroy();
-	DirectionLightManager::Destroy();
-	ActorManager::Destroy();
-	TextureManager::Destroy();
-	CameraManager::Destroy();
-	ModelBaseManager::Destroy();
-	BoneManager::Destroy();
-	ShaderManager::Destroy();
-
-	GameVerify( Mem_OK == Mem::destroyHeap( this->managerHeap ) );
-	GameVerify( Mem_OK == Mem::destroyHeap( this->materialHeap ) );
-
-	TemporaryHeap::Destroy();
-	ConstantBufferHeap::Destroy();
-
-	this->depthStencil->Release();
-	this->depthStencilView->Release();
-	this->renderTarget->Release();
-	this->swapChain->Release();
-	this->deviceContext->Release();
-	this->device->Release();
-}
+#define WINDOW_CLASS_NAME "GameEngineWindow"
 
 void Engine::CreateEngineWindow()
 {
@@ -168,7 +109,7 @@ void Engine::CreateEngineWindow()
 	wc.hCursor = LoadCursor( NULL, IDC_ARROW );
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = "GameEngineWindow";
+	wc.lpszClassName = WINDOW_CLASS_NAME;
 	RegisterClass( &wc );
 
 	DWORD exStyle = WS_EX_APPWINDOW;
@@ -213,7 +154,12 @@ void Engine::CreateEngineWindow()
 		SystemParametersInfo( SPI_GETWORKAREA, 0, &wa, 0 );
 	}
 
-	this->hWindow = CreateWindowExA( exStyle, "Engine", this->info[Window_Title], style, wa.left, wa.top, fullWidth, fullHeight, NULL, NULL, NULL, NULL );
+	this->hWindow = CreateWindowExA( exStyle, WINDOW_CLASS_NAME, this->info[Window_Title], style, wa.left, wa.top, fullWidth, fullHeight, NULL, NULL, NULL, NULL );
+	if( this->hWindow == nullptr )
+	{
+		DWORD lastError = GetLastError();
+		out( "Could not create window - error code = %d", lastError );
+	}
 	GameCheckFatal( this->hWindow, "Could not create window." );
 
 	SetWindowLongPtr( this->hWindow, GWLP_USERDATA, ( LONG_PTR ) this );
@@ -357,7 +303,9 @@ void Engine::SetupDirect3D()
 			pFsd = nullptr;
 		}
 
-		GameCheckFatal( SUCCEEDED( dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, reinterpret_cast<IDXGISwapChain1**>( &this->swapChain ) ) ), "Could not create swap chain." );
+		IDXGISwapChain1* tempSwapChain;
+		GameCheckFatal( SUCCEEDED( dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, &tempSwapChain ) ), "Could not create swap chain." );
+		GameCheckFatal( SUCCEEDED( tempSwapChain->QueryInterface( __uuidof( IDXGISwapChain ), reinterpret_cast<void**>( &this->swapChain ) ) ), "Could not retrieve regular swap chain from SwapChain1" );
 		dxgiFactory2->Release();
 	}
 	else
@@ -460,11 +408,22 @@ void Engine::SetupDirect3D()
 		// Capture cursor to user window
 		SetCapture( this->hWindow );
 	}
+
+	this->vsyncInterval = this->info[Vsync] ? 1 : 0;
 }
 
 Engine::Engine( const char* windowName, const int Width, const int Height )
-	: info( windowName, 0 ),
-	isOpen( true )
+	: info( windowName, 1 ),
+	isOpen( true ),
+	litTextureMaterial( nullptr ),
+	wireframeMaterial( nullptr ),
+	unlitTextureMaterial( nullptr ),
+	device( nullptr ),
+	deviceContext( nullptr ),
+	swapChain( nullptr ),
+	renderTarget( nullptr ),
+	depthStencil( nullptr ),
+	depthStencilView( nullptr )
 {
 	this->info[Window_Width] = Width;
 	this->info[Window_Height] = Height;
@@ -473,9 +432,40 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	this->info[Cursor] = true;
 	this->info[Fullscreen] = false;
 	this->info[Vsync] = true;
+
+	TemporaryHeap::Create();
+	ConstantBufferHeap::Create();
+
+	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
+
+	ModelBaseManager::Create( this->managerHeap, 7, 1 );
+	CameraManager::Create( this->managerHeap, 1, 1 );
+	TextureManager::Create( this->managerHeap, 10, 3 );
+	ActorManager::Create( this->managerHeap, 12, 1 );
+	DirectionLightManager::Create( this->managerHeap, 1, 1 );
+	KeyBindingManager::Create( this->managerHeap, 4, 2 );
+	BoneManager::Create( this->managerHeap, 100, 10 );
 }
 
 Engine::~Engine()
 {
+	KeyBindingManager::Destroy();
+	DirectionLightManager::Destroy();
+	ActorManager::Destroy();
+	TextureManager::Destroy();
+	CameraManager::Destroy();
+	ModelBaseManager::Destroy();
+	BoneManager::Destroy();
 
+	Mem::destroyHeap( this->managerHeap );
+
+	TemporaryHeap::Destroy();
+	ConstantBufferHeap::Destroy();
+
+	this->depthStencil->Release();
+	this->depthStencilView->Release();
+	this->renderTarget->Release();
+	this->swapChain->Release();
+	this->deviceContext->Release();
+	this->device->Release();
 }

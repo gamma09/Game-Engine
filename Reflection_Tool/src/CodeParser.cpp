@@ -15,15 +15,13 @@ CodeParser::~CodeParser()
 	// Do nothing
 }
 
-void CodeParser::Write( TiXmlDocument& doc, FeedbackContext& context )
+bool CodeParser::Write( TiXmlDocument& doc, FeedbackContext& context )
 {
 	TiXmlElement* unit = doc.RootElement( );
-	FEEDBACK_CHECK_RETURN_XML( context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml.", doc );
-	FEEDBACK_CHECK_RETURN_XML( context, strcmp( unit->Value( ), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, (std::string("Unknown root element type in srcml: ") + unit->Value( )).c_str(), unit );
+	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, unit, MessageType::MSG_TYPE_ERROR, "No root element found in srcml.", doc );
+	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( unit->Value( ), "unit" ) == 0, MessageType::MSG_TYPE_ERROR, (std::string("Unknown root element type in srcml: ") + unit->Value( )).c_str(), unit );
 
-	ReadUnit( unit, context, "" );
-
-	
+	return ReadUnit( unit, context, "" );
 }
 
 bool CodeParser::ReadUnit( TiXmlElement* unit, FeedbackContext& context, const char* namespaceSoFar )
@@ -46,7 +44,7 @@ bool CodeParser::ReadUnit( TiXmlElement* unit, FeedbackContext& context, const c
 		}
 		else if( strcmp( unitElement->Value(), "class" ) == 0 || strcmp( unitElement->Value(), "struct" ) == 0 )
 		{
-			if( !ReadClass( unitElement, context, namespaceSoFar ) ) break;
+			if( !ReadClass( unitElement, context, namespaceSoFar ) ) return false;
 		}
 
 		unitElement = unitElement->NextSiblingElement();
@@ -69,10 +67,14 @@ bool CodeParser::ReadClass( TiXmlElement* classElement, FeedbackContext& context
 	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, nameElement, MessageType::MSG_TYPE_ERROR, "Unexpected end of class/struct tag.", *classElement );
 
 	const char* className = nameElement->GetText();
-	FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, className, MessageType::MSG_TYPE_ERROR, "Class name not found.", *classElement );
+	if( className == nullptr )
+	{
+		// We have a class with namespace declaration - ignore it and move on
+		return true;
+	}
 
 	const char* reflectedParent;
-	if( !ReadParents( classElement->FirstChildElement( "super" ), context, reflectedParent, className ) ) return false;
+	if( !ReadParents( classElement->FirstChildElement( "super" ), context, reflectedParent ) ) return false;
 
 	TiXmlElement* classBlock = classElement->FirstChildElement( "block" );
 	FEEDBACK_CHECK_RETURN_VALUE_XML( true, context, classBlock, MessageType::MSG_TYPE_WARNING, (std::string("Class ") + className + " has no block tag.").c_str(), *classElement );
@@ -172,35 +174,43 @@ bool CodeParser::ReadClass( TiXmlElement* classElement, FeedbackContext& context
 	return true;
 }// End ReadClass()
 
-bool CodeParser::ReadParents( TiXmlElement* superElement, FeedbackContext& context, const char*& parentOut, const char* className )
+bool CodeParser::ReadParents( TiXmlElement* superElement, FeedbackContext& context, const char*& parentOut )
 {
 	parentOut = nullptr;
 
 	if( superElement != nullptr )
 	{
 		TiXmlElement* specifier = superElement->FirstChildElement( );
-		FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, specifier, MessageType::MSG_TYPE_WARNING, "Expected specifier tag inside super block, found nothing instead.", *superElement );
-		FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( specifier->Value( ), "specifier" ) == 0, MessageType::MSG_TYPE_WARNING, ( std::string( "Expected specifier tag inside super block, found " ) + specifier->Value( ) + " instead." ).c_str( ), *superElement );
+		FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, specifier, MessageType::MSG_TYPE_ERROR, "Expected tag inside super block, found nothing instead.", *superElement );
+
 
 		TiXmlElement* superName = nullptr;
 
 		while( specifier != nullptr )
 		{
-			FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( specifier->Value( ), "specifier" ) == 0, MessageType::MSG_TYPE_ERROR, ( std::string( "Expected specifier tag inside super block, found " ) + specifier->Value( ) + " instead." ).c_str( ), *superElement );
-
-			superName = specifier->NextSiblingElement();
-			FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, superName, MessageType::MSG_TYPE_ERROR, "Expected name tag inside super block, found nothing instead.", *superElement );
-			FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( superName->Value( ), "name" ) == 0, MessageType::MSG_TYPE_ERROR, ( std::string( "Expected name tag inside super block, found " ) + superName->Value( ) + " instead." ).c_str( ), *superElement );
-			FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, superName->GetText( ), MessageType::MSG_TYPE_ERROR, ( std::string( "No parent type string found for class " ) + className ).c_str( ), *superElement );
-
-			if( strcmp( specifier->GetText( ), "public" ) == 0 && this->data->FindType( superName->GetText( ) ) != nullptr )
+			FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( specifier->Value(), "specifier" ) == 0 || strcmp( specifier->Value(), "name" ) == 0, MessageType::MSG_TYPE_ERROR, ( std::string( "Expected specifier tag inside super block, found " ) + specifier->Value() + " instead." ).c_str(), *superElement );
+			if( strcmp( specifier->Value(), "specifier" ) == 0 )
 			{
-				FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, parentOut == nullptr, MessageType::MSG_TYPE_ERROR, "Only one direct parent may be a reflected class.", *superElement );
-				parentOut = superName->GetText();
-				FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, parentOut != nullptr, MessageType::MSG_TYPE_ERROR, "Expected name string inside of name block.", *superElement );
-			}
+				superName = specifier->NextSiblingElement();
+				FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, superName, MessageType::MSG_TYPE_ERROR, "Expected name tag inside super block, found nothing instead.", *superElement );
+				FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, strcmp( superName->Value(), "name" ) == 0, MessageType::MSG_TYPE_ERROR, ( std::string( "Expected name tag inside super block, found " ) + superName->Value() + " instead." ).c_str(), *superElement );
+				if( superName->GetText() )
+				{
 
-			specifier = superName->NextSiblingElement();
+					if( strcmp( specifier->GetText(), "public" ) == 0 && this->data->FindType( superName->GetText() ) != nullptr )
+					{
+						FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, parentOut == nullptr, MessageType::MSG_TYPE_ERROR, "Only one direct parent may be a reflected class.", *superElement );
+						parentOut = superName->GetText();
+						FEEDBACK_CHECK_RETURN_VALUE_XML( false, context, parentOut != nullptr, MessageType::MSG_TYPE_ERROR, "Expected name string inside of name block.", *superElement );
+					}
+				}
+
+				specifier = superName->NextSiblingElement();
+			}
+			else
+			{
+				specifier = specifier->NextSiblingElement();
+			}
 		}
 	}
 

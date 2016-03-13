@@ -12,6 +12,9 @@ enum MessageType
 	MSG_TYPE_LINK_ERROR
 };
 
+#define FEEDBACK_CHECK_CONTINUE( context, valueToCheck, type, str ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); }
+#define FEEDBACK_CHECK_CONTINUE_XML( context, valueToCheck, type, str, xml ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); LOG( xml ); }
+
 #define FEEDBACK_CHECK_RETURN_VALUE( returnVal, context, valueToCheck, type, str ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); return returnVal; }
 #define FEEDBACK_CHECK_RETURN_VALUE_XML( returnVal, context, valueToCheck, type, str, xml ) if( !( valueToCheck ) ) { ( context ).AddMessage( type, str ); LOG( xml ); return returnVal; }
 

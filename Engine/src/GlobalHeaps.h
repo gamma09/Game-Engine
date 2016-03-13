@@ -1,3 +1,5 @@
+#pragma once
+
 class Heap;
 
 // The temporary heap is used for temporary allocations

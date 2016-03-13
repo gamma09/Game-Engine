@@ -41,11 +41,11 @@ public:
 	// Public Interface ------------------------------   for the customers
 
 	// Create an Heap from the heap system
-	static MemReturnCode createVariableBlockHeap( Heap*& newHeap, int heapSize );
-	static MemReturnCode createFixBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock );
+	static void createVariableBlockHeap( Heap*& newHeap, unsigned int heapSize );
+	static void createFixBlockHeap( Heap*& newHeap, unsigned int numBlocks, unsigned int sizePerBlock );
 
 	// Create an Heap from the heap system
-	static MemReturnCode destroyHeap( Heap* inHeap );
+	static void destroyHeap( Heap* inHeap );
 
 	// get mem information
 	inline static const MemInfo& getInfo() { return Mem::instance().memInfo; }
@@ -73,16 +73,14 @@ private:
 
 	static Mem& instance();
 
-	MemReturnCode privCreateVariableBlockHeap( Heap*& newHeap, int heapSize );
-	MemReturnCode privCreateFixedBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock );
-	MemReturnCode privDestroyHeap( Heap* inHeap );
+	void privCreateVariableBlockHeap( Heap*& newHeap, unsigned int heapSize );
+	void privCreateFixedBlockHeap( Heap*& newHeap, unsigned int numBlocks, unsigned int sizePerBlock );
+	void privDestroyHeap( Heap* inHeap );
 
 private:
 	// data -----------------------------------------------------------------------
 
-#ifdef _DEBUG
 	TrackingBlock* globalTrackingBlockHead;
-#endif
 
 	Heap*   heapHead;
 	MemInfo memInfo;

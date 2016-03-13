@@ -18,13 +18,10 @@ public:
 	// constructor
 	Game( const char* windowName, const int Width, const int Height );
 
-	virtual void Initialize();
-	virtual void LoadContent();
-	virtual void Update();
-	virtual void Draw();
-	virtual void UnLoadContent();
-
-	virtual void ClearBufferFunc();
+	virtual void LoadContent() override;
+	virtual void Update() override;
+	virtual void Draw() override;
+	virtual void UnLoadContent() override;
 
 private:
 	// prevent them from calling wrong call

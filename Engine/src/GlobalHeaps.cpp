@@ -35,12 +35,12 @@ Heap* TemporaryHeap::Instance()
 TemporaryHeap::TemporaryHeap()
 {
 
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, TEMPORARY_HEAP_SIZE ) );
+	Mem::createVariableBlockHeap( this->heap, TEMPORARY_HEAP_SIZE );
 }
 
 TemporaryHeap::~TemporaryHeap()
 {
-	GameVerify( Mem_OK == Mem::destroyHeap( this->heap ) );
+	Mem::destroyHeap( this->heap );
 }
 
 ConstantBufferHeap* ConstantBufferHeap::instance = nullptr;
@@ -72,10 +72,10 @@ Heap* ConstantBufferHeap::Instance()
 
 ConstantBufferHeap::ConstantBufferHeap()
 {
-	GameVerify( Mem_OK == Mem::createVariableBlockHeap( this->heap, CONSTANT_BUFFER_HEAP_SIZE ) );
+	Mem::createVariableBlockHeap( this->heap, CONSTANT_BUFFER_HEAP_SIZE );
 }
 
 ConstantBufferHeap::~ConstantBufferHeap()
 {
-	GameVerify( Mem_OK == Mem::destroyHeap( this->heap ) );
+	Mem::destroyHeap( this->heap );
 }

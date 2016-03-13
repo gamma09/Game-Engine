@@ -189,10 +189,10 @@
     <ClCompile Include="src\ReflectionData.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\File_System\File_System.vcxproj">
+    <ProjectReference Include="..\File_System\File_System.vcxproj">
       <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Shared\Shared.vcxproj">
+    <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{af0d953c-be31-4f51-96bf-6649c455a2be}</Project>
     </ProjectReference>
     <ProjectReference Include="..\TinyXML\TinyXML.vcxproj">

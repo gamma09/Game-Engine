@@ -1,11 +1,16 @@
 #include <stdio.h>
-#include <GameAssert.h>
 #include <string.h>
 #include <new>
+#include <utility>
+
+#include <GameAssert.h>
 
 #include "mem.h"
 #include "heap.h"
 #include "block.h"
+
+// Cuz this is turned off in stdlib for C++ (and we don't want to include all the junk that comes with Windows.h just for this)
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
 
 // --------------------------------------------------------------
 // MemInfo methods
@@ -26,19 +31,19 @@ MemInfo::MemInfo() :
 // --------------------------------------------------------------
 
 // Create the heap.
-MemReturnCode Mem::createVariableBlockHeap( Heap*& newHeap, int heapSize )
+void Mem::createVariableBlockHeap( Heap*& newHeap, unsigned int heapSize )
 {
-	return Mem::instance().privCreateVariableBlockHeap( newHeap, heapSize );
+	Mem::instance().privCreateVariableBlockHeap( newHeap, heapSize );
 }
 
-MemReturnCode Mem::createFixBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock )
+void Mem::createFixBlockHeap( Heap*& newHeap, unsigned int numBlocks, unsigned int sizePerBlock )
 {
-	return Mem::instance().privCreateFixedBlockHeap( newHeap, numBlocks, sizePerBlock );
+	Mem::instance().privCreateFixedBlockHeap( newHeap, numBlocks, sizePerBlock );
 }
 
-MemReturnCode Mem::destroyHeap( Heap* inHeap )
+void Mem::destroyHeap( Heap* inHeap )
 {
-	return Mem::instance().privDestroyHeap( inHeap );
+	Mem::instance().privDestroyHeap( inHeap );
 }
 
 MemReturnCode Mem::getHeapByAddr( Heap*& pHeap, const void* p )
@@ -64,9 +69,7 @@ MemReturnCode Mem::getHeapByAddr( Heap*& pHeap, const void* p )
 // Private method implementations
 // --------------------------------------------------------------
 Mem::Mem() :
-#ifdef _DEBUG
 	globalTrackingBlockHead( nullptr ),
-#endif
 	heapHead( nullptr ),
 	memInfo()
 {
@@ -85,16 +88,15 @@ Mem& Mem::instance()
 	return mem;
 }
 
-MemReturnCode Mem::privCreateVariableBlockHeap( Heap*& newHeap, int heapSize )
+void Mem::privCreateVariableBlockHeap( Heap*& newHeap, unsigned int heapSize )
 {
 	GameAssert( heapSize > 0 );
 
-	HANDLE hHeap = HeapCreate( 0, heapSize, 0 );
-	if( hHeap == 0 )
-		return Mem_ERROR_Heap_Create;
+	LowLevelHeap lowLevelHeap( heapSize );
 
-	newHeap = (Heap*) HeapAlloc( hHeap, 0, sizeof( VariableBlockHeap ) );
-	newHeap = ( Heap* ) new( newHeap ) VariableBlockHeap( heapSize, hHeap, this );
+	// We've have to move it into itself (sounds kinda weird and kinky at the same time) to increase speed (using this magic thing called the cache)
+	newHeap = (Heap*) lowLevelHeap.Allocate( sizeof( VariableBlockHeap ) );
+	newHeap = ( Heap* ) new( newHeap ) VariableBlockHeap( heapSize, std::move( lowLevelHeap ), this );
 
 	if( this->heapHead != 0 )
 		this->heapHead->prevHeap = newHeap;
@@ -104,21 +106,20 @@ MemReturnCode Mem::privCreateVariableBlockHeap( Heap*& newHeap, int heapSize )
 
 	this->memInfo.currHeapCount++;
 	this->memInfo.peakHeapCount = max( this->memInfo.peakHeapCount, this->memInfo.currHeapCount );
-
-	return Mem_OK;
 }
 
-MemReturnCode Mem::privCreateFixedBlockHeap( Heap*& newHeap, int numBlocks, int sizePerBlock )
+void Mem::privCreateFixedBlockHeap( Heap*& newHeap, unsigned int numBlocks, unsigned int sizePerBlock )
 {
 	GameAssert( numBlocks > 0 );
 	GameAssert( sizePerBlock > 0 );
 
-	HANDLE hHeap = HeapCreate( 0, numBlocks * sizePerBlock + sizeof( Heap ), 0 );
-	if( hHeap == 0 )
-		return Mem_ERROR_Heap_Create;
+	LowLevelHeap lowLevelHeap( numBlocks * sizePerBlock + sizeof( FixedBlockHeap ) + sizeof( LowLevelUsedBlock ));
+	
+	// We've have to move it into itself (sounds kinda weird and kinky at the same time) to increase speed (using this magic thing called the cache)
+	newHeap = (Heap*) lowLevelHeap.Allocate( sizeof( FixedBlockHeap ) );
+	newHeap = ( Heap* ) new( newHeap ) FixedBlockHeap( numBlocks, sizePerBlock, std::move( lowLevelHeap ), this );
 
-	newHeap = (Heap*) HeapAlloc( hHeap, 0, sizeof( FixedBlockHeap ) );
-	newHeap = ( Heap* ) new( newHeap ) FixedBlockHeap( numBlocks, sizePerBlock, hHeap, this );
+	
 
 	if( this->heapHead != 0 )
 		this->heapHead->prevHeap = newHeap;
@@ -128,16 +129,13 @@ MemReturnCode Mem::privCreateFixedBlockHeap( Heap*& newHeap, int numBlocks, int 
 
 	this->memInfo.currHeapCount++;
 	this->memInfo.peakHeapCount = max( this->memInfo.peakHeapCount, this->memInfo.currHeapCount );
-
-	return Mem_OK;
 }
 
-MemReturnCode Mem::privDestroyHeap( Heap* inHeap )
+void Mem::privDestroyHeap( Heap* inHeap )
 {
 	GameAssert( inHeap != 0 );
 
-#ifdef _DEBUG
-	TrackingBlock* block = inHeap->DebugGetHeapTrackingHead();
+	TrackingBlock* block = inHeap->GetHeapTrackingHead();
 
 	while( block != 0 )
 	{
@@ -149,7 +147,6 @@ MemReturnCode Mem::privDestroyHeap( Heap* inHeap )
 
 		block = block->hNext;
 	}
-#endif
 
 	this->memInfo.currNumAlloc -= inHeap->heapInfo.currNumAlloc;
 	this->memInfo.currBytesUsed -= inHeap->heapInfo.currBytesUsed;
@@ -164,7 +161,10 @@ MemReturnCode Mem::privDestroyHeap( Heap* inHeap )
 	if( this->heapHead == inHeap )
 		this->heapHead = inHeap->nextHeap;
 
-	HeapDestroy( inHeap->winHeapHandle );
+	// We have to rip the low level heap out of the heap data
+	// This will cause the heap to be destroyed on return from this function
+	LowLevelHeap lowLevelHeap( inHeap->RipOutLowLevelHeap() );
 
-	return Mem_OK;
+	// Need to silence the warning about not using it (we are, after all, "creating" the object in order to destroy it...)
+	lowLevelHeap;
 }

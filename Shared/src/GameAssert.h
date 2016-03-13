@@ -13,7 +13,9 @@
 #include <crtdbg.h>
 	
 	#define GameVerify(a) assert(a)
-#define GameCheckFatal( a, msg ) _ASSERT_EXPR( a, msg )
+#define GameCheckFatal( a, msg )  (void) ((!!(a)) || \
+                (1 != _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, NULL, "%s", msg)) || \
+                (_CrtDbgBreak(), 0))
 
 #else
 

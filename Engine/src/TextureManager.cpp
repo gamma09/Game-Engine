@@ -30,17 +30,14 @@ void TextureManager::Destroy()
 {
 	GameAssert( instance != 0 );
 
-	instance->Destroy_Objects();
-	GameVerify( Mem_OK == Mem::destroyHeap( instance->heap ) );
-
 	delete instance;
 	instance = 0;
 }
 
-Texture* TextureManager::Add( const char* archiveFile, const char* textureName )
+Texture* TextureManager::Add( ID3D11Device* device, const char* archiveFile, const char* textureName )
 {
 	Texture* texture = static_cast<Texture*>( this->Add_Object() );
-	texture->Set( archiveFile, textureName );
+	texture->Set( device, archiveFile, textureName );
 	return texture;
 }
 
@@ -51,10 +48,10 @@ const Texture* TextureManager::Default_Texture() const
 	return this->defaultTexture;
 }
 
-void TextureManager::Create_Default_Texture()
+void TextureManager::Create_Default_Texture( ID3D11Device* device )
 {
 	GameAssert( this->defaultTexture == 0 );
-	this->defaultTexture = new( this->heap, ALIGN_4 ) Texture( "../resources/Default_Texture.spu", "default" );
+	this->defaultTexture = new( this->heap, ALIGN_4 ) Texture( device, "../resources/Default_Texture.spu", "default" );
 }
 
 
@@ -69,16 +66,17 @@ void TextureManager::Delete_Object( ManagedObject* obj ) const
 }
 
 
-TextureManager::TextureManager( const uint32_t initialReserve, const uint32_t refillSize ) :
-Manager( refillSize ),
-defaultTexture( 0 )
+TextureManager::TextureManager( const uint32_t initialReserve, const uint32_t refillSize )
+	: Manager( refillSize ),
+	defaultTexture( nullptr )
 {
-	GameVerify( Mem_OK == Mem::createFixBlockHeap( this->heap, MAX_TEXTURES_CREATED, sizeof( Texture ) ) );
+	Mem::createFixBlockHeap( this->heap, MAX_TEXTURES_CREATED, sizeof( Texture ) );
 	this->Init( initialReserve );
 }
 
 TextureManager::~TextureManager()
 {
-	glDeleteTextures( 1, &this->defaultTexture->texture_obj );
 	delete this->defaultTexture;
+	Destroy_Objects();
+	Mem::destroyHeap( heap );
 }

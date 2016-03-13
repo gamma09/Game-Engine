@@ -16,7 +16,7 @@ public:
 	
 	// Reads the file with the filename specified and writes the contents
 	// to the source code pipe
-	void PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context );
+	bool PreprocessFile( const string& clCommandLine, const string& src2srcmlCommandLine, const string& filename, const char* srcmlFile, FeedbackContext& context );
 	
 private:
 	SourceCodePipe* out;
