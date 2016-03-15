@@ -79,3 +79,43 @@ ConstantBufferHeap::~ConstantBufferHeap()
 {
 	Mem::destroyHeap( this->heap );
 }
+
+
+
+
+AnimHeap* AnimHeap::instance = nullptr;
+
+void AnimHeap::Create()
+{
+	GameAssert( instance == nullptr );
+
+	instance = new AnimHeap();
+}
+
+void AnimHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+	
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* AnimHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// We need to go big with this, so go for 512 MB to begin with
+#define ANIM_HEAP_SIZE 512 * 1024 * 1024
+
+AnimHeap::AnimHeap()
+{
+	Mem::createVariableBlockHeap( this->heap, ANIM_HEAP_SIZE );
+}
+
+AnimHeap::~AnimHeap()
+{
+	Mem::destroyHeap( this->heap );
+}

@@ -37,16 +37,16 @@ public:
 	void Set( const PerspectiveData& perspective, const OrientationData& orientation );
 	virtual void Reset();
 
-	const bool Should_Be_Drawn( const Vect& position, const float boundingRadius ) const;
+	bool Should_Be_Drawn( const Vect& position, float boundingRadius ) const;
 
-	const Vect Get_Position() const;
+	Vect Get_Position() const;
 	void Set_Position( const Vect& pos );
 
 	const Matrix& Get_Projection_View() const;
 	const Matrix& Get_Projection() const;
 	const Matrix& Get_View() const;
 
-	virtual void Update_Position( const uint32_t& time ) override;
+	virtual void Update_Position( uint32_t time ) override;
 
 protected:
 	virtual void Free_Me() override;

@@ -37,7 +37,7 @@ void ModelBaseManager::Destroy()
 ModelBaseManager::ModelBaseManager( uint32_t initialReserve, uint32_t refillSize )
 	: Manager( refillSize )
 {
-	Mem::createFixBlockHeap( this->heap, MAX_MODEL_BASES_CREATED, sizeof( ModelBase ) );
+	Mem::createVariableBlockHeap( this->heap, MAX_MODEL_BASES_CREATED * sizeof( ModelBase ) );
 	this->Init( initialReserve );
 }
 
@@ -56,7 +56,7 @@ ModelBase* ModelBaseManager::Add( ID3D11Device* device, const char* archiveFilen
 
 ManagedObject* ModelBaseManager::Make_Object() const
 {
-	return new( this->heap, ALIGN_4 ) ModelBase();
+	return new( this->heap, ALIGN_16 ) ModelBase();
 }
 
 void ModelBaseManager::Delete_Object( ManagedObject* obj ) const

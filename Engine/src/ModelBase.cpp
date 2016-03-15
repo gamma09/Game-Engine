@@ -9,6 +9,7 @@
 #include <utility>
 #include <d3d11_1.h>
 
+#include "MemorySetup.h"
 #include "DrawInfo.h"
 #include "ModelBase.h"
 #include "ModelBaseManager.h"
@@ -146,20 +147,22 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 {
 	unsigned char* modelName = nullptr;
 	int modelNameSize;
-	GameVerify( read_asset( archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize ) );
+	GameVerify( read_asset( archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize, TemporaryHeap::Instance() ) );
 
 	unsigned char* modelData = nullptr;
 	int modelSize;
-	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize ) );
+	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize, TemporaryHeap::Instance() ) );
 
 	Header* header = reinterpret_cast<Header*>( modelData );
-	this->boneParentList = reinterpret_cast<int*>( modelData + sizeof( Header ) );
-	this->boneMeshes = new Mesh[header->boneCount];
+	this->boneParentList = new( AnimHeap::Instance(), ALIGN_4 ) int[header->boneCount];
+	memcpy( this->boneParentList, reinterpret_cast<int*>( modelData + sizeof( Header ) ), sizeof(int) * header->boneCount);
+
+	this->boneMeshes = new( AnimHeap::Instance(), ALIGN_4 ) Mesh[header->boneCount];
 	this->boneCount = header->boneCount;
-	unsigned char* animData = reinterpret_cast<unsigned char*>( this->boneParentList ) + header->boneCount * sizeof( int );
+	unsigned char* animData = modelData + sizeof( Header ) + header->boneCount * sizeof( int );
 
 	this->animCount = header->animCount;
-	this->anims = new Animation[this->animCount];
+	this->anims = new( AnimHeap::Instance(), ALIGN_4 ) Animation[this->animCount];
 	for( unsigned int i = 0; i < header->animCount; i++ )
 	{
 		this->anims[i] = std::move( Animation( header->boneCount, animData ) );
@@ -308,7 +311,7 @@ void ModelBase::Draw( const DrawInfo& info ) const
 
 Bone* const ModelBase::Create_Skeleton_From_Model() const
 {
-	Bone** boneyard = new Bone*[this->boneCount];
+	Bone** boneyard = new( AnimHeap::Instance(), ALIGN_4 )  Bone*[this->boneCount];
 	for( unsigned int i = 0; i < this->boneCount; i++ )
 		boneyard[i] = BoneManager::Instance()->Add( i );
 

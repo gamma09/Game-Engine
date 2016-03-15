@@ -24,10 +24,11 @@ void Engine::run()
 	this->updateThread = std::thread( UpdateThreadEntry, this );
 
 	MSG msg ={ 0 };
-	while( WM_QUIT != msg.message )
+	while( this->isOpen )
 	{
 		if( PeekMessage( &msg, this->hWindow, 0, 0, PM_REMOVE ) )
 		{
+
 			TranslateMessage( &msg );
 			DispatchMessage( &msg );
 		}
@@ -42,7 +43,6 @@ void Engine::run()
 		}
 	}
 
-	this->isOpen = false;
 	this->updateThread.join();
 
 	UnLoadContent();
@@ -58,22 +58,23 @@ void Engine::UpdateThreadEntry( Engine* engine )
 
 LRESULT CALLBACK Engine::WindowCallback( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	Engine* window = (Engine*) GetWindowLongPtr( hWnd, GWLP_USERDATA );
+	Engine* engine = (Engine*) GetWindowLongPtr( hWnd, GWLP_USERDATA );
 
 	switch( message )
 	{
 		case WM_CLOSE:
-			DestroyWindow( window->hWindow );
+			DestroyWindow( engine->hWindow );
 			break;
 
 		case WM_DESTROY:
 			PostQuitMessage( 0 );
+			engine->isOpen = false;
 			break;
 
 		case WM_PAINT:
 			PAINTSTRUCT ps;
-			BeginPaint( window->hWindow, &ps );
-			EndPaint( window->hWindow, &ps );
+			BeginPaint( engine->hWindow, &ps );
+			EndPaint( engine->hWindow, &ps );
 			break;
 
 		default:
@@ -158,6 +159,7 @@ void Engine::CreateEngineWindow()
 	if( this->hWindow == nullptr )
 	{
 		DWORD lastError = GetLastError();
+		lastError;
 		out( "Could not create window - error code = %d", lastError );
 	}
 	GameCheckFatal( this->hWindow, "Could not create window." );
@@ -435,6 +437,7 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 
 	TemporaryHeap::Create();
 	ConstantBufferHeap::Create();
+	AnimHeap::Create();
 
 	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
 
@@ -459,6 +462,7 @@ Engine::~Engine()
 
 	Mem::destroyHeap( this->managerHeap );
 
+	AnimHeap::Destroy();
 	TemporaryHeap::Destroy();
 	ConstantBufferHeap::Destroy();
 

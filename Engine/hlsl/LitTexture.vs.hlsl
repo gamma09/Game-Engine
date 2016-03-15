@@ -3,7 +3,7 @@
 //*****************************************************************************
 // Shader "Uniforms" (they're called constant buffers in DirectX)
 //*****************************************************************************
-
+#pragma pack_matrix( row_major )
 cbuffer cbCameraMatrices : register( b0 )
 {
 	float4x4 View;

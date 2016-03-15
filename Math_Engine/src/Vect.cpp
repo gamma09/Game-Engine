@@ -13,28 +13,28 @@ const static Math128 NEGATION_TERM( -1.0f );
 
 
 
-Vect::Vect() :
-m( DEFAULT_VECTOR_VALUES )
+Vect::Vect()
+	: m( DEFAULT_VECTOR_VALUES )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Vect::Vect( const M128_TYPE& _m ) :
-m( _m )
+Vect::Vect( const M128_TYPE& _m )
+	: m( _m )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Vect::Vect( const M128_TYPE& _m, const float w ) :
-m( _m )
+Vect::Vect( const M128_TYPE& _m, float w )
+	: m( _m )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->w = w;
 }
 
-Vect::Vect( const Vect& v, const NormType& ) :
-m( v.m )
+Vect::Vect( const Vect& v, const NormType& )
+	: m( v.m )
 {
 	CHECK_ALIGNMENT_16( this );
 
@@ -42,25 +42,25 @@ m( v.m )
 }
 
 
-Vect::Vect( const Vect& v ) :
-m( v.m )
+Vect::Vect( const Vect& v )
+	: m( v.m )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Vect::Vect( const Vect& v, const float w ) :
-m( v.m )
+Vect::Vect( const Vect& v, float w )
+	: m( v.m )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->w = w;
 }
 
-Vect::Vect( const float _x, const float _y, const float _z, const float _w ) :
-x( _x ),
-y( _y ),
-z( _z ),
-w( _w )
+Vect::Vect( float _x, float _y, float _z, float _w )
+	: x( _x ),
+	y( _y ),
+	z( _z ),
+	w( _w )
 {
 	CHECK_ALIGNMENT_16( this );
 }
@@ -76,7 +76,7 @@ Vect::~Vect()
 	// Do nothing
 }
 
-const bool Vect::isEqual( const Vect& rhs, const float tolerance ) const
+bool Vect::isEqual( const Vect& rhs, float tolerance ) const
 {
 	M128_TYPE result = _mm_abs_ps( this->m - rhs.m );
 
@@ -86,7 +86,7 @@ const bool Vect::isEqual( const Vect& rhs, const float tolerance ) const
 			 result.m128_f32[3] < tolerance );
 }
 
-const bool Vect::isZero( const float tolerance ) const
+bool Vect::isZero( float tolerance ) const
 {
 	M128_TYPE result = _mm_abs_ps( this->m - DEFAULT_VECTOR_VALUES );
 
@@ -96,7 +96,7 @@ const bool Vect::isZero( const float tolerance ) const
 			 result.m128_f32[3] < tolerance );
 }
 
-void Vect::set( const float x, const float y, const float z, const float w )
+void Vect::set( float x, float y, float z, float w )
 {
 	this->x = x;
 	this->y = y;
@@ -109,12 +109,12 @@ void Vect::set( const Vect& v )
 	this->m = v.m;
 }
 
-const Vect Vect::operator+( const Vect& rhs ) const
+Vect Vect::operator+( const Vect& rhs ) const
 {
 	return Vect( this->m + rhs.m, 1.0f );
 }
 
-const Vect Vect::operator-( const Vect& rhs ) const
+Vect Vect::operator-( const Vect& rhs ) const
 {
 	return Vect( this->m - rhs.m, 1.0f );
 }
@@ -131,7 +131,7 @@ void Vect::operator-=( const Vect& rhs )
 	this->w = 1.0f;
 }
 
-const float Vect::dot( const Vect& v2 ) const
+float Vect::dot( const Vect& v2 ) const
 {
 	M128_TYPE squared = this->m * v2.m;
 	float result = squared.m128_f32[0];
@@ -141,7 +141,7 @@ const float Vect::dot( const Vect& v2 ) const
 	return result;
 }
 
-const Vect Vect::cross( const Vect& v2 ) const
+Vect Vect::cross( const Vect& v2 ) const
 {
 	//     col0   col1   col2   col3
 	// x = v1.y * v2.z - v1.z * v2.y
@@ -189,24 +189,24 @@ void Vect::norm()
 	this->w = 1.0f;
 }
 
-const Vect Vect::getNorm() const
+Vect Vect::getNorm() const
 {
 	return Vect( *this, NORMALIZE );
 }
 
-const float Vect::mag() const
+float Vect::mag() const
 {
 	M128_TYPE squaredLength = this->m * this->m;
 	return sqrtf( squaredLength.m128_f32[0] + squaredLength.m128_f32[1] + squaredLength.m128_f32[2] );
 }
 
-const float Vect::magSqr() const
+float Vect::magSqr() const
 {
 	M128_TYPE squaredLength = this->m * this->m;
 	return squaredLength.m128_f32[0] + squaredLength.m128_f32[1] + squaredLength.m128_f32[2];
 }
 
-const float Vect::getAngle( const Vect& v2 ) const
+float Vect::getAngle( const Vect& v2 ) const
 {
 	float dotProduct = this->dot( v2 );
 	dotProduct /= this->mag();
@@ -215,35 +215,35 @@ const float Vect::getAngle( const Vect& v2 ) const
 	return acosf( dotProduct );
 }
 
-const Vect operator*( const float a, const Vect& b )
+Vect operator*( float a, const Vect& b )
 {
 	return b * a;
 }
 
-const Vect Vect::operator*( const float a ) const
+Vect Vect::operator*( float a ) const
 {
 	return Vect( this->m * a, 1.0f );
 }
 
-void Vect::operator*=( const float a )
+void Vect::operator*=( float a )
 {
 	this->m *= a;
 	this->w = 1.0f;
 }
 
-const Vect Vect::operator+( ) const
+Vect Vect::operator+( ) const
 {
 	return Vect( *this, 1.0f );
 }
 
-const Vect Vect::operator-( ) const
+Vect Vect::operator-( ) const
 {
 	M128_TYPE negated = this->m * NEGATION_TERM;
 	negated.m128_f32[3] = 1.0f;
 	return Vect( negated );
 }
 
-const Vect Vect::operator*( const Matrix& mtx ) const
+Vect Vect::operator*( const Matrix& mtx ) const
 {
 	return Vect( *this ) *= mtx;
 }

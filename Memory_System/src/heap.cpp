@@ -156,12 +156,11 @@ void VariableBlockHeap::free( void* p )
 	this->lowLevelHeap.Free( block );
 }
 
-#ifdef _DEBUG
+
 TrackingBlock* VariableBlockHeap::GetHeapTrackingHead() const
 {
 	return this->trackingBlockHead;
 }
-#endif
 
 
 

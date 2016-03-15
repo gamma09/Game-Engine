@@ -25,40 +25,40 @@ const static M128_TYPE ZERO_QUAT( 0.0f );
 //--------------------------------------------------------------------------------------------------
 // Contructors
 //--------------------------------------------------------------------------------------------------
-Quat::Quat() :
-m( IDENTITY_QUAT )
+Quat::Quat()
+	: m( IDENTITY_QUAT )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Quat::Quat( const Quat& q ) :
-m( q.m )
+Quat::Quat( const Quat& q )
+	: m( q.m )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Quat::Quat( const MatrixSpecialType type )
+Quat::Quat( MatrixSpecialType type )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	switch( type )
 	{
-	case IDENTITY:
-		this->m = IDENTITY_QUAT;
-		break;
+		case IDENTITY:
+			this->m = IDENTITY_QUAT;
+			break;
 
-	case ZERO:
-		this->m = ZERO_QUAT;
-		break;
+		case ZERO:
+			this->m = ZERO_QUAT;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 }
 
-Quat::Quat( const M128_TYPE& _m ) :
-m( _m )
+Quat::Quat( const M128_TYPE& _m )
+	: m( _m )
 {
 	CHECK_ALIGNMENT_16( this );
 }
@@ -70,51 +70,51 @@ Quat::Quat( const Matrix& mtx )
 	this->set( mtx );
 }
 
-Quat::Quat( const float& x, const float& y, const float& z, const float& w ) :
-qx( x ),
-qy( y ),
-qz( z ),
-qw( w )
+Quat::Quat( float x, float y, float z, float w )
+	: qx( x ),
+	qy( y ),
+	qz( z ),
+	qw( w )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Quat::Quat( const Vect& v ) :
-m( v.m )
+Quat::Quat( const Vect& v )
+	: m( v.m )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Quat::Quat( const Vect& v, const float& w ) :
-m( v.m )
+Quat::Quat( const Vect& v, float w )
+	: m( v.m )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->qw = w;
 }
 
-Quat::Quat( const RotType& type, const float& angle )
+Quat::Quat( RotType type, float angle )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( type, angle );
 }
 
-Quat::Quat( const Rot3AxisType&, const float& xAngle, const float& yAngle, const float& zAngle )
+Quat::Quat( Rot3AxisType, float xAngle, float yAngle, float zAngle )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( ROT_XYZ, xAngle, yAngle, zAngle );
 }
 
-Quat::Quat( const RotAxisAngleType&, const Vect& axis, const float& angle )
+Quat::Quat( RotAxisAngleType, const Vect& axis, float angle )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( ROT_AXIS_ANGLE, axis, angle );
 }
 
-Quat::Quat( const RotOrientType& type, const Vect& direction, const Vect& up )
+Quat::Quat( RotOrientType type, const Vect& direction, const Vect& up )
 {
 	CHECK_ALIGNMENT_16( this );
 
@@ -127,21 +127,21 @@ Quat::Quat( const RotOrientType& type, const Vect& direction, const Vect& up )
 //--------------------------------------------------------------------------------------------------
 // Set functions
 //--------------------------------------------------------------------------------------------------
-void Quat::set( const MatrixSpecialType type )
+void Quat::set( MatrixSpecialType type )
 {
 	switch( type )
 	{
-	case IDENTITY:
-		this->m = IDENTITY_QUAT;
-		break;
+		case IDENTITY:
+			this->m = IDENTITY_QUAT;
+			break;
 
-	case ZERO:
-		this->m = ZERO_QUAT;
-		break;
+		case ZERO:
+			this->m = ZERO_QUAT;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 }
 
@@ -252,13 +252,13 @@ void Quat::set( const Vect& v )
 
 
 
-void Quat::set( const Vect& v, const float& qw )
+void Quat::set( const Vect& v, float qw )
 {
 	this->m = v.m;
 	this->qw = qw;
 }
 
-void Quat::set( const float& x, const float& y, const float& z, const float& w )
+void Quat::set( float x, float y, float z, float w )
 {
 	this->qx = x;
 	this->qy = y;
@@ -266,7 +266,7 @@ void Quat::set( const float& x, const float& y, const float& z, const float& w )
 	this->qw = w;
 }
 
-void Quat::set( const RotType& type, const float& angle )
+void Quat::set( RotType type, float angle )
 {
 	this->m = IDENTITY_QUAT;
 
@@ -275,27 +275,27 @@ void Quat::set( const RotType& type, const float& angle )
 
 	switch( type )
 	{
-	case ROT_X:
-		this->qx = 1.0f * sn;
-		break;
+		case ROT_X:
+			this->qx = 1.0f * sn;
+			break;
 
-	case ROT_Y:
-		this->qy = 1.0f * sn;
-		break;
+		case ROT_Y:
+			this->qy = 1.0f * sn;
+			break;
 
-	case ROT_Z:
-		this->qz = 1.0f * sn;
-		break;
+		case ROT_Z:
+			this->qz = 1.0f * sn;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 
 	this->qw = cs;
 }
 
-void Quat::set( const Rot3AxisType&, const float& xAngle, const float& yAngle, const float& zAngle )
+void Quat::set( Rot3AxisType, float xAngle, float yAngle, float zAngle )
 {
 	this->set( ROT_X, xAngle );
 
@@ -306,7 +306,7 @@ void Quat::set( const Rot3AxisType&, const float& xAngle, const float& yAngle, c
 	*this *= temp;
 }
 
-void Quat::set( const RotAxisAngleType&, const Vect& axis, const float& angle )
+void Quat::set( RotAxisAngleType, const Vect& axis, float angle )
 {
 	this->m = axis.getNorm().m;
 
@@ -318,7 +318,7 @@ void Quat::set( const RotAxisAngleType&, const Vect& axis, const float& angle )
 	this->qw = cs;
 }
 
-void Quat::set( const RotOrientType& type, const Vect& direction, const Vect& up )
+void Quat::set( RotOrientType type, const Vect& direction, const Vect& up )
 {
 	this->set( Matrix( type, direction, up ) );
 }
@@ -342,7 +342,7 @@ void Quat::getVect( Vect& out ) const
 	out = Vect( this->m, 1.0f );
 }
 
-const float Quat::getAngle() const
+float Quat::getAngle() const
 {
 	return 2.0f * acosf( this->qw );
 }
@@ -378,7 +378,7 @@ Quat::~Quat()
 //--------------------------------------------------------------------------------------------------
 // Addition operators
 //--------------------------------------------------------------------------------------------------
-const Quat Quat::operator+( const Quat& q ) const
+Quat Quat::operator+( const Quat& q ) const
 {
 	return ( Quat( *this ) += q );
 }
@@ -389,12 +389,12 @@ Quat& Quat::operator+=( const Quat& q )
 	return *this;
 }
 
-const Quat Quat::operator+( const float& f ) const
+Quat Quat::operator+( float f ) const
 {
 	return ( Quat( *this ) += f );
 }
 
-Quat& Quat::operator+=( const float& f )
+Quat& Quat::operator+=( float f )
 {
 #ifdef MATH_SIMD
 	M128_TYPE m_f = _mm_set1_ps(f);
@@ -408,7 +408,7 @@ Quat& Quat::operator+=( const float& f )
 	return *this;
 }
 
-const Quat operator+( const float& f, const Quat& q )
+Quat operator+( float f, const Quat& q )
 {
 	return q + f;
 }
@@ -419,12 +419,12 @@ const Quat operator+( const float& f, const Quat& q )
 //--------------------------------------------------------------------------------------------------
 // Subtraction operators
 //--------------------------------------------------------------------------------------------------
-const Quat Quat::operator-( const Quat& q ) const
+Quat Quat::operator-( const Quat& q ) const
 {
 	return ( Quat( *this ) -= q );
 }
 
-const Quat Quat::operator-( const float& f ) const
+Quat Quat::operator-( float f ) const
 {
 	return ( Quat( *this ) -= f );
 }
@@ -435,7 +435,7 @@ Quat& Quat::operator-=( const Quat& q )
 	return *this;
 }
 
-Quat& Quat::operator-=( const float& f )
+Quat& Quat::operator-=( float f )
 {
 #ifdef MATH_SIMD
 	M128_TYPE m_f = _mm_set1_ps(f);
@@ -447,7 +447,7 @@ Quat& Quat::operator-=( const float& f )
 	return *this;
 }
 
-const Quat operator-( const float& f, const Quat& q )
+Quat operator-( float f, const Quat& q )
 {
 	return -q + f;
 }
@@ -458,7 +458,7 @@ const Quat operator-( const float& f, const Quat& q )
 //--------------------------------------------------------------------------------------------------
 // Multiplication operators
 //--------------------------------------------------------------------------------------------------
-const Quat Quat::operator*( const Quat& q ) const
+Quat Quat::operator*( const Quat& q ) const
 {
 	return ( Quat( *this ) *= q );
 }
@@ -480,12 +480,12 @@ Quat& Quat::operator*=( const Quat& q )
 	return *this;
 }
 
-const Quat Quat::operator*( const float& f ) const
+Quat Quat::operator*( float f ) const
 {
 	return ( Quat( *this ) *= f );
 }
 
-Quat& Quat::operator*=( const float& f )
+Quat& Quat::operator*=( float f )
 {
 #ifdef MATH_SIMD
 	M128_TYPE m_f = _mm_set1_ps(f);
@@ -497,12 +497,12 @@ Quat& Quat::operator*=( const float& f )
 	return *this;
 }
 
-const Quat operator*( const float& f, const Quat& q )
+Quat operator*( float f, const Quat& q )
 {
 	return q * f;
 }
 
-const Quat Quat::multByElement( const Quat& q ) const
+Quat Quat::multByElement( const Quat& q ) const
 {
 	return Quat( this->m * q.m );
 }
@@ -513,7 +513,7 @@ const Quat Quat::multByElement( const Quat& q ) const
 //--------------------------------------------------------------------------------------------------
 // Division operators
 //--------------------------------------------------------------------------------------------------
-const Quat Quat::operator/( const Quat& q ) const
+Quat Quat::operator/( const Quat& q ) const
 {
 	return ( Quat( *this ) /= q );
 }
@@ -524,12 +524,12 @@ Quat& Quat::operator/=( const Quat& q )
 	return *this;
 }
 
-const Quat Quat::operator/( const float& f ) const
+Quat Quat::operator/( float f ) const
 {
 	return ( Quat( *this ) /= f );
 }
 
-Quat& Quat::operator/=( const float& f )
+Quat& Quat::operator/=( float f )
 {
 #ifdef MATH_SIMD
 	M128_TYPE m_f = _mm_set1_ps(f);
@@ -541,7 +541,7 @@ Quat& Quat::operator/=( const float& f )
 	return *this;
 }
 
-const Quat operator/( const float& f, const Quat& q )
+Quat operator/( float f, const Quat& q )
 {
 #ifdef MATH_SIMD
 	M128_TYPE m_f = _mm_set1_ps(f);
@@ -558,12 +558,12 @@ const Quat operator/( const float& f, const Quat& q )
 //--------------------------------------------------------------------------------------------------
 // Unary operators
 //--------------------------------------------------------------------------------------------------
-const Quat Quat::operator+( ) const
+Quat Quat::operator+( ) const
 {
 	return Quat( *this );
 }
 
-const Quat Quat::operator-( ) const
+Quat Quat::operator-( ) const
 {
 	return Quat( this->m * -1.0f );
 }
@@ -574,7 +574,7 @@ const Quat Quat::operator-( ) const
 //--------------------------------------------------------------------------------------------------
 // Boolean functions
 //--------------------------------------------------------------------------------------------------
-const bool Quat::isEqual( const Quat& q, const float& tolerance ) const
+bool Quat::isEqual( const Quat& q, float tolerance ) const
 {
 	M128_TYPE a = _mm_abs_ps( this->m - q.m );
 	return a.m128_f32[0] < tolerance &&
@@ -583,7 +583,7 @@ const bool Quat::isEqual( const Quat& q, const float& tolerance ) const
 		a.m128_f32[3] < tolerance;
 }
 
-const bool Quat::isNegEqual( const Quat& q, const float& tolerance ) const
+bool Quat::isNegEqual( const Quat& q, float tolerance ) const
 {
 	M128_TYPE a = _mm_abs_ps( this->m + q.m );
 	return a.m128_f32[0] < tolerance &&
@@ -592,12 +592,12 @@ const bool Quat::isNegEqual( const Quat& q, const float& tolerance ) const
 		a.m128_f32[3] < tolerance;
 }
 
-const bool Quat::isEquivalent( const Quat& q, const float& tolerance ) const
+bool Quat::isEquivalent( const Quat& q, float tolerance ) const
 {
 	return this->isEqual( q, tolerance ) || this->isNegEqual( q, tolerance );
 }
 
-const bool Quat::isConjugateEqual( const Quat& q, const float& tolerance ) const
+bool Quat::isConjugateEqual( const Quat& q, float tolerance ) const
 {
 #ifdef MATH_SIMD
 	static const M128_TYPE wNeg = _mm_setr_ps(1.0f, 1.0f, 1.0f, -1.0f);
@@ -612,7 +612,7 @@ const bool Quat::isConjugateEqual( const Quat& q, const float& tolerance ) const
 		a.m128_f32[3] < tolerance;
 }
 
-const bool Quat::isIdentity( const float& tolerance ) const
+bool Quat::isIdentity( float tolerance ) const
 {
 	M128_TYPE a = _mm_abs_ps( this->m - IDENTITY_QUAT );
 	return a.m128_f32[0] < tolerance &&
@@ -621,7 +621,7 @@ const bool Quat::isIdentity( const float& tolerance ) const
 		a.m128_f32[3] < tolerance;
 }
 
-const bool Quat::isZero( const float& tolerance ) const
+bool Quat::isZero( float tolerance ) const
 {
 	M128_TYPE a = _mm_abs_ps( this->m );
 	return a.m128_f32[0] < tolerance &&
@@ -630,7 +630,7 @@ const bool Quat::isZero( const float& tolerance ) const
 		a.m128_f32[3] < tolerance;
 }
 
-const bool Quat::isNormalized( const float& tolerance ) const
+bool Quat::isNormalized( float tolerance ) const
 {
 	return fabsf( this->magSquared() - 1.0f ) < tolerance;
 }
@@ -648,7 +648,7 @@ static const M128_TYPE NEGATE_XYZ = _mm_setr_ps(-1.0f, -1.0f, -1.0f, 1.0f);
 static const M128_TYPE NEGATE_XYZ( -1.0f, -1.0f, -1.0f, 1.0f );
 #endif
 
-const Quat Quat::getConj() const
+Quat Quat::getConj() const
 {
 	return Quat( *this ).conj();
 }
@@ -659,7 +659,7 @@ Quat& Quat::conj()
 	return *this;
 }
 
-const Quat Quat::getT() const
+Quat Quat::getT() const
 {
 	return this->getConj();
 }
@@ -669,24 +669,24 @@ Quat& Quat::T()
 	return this->conj();
 }
 
-const float Quat::mag() const
+float Quat::mag() const
 {
 	return sqrtf( this->magSquared() );
 }
 
-const float Quat::magSquared() const
+float Quat::magSquared() const
 {
 	float result;
 	_dot_product_ps( this->m, this->m, result );
 	return result;
 }
 
-const float Quat::invMag() const
+float Quat::invMag() const
 {
 	return 1.0f / this->mag();
 }
 
-const Quat Quat::getNorm() const
+Quat Quat::getNorm() const
 {
 	return Quat( *this ).norm();
 }
@@ -710,7 +710,7 @@ Quat& Quat::norm()
 }
 
 
-const Quat Quat::getInv() const
+Quat Quat::getInv() const
 {
 	return Quat( *this ).inv();
 }
@@ -722,7 +722,7 @@ Quat& Quat::inv()
 	return ( this->conj() /= magSqr );
 }
 
-const float Quat::dot( const Quat& q ) const
+float Quat::dot( const Quat& q ) const
 {
 	float result;
 	_dot_product_ps( this->m, q.m, result );

@@ -22,10 +22,10 @@ public:
 	// Copies a vector
 	Vect( const Vect& v );
 
-	Vect( const Vect& v, const float w );
+	Vect( const Vect& v, float w );
 
 	// Specialization ctor, w is optional (defaults to 1 if not specified)
-	Vect( const float x, const float y, const float z, const float w = 1.0f );
+	Vect( float x, float y, float z, float w = 1.0f );
 
 	// Assignment operator
 	Vect& operator=( const Vect& v );
@@ -35,21 +35,21 @@ public:
 
 	// Checks for element equality within a specified tolerance
 	// Tolerance is optional
-	const bool isEqual( const Vect& rhs, const float tolerance = MATH_TOLERANCE ) const;
+	bool isEqual( const Vect& rhs, float tolerance = MATH_TOLERANCE ) const;
 
 	// Checks whether the vector contains all zeros within a specified tolerance
 	// Tolerance is optional
-	const bool isZero( const float tolerance = MATH_TOLERANCE ) const;
+	bool isZero( float tolerance = MATH_TOLERANCE ) const;
 
 	// Sets the vector to the specified values - w is optional and defaults to 1
-	void set( const float x, const float y, const float z, const float w = 1.0f );
+	void set( float x, float y, float z, float w = 1.0f );
 	void set( const Vect& v );
 
 	// get operators for x, y, z, and w
-	inline const float operator[] ( const x_enum ) const { return this->x; }
-	inline const float operator[] ( const y_enum ) const { return this->y; }
-	inline const float operator[] ( const z_enum ) const { return this->z; }
-	inline const float operator[] ( const w_enum ) const { return this->w; }
+	inline float operator[] ( const x_enum ) const { return this->x; }
+	inline float operator[] ( const y_enum ) const { return this->y; }
+	inline float operator[] ( const z_enum ) const { return this->z; }
+	inline float operator[] ( const w_enum ) const { return this->w; }
 
 	// set operators for x, y, z, and w
 	inline float& operator[] ( const x_enum ) { return this->x; }
@@ -58,45 +58,45 @@ public:
 	inline float& operator[] ( const w_enum ) { return this->w; }
 
 	// Binary add and subtract operators
-	const Vect operator+( const Vect& rhs ) const;
-	const Vect operator-( const Vect& rhs ) const;
+	Vect operator+( const Vect& rhs ) const;
+	Vect operator-( const Vect& rhs ) const;
 
 	// In-place add and subtract operators
 	void operator+=( const Vect& rhs );
 	void operator-=( const Vect& rhs );
 
 	// Dot product of two vectors
-	const float dot( const Vect& v2 ) const;
+	float dot( const Vect& v2 ) const;
 
 	// Cross product of two vectors
-	const Vect Vect::cross( const Vect& v2 ) const;
+	Vect Vect::cross( const Vect& v2 ) const;
 
 	// Normalize the vector in place
 	void norm();
 
 	// Get a normalized vector without modifying the original
-	const Vect getNorm() const;
+	Vect getNorm() const;
 
 	// Gets the magnitude of the vector
-	const float mag() const;
+	float mag() const;
 
 	// Gets the square of the magnitude of the vector
-	const float magSqr() const;
+	float magSqr() const;
 
 	// Returns the angle between this vector and v2
-	const float getAngle( const Vect& v2 ) const;
+	float getAngle( const Vect& v2 ) const;
 
 	// Scaling operators
-	const Vect operator*( const float a ) const;
-	void operator*=( const float a );
+	Vect operator*( float a ) const;
+	void operator*=( float a );
 
 	// Unary + operator, does nothing
-	const Vect operator+( ) const;
+	Vect operator+( ) const;
 	// Unary - operator, negates vector
-	const Vect operator-( ) const;
+	Vect operator-( ) const;
 
 	// multiply a vector by a matrix
-	const Vect operator*( const Matrix& mtx ) const;
+	Vect operator*( const Matrix& mtx ) const;
 	Vect& operator*=( const Matrix& mtx );
 
 	friend class Matrix;
@@ -106,7 +106,7 @@ public:
 private:
 
 	Vect( const M128_TYPE& m );
-	Vect( const M128_TYPE& m, const float w );
+	Vect( const M128_TYPE& m, float w );
 	Vect( const Vect& v, const NormType& );
 
 
@@ -134,4 +134,4 @@ public:
 
 };
 
-const Vect operator*( const float a, const Vect& b );
+Vect operator*( float a, const Vect& b );

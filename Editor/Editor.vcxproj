@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
@@ -124,7 +124,7 @@ MKDIR "$(IntDir)"
 MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
     <CustomBuildStep>
-      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;ADD_META_TAGS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;_WINDOWS;ADD_META_TAGS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
       <Message>Building Reflection Data</Message>
       <Outputs>$(ProjectDir)GeneratedFiles\GeneratedReflectionCode.cpp;%(Outputs)</Outputs>
     </CustomBuildStep>

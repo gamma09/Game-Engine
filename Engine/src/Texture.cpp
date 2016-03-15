@@ -23,7 +23,7 @@ void Texture::Set( ID3D11Device* device, const char* archiveFile, const char* te
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage image;
 
-	if( !read_asset( archiveFile, TEXTURE_TYPE, textureName, bytes, size ) )
+	if( !read_asset( archiveFile, TEXTURE_TYPE, textureName, bytes, size, TemporaryHeap::Instance() ) )
 	{
 		this->textureResource = TextureManager::Instance()->Default_Texture()->Get_Texture_Resource();
 		this->using_default_texture = true;
@@ -72,7 +72,7 @@ Texture::Texture( ID3D11Device* device, const char* defaultArchive, const char* 
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage image;
 
-	GameCheckFatal( read_asset( defaultArchive, TEXTURE_TYPE, textureName, bytes, size ), "Error: Could not load default texture from archive." );
+	GameCheckFatal( read_asset( defaultArchive, TEXTURE_TYPE, textureName, bytes, size, TemporaryHeap::Instance() ), "Error: Could not load default texture from archive." );
 	GameCheckFatal( SUCCEEDED( DirectX::LoadFromTGAMemory( bytes, size, &metadata, image ) ), "Error: Could not read default texture's image data." );
 	GameCheckFatal( SUCCEEDED( DirectX::CreateShaderResourceView( device, image.GetImages(), image.GetImageCount(), metadata, &this->textureResource ) ), "Error: Could not create default texture's shader resource view." );
 }

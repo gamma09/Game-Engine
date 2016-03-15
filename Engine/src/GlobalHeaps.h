@@ -48,3 +48,23 @@ private:
 
 	static ConstantBufferHeap* instance;
 };
+
+class AnimHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	AnimHeap();
+	~AnimHeap();
+
+	AnimHeap( const AnimHeap& ) = delete;
+	AnimHeap& operator=( const AnimHeap& ) = delete;
+
+private:
+	Heap* heap;
+	static AnimHeap* instance;
+};

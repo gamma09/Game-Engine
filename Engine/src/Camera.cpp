@@ -6,36 +6,36 @@
 #include "Camera.h"
 #include "CameraManager.h"
 
-Camera::Camera() :
-ManagedObject(),
-ReferencedObject(),
-projection(),
-view(),
-projection_view_matrix(),
-pos(),
-facing(),
-right(),
-up(),
-nearTopLeft(),
-nearTopRight(),
-nearBottomLeft(),
-nearBottomRight(),
-farTopLeft(),
-farTopRight(),
-farBottomLeft(),
-farBottomRight(),
-frontNorm(),
-backNorm(),
-rightNorm(),
-leftNorm(),
-topNorm(),
-bottomNorm(),
-near_height( 0.0f ),
-near_width( 0.0f ),
-far_height( 0.0f ),
-far_width( 0.0f ),
-near_distance( 0.0f ),
-far_distance( 0.0f )
+Camera::Camera()
+	: ManagedObject(),
+	ReferencedObject(),
+	projection(),
+	view(),
+	projection_view_matrix(),
+	pos(),
+	facing(),
+	right(),
+	up(),
+	nearTopLeft(),
+	nearTopRight(),
+	nearBottomLeft(),
+	nearBottomRight(),
+	farTopLeft(),
+	farTopRight(),
+	farBottomLeft(),
+	farBottomRight(),
+	frontNorm(),
+	backNorm(),
+	rightNorm(),
+	leftNorm(),
+	topNorm(),
+	bottomNorm(),
+	near_height( 0.0f ),
+	near_width( 0.0f ),
+	far_height( 0.0f ),
+	far_width( 0.0f ),
+	near_distance( 0.0f ),
+	far_distance( 0.0f )
 {
 	// Do nothing
 }
@@ -66,7 +66,7 @@ void Camera::Free_Me()
 	CameraManager::Instance()->Remove( this );
 }
 
-const bool Camera::Should_Be_Drawn( const Vect& position, const float boundingRadius ) const
+bool Camera::Should_Be_Drawn( const Vect& position, float boundingRadius ) const
 {
 	Vect posFromTopLeftNear = position - this->nearTopLeft;
 	if( posFromTopLeftNear.dot( this->topNorm ) > boundingRadius )
@@ -87,7 +87,7 @@ const bool Camera::Should_Be_Drawn( const Vect& position, const float boundingRa
 	return true;
 }
 
-const Vect Camera::Get_Position() const
+Vect Camera::Get_Position() const
 {
 	return Vect( this->pos );
 }
@@ -117,7 +117,7 @@ const Matrix& Camera::Get_View() const
 	return this->view;
 }
 
-void Camera::Update_Position( const uint32_t& time )
+void Camera::Update_Position( uint32_t time )
 {
 	uint32_t timeSinceLast = time - this->lastMovementTime;
 	this->lastMovementTime = time;

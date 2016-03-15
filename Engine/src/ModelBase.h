@@ -39,8 +39,8 @@ protected:
 
 
 private:
-	float boundingRadius;
 	Matrix boundsMatrix;
+	float boundingRadius;
 
 	uint32_t boneCount;
 	Mesh* boneMeshes;

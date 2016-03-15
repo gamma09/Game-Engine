@@ -4,8 +4,8 @@
 #include "GlobalHeaps.h"
 
 
-#ifdef OVERRIDE_NEW
-#define new(heap, align) new((heap), (align), __FILE__, __LINE__)
-#else
+#ifdef DONT_OVERRIDE_NEW
 #define new(heap, align) new
+#else
+#define new(heap, align) new((heap), (align), __FILE__, __LINE__)
 #endif

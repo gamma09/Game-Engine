@@ -31,9 +31,9 @@
 //  Game::Game()
 //		Game Engine Constructor
 //-----------------------------------------------------------------------------
-Game::Game( const char* windowName, const int Width, const int Height ) :
-Engine( windowName, Width, Height ),
-wasCulled( false )
+Game::Game( const char* windowName, const int Width, const int Height )
+	: Engine( windowName, Width, Height ),
+	wasCulled( false )
 {
 	// Do nothing
 }

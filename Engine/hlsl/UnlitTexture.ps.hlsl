@@ -1,3 +1,5 @@
+#pragma pack_matrix( row_major )
+
 Texture2D txDiffuse : register( t0 );
 SamplerState samplerLinear : register( s0 );
 

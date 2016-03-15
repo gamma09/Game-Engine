@@ -11,29 +11,29 @@ const static Vect IDENTITY_ROW_1( 0.0f, 1.0f, 0.0f, 0.0f );
 const static Vect IDENTITY_ROW_2( 0.0f, 0.0f, 1.0f, 0.0f );
 const static Vect IDENTITY_ROW_3( 0.0f, 0.0f, 0.0f, 1.0f );
 
-Matrix::Matrix() :
-v0( ZERO_ROW ),
-v1( ZERO_ROW ),
-v2( ZERO_ROW ),
-v3( ZERO_ROW )
+Matrix::Matrix()
+	: v0( ZERO_ROW ),
+	v1( ZERO_ROW ),
+	v2( ZERO_ROW ),
+	v3( ZERO_ROW )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Matrix::Matrix( const Matrix& mtx ) :
-v0( mtx.v0 ),
-v1( mtx.v1 ),
-v2( mtx.v2 ),
-v3( mtx.v3 )
+Matrix::Matrix( const Matrix& mtx )
+	: v0( mtx.v0 ),
+	v1( mtx.v1 ),
+	v2( mtx.v2 ),
+	v3( mtx.v3 )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Matrix::Matrix( const Vect& _v0, const Vect& _v1, const Vect& _v2, const Vect& _v3 ) :
-v0( _v0 ),
-v1( _v1 ),
-v2( _v2 ),
-v3( _v3 )
+Matrix::Matrix( const Vect& _v0, const Vect& _v1, const Vect& _v2, const Vect& _v3 )
+	: v0( _v0 ),
+	v1( _v1 ),
+	v2( _v2 ),
+	v3( _v3 )
 {
 	CHECK_ALIGNMENT_16( this );
 }
@@ -47,61 +47,61 @@ v3( row3 )
 	CHECK_ALIGNMENT_16( this );
 }
 
-Matrix::Matrix( const MatrixSpecialType type )
+Matrix::Matrix( MatrixSpecialType type )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( type );
 }
 
-Matrix::Matrix( const MatrixTransType, const float x, const float y, const float z ) :
-v0( IDENTITY_ROW_0 ),
-v1( IDENTITY_ROW_1 ),
-v2( IDENTITY_ROW_2 ),
-v3( x, y, z )
+Matrix::Matrix( MatrixTransType, float x, float y, float z )
+	: v0( IDENTITY_ROW_0 ),
+	v1( IDENTITY_ROW_1 ),
+	v2( IDENTITY_ROW_2 ),
+	v3( x, y, z )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Matrix::Matrix( const MatrixTransType, const Vect& trans ) :
-v0( IDENTITY_ROW_0 ),
-v1( IDENTITY_ROW_1 ),
-v2( IDENTITY_ROW_2 ),
-v3( trans )
+Matrix::Matrix( MatrixTransType, const Vect& trans )
+	: v0( IDENTITY_ROW_0 ),
+	v1( IDENTITY_ROW_1 ),
+	v2( IDENTITY_ROW_2 ),
+	v3( trans )
 {
 	CHECK_ALIGNMENT_16( this );
 }
 
-Matrix::Matrix( const MatrixScaleType, const float sx, const float sy, const float sz )
+Matrix::Matrix( MatrixScaleType, float sx, float sy, float sz )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( SCALE, sx, sy, sz );
 }
 
-Matrix::Matrix( const MatrixScaleType, const Vect& scale )
+Matrix::Matrix( MatrixScaleType, const Vect& scale )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( SCALE, scale );
 }
 
-Matrix::Matrix( const RotOrientType type, const Vect& direction, const Vect& up ) :
-v3()
+Matrix::Matrix( RotOrientType type, const Vect& direction, const Vect& up )
+	: v3()
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( type, direction, up );
 }
 
-Matrix::Matrix( const RotAxisAngleType, const Vect& axis, const float& angle )
+Matrix::Matrix( RotAxisAngleType, const Vect& axis, float angle )
 {
 	CHECK_ALIGNMENT_16( this );
 
 	this->set( ROT_AXIS_ANGLE, axis, angle );
 }
 
-Matrix::Matrix( const Rot3AxisType, const float& xAngle, const float& yAngle, const float& zAngle )
+Matrix::Matrix( Rot3AxisType, float xAngle, float yAngle, float zAngle )
 {
 	CHECK_ALIGNMENT_16( this );
 
@@ -115,7 +115,7 @@ Matrix::Matrix( const Quat& quat )
 	this->set( quat );
 }
 
-Matrix::Matrix( const RotType type, const float angle )
+Matrix::Matrix( const RotType type, float angle )
 {
 	CHECK_ALIGNMENT_16( this );
 
@@ -137,7 +137,7 @@ Matrix::~Matrix()
 	// Do nothing
 }
 
-const bool Matrix::isEqual( const Matrix& mtx, const float tolerance ) const
+bool Matrix::isEqual( const Matrix& mtx, float tolerance ) const
 {
 	return ( this->v0.isEqual( mtx.v0, tolerance ) &&
 			 this->v1.isEqual( mtx.v1, tolerance ) &&
@@ -145,7 +145,7 @@ const bool Matrix::isEqual( const Matrix& mtx, const float tolerance ) const
 			 this->v3.isEqual( mtx.v3, tolerance ) );
 }
 
-const bool Matrix::isIdentity( const float tolerance ) const
+bool Matrix::isIdentity( float tolerance ) const
 {
 	return ( this->v0.isEqual( IDENTITY_ROW_0, tolerance ) &&
 			 this->v1.isEqual( IDENTITY_ROW_1, tolerance ) &&
@@ -153,31 +153,31 @@ const bool Matrix::isIdentity( const float tolerance ) const
 			 this->v3.isEqual( IDENTITY_ROW_3, tolerance ) );
 }
 
-void Matrix::set( const MatrixSpecialType type )
+void Matrix::set( MatrixSpecialType type )
 {
 	switch( type )
 	{
-	case IDENTITY:
-		this->v0 = IDENTITY_ROW_0;
-		this->v1 = IDENTITY_ROW_1;
-		this->v2 = IDENTITY_ROW_2;
-		this->v3 = IDENTITY_ROW_3;
-		break;
+		case IDENTITY:
+			this->v0 = IDENTITY_ROW_0;
+			this->v1 = IDENTITY_ROW_1;
+			this->v2 = IDENTITY_ROW_2;
+			this->v3 = IDENTITY_ROW_3;
+			break;
 
-	case ZERO:
-		this->v0 = ZERO_ROW;
-		this->v1 = ZERO_ROW;
-		this->v2 = ZERO_ROW;
-		this->v3 = ZERO_ROW;
-		break;
+		case ZERO:
+			this->v0 = ZERO_ROW;
+			this->v1 = ZERO_ROW;
+			this->v2 = ZERO_ROW;
+			this->v3 = ZERO_ROW;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 }
 
-void Matrix::set( const MatrixTransType, const float x, const float y, const float z )
+void Matrix::set( MatrixTransType, float x, float y, float z )
 {
 	this->v0 = IDENTITY_ROW_0;
 	this->v1 = IDENTITY_ROW_1;
@@ -185,7 +185,7 @@ void Matrix::set( const MatrixTransType, const float x, const float y, const flo
 	this->v3.set( x, y, z, 1.0f );
 }
 
-void Matrix::set( const MatrixTransType, const Vect& v )
+void Matrix::set( MatrixTransType, const Vect& v )
 {
 	this->v0 = IDENTITY_ROW_0;
 	this->v1 = IDENTITY_ROW_1;
@@ -194,7 +194,7 @@ void Matrix::set( const MatrixTransType, const Vect& v )
 }
 
 
-void Matrix::set( const MatrixScaleType, const float sx, const float sy, const float sz )
+void Matrix::set( MatrixScaleType, float sx, float sy, float sz )
 {
 	this->v0 = ZERO_ROW;
 	this->v1 = ZERO_ROW;
@@ -218,40 +218,40 @@ void Matrix::set( const MatrixScaleType, const Vect& scale )
 	this->v2[Z] = scale.z;
 }
 
-void Matrix::set( const RotType type, const float angle )
+void Matrix::set( RotType type, float angle )
 {
 	float cs = cosf( angle );
 	float sn = sinf( angle );
 
 	switch( type )
 	{
-	case ROT_X:
-		this->v0 = IDENTITY_ROW_0;
-		this->v1.set( 0.0f, cs, sn, 0.0f );
-		this->v2.set( 0.0f, -sn, cs, 0.0f );
-		break;
+		case ROT_X:
+			this->v0 = IDENTITY_ROW_0;
+			this->v1.set( 0.0f, cs, sn, 0.0f );
+			this->v2.set( 0.0f, -sn, cs, 0.0f );
+			break;
 
-	case ROT_Y:
-		this->v0.set( cs, 0.0f, -sn, 0.0f );
-		this->v1 = IDENTITY_ROW_1;
-		this->v2.set( sn, 0.0f, cs, 0.0f );
-		break;
+		case ROT_Y:
+			this->v0.set( cs, 0.0f, -sn, 0.0f );
+			this->v1 = IDENTITY_ROW_1;
+			this->v2.set( sn, 0.0f, cs, 0.0f );
+			break;
 
-	case ROT_Z:
-		this->v0.set( cs, sn, 0.0f, 0.0f );
-		this->v1.set( -sn, cs, 0.0f, 0.0f );
-		this->v2 = IDENTITY_ROW_2;
-		break;
+		case ROT_Z:
+			this->v0.set( cs, sn, 0.0f, 0.0f );
+			this->v1.set( -sn, cs, 0.0f, 0.0f );
+			this->v2 = IDENTITY_ROW_2;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 
 	this->v3 = IDENTITY_ROW_3;
 }
 
-void Matrix::set( const RotOrientType type, const Vect& direction, const Vect& up )
+void Matrix::set( RotOrientType type, const Vect& direction, const Vect& up )
 {
 	this->v2 = direction.getNorm();
 	this->v0 = up.cross( this->v2 );
@@ -267,20 +267,20 @@ void Matrix::set( const RotOrientType type, const Vect& direction, const Vect& u
 
 	switch( type )
 	{
-	case ROT_ORIENT:
-		// Do nothing
-		break;
+		case ROT_ORIENT:
+			// Do nothing
+			break;
 
-	case ROT_INVERSE_ORIENT:
-		this->inv();
-		break;
+		case ROT_INVERSE_ORIENT:
+			this->inv();
+			break;
 
-	default:
-		GameAssert( 0 );
+		default:
+			GameAssert( 0 );
 	}
 }
 
-void Matrix::set( const Rot3AxisType, const float& xAngle, const float& yAngle, const float& zAngle )
+void Matrix::set( Rot3AxisType, float xAngle, float yAngle, float zAngle )
 {
 	this->set( ROT_X, xAngle );
 
@@ -291,34 +291,34 @@ void Matrix::set( const Rot3AxisType, const float& xAngle, const float& yAngle, 
 	*this *= temp;
 }
 
-void Matrix::set( const RotAxisAngleType, const Vect& axis, const float& angle )
+void Matrix::set( RotAxisAngleType, const Vect& axis, float angle )
 {
 	this->set( Quat( ROT_AXIS_ANGLE, axis, angle ) );
 }
 
-void Matrix::set( const MatrixRowType row, const Vect& v )
+void Matrix::set( MatrixRowType row, const Vect& v )
 {
 	switch( row )
 	{
-	case ROW_0:
-		this->v0 = v;
-		break;
+		case ROW_0:
+			this->v0 = v;
+			break;
 
-	case ROW_1:
-		this->v1 = v;
-		break;
+		case ROW_1:
+			this->v1 = v;
+			break;
 
-	case ROW_2:
-		this->v2 = v;
-		break;
+		case ROW_2:
+			this->v2 = v;
+			break;
 
-	case ROW_3:
-		this->v3 = v;
-		break;
+		case ROW_3:
+			this->v3 = v;
+			break;
 
-	default:
-		GameAssert( 0 );
-		break;
+		default:
+			GameAssert( 0 );
+			break;
 	}
 }
 
@@ -389,29 +389,29 @@ void Matrix::set( const Quat& quat )
 	this->v2[W] = 0.0f;
 }
 
-const Vect Matrix::get( const MatrixRowType row ) const
+Vect Matrix::get( MatrixRowType row ) const
 {
 	switch( row )
 	{
-	case ROW_0:
-		return this->v0;
+		case ROW_0:
+			return this->v0;
 
-	case ROW_1:
-		return this->v1;
+		case ROW_1:
+			return this->v1;
 
-	case ROW_2:
-		return this->v2;
+		case ROW_2:
+			return this->v2;
 
-	case ROW_3:
-		return this->v3;
+		case ROW_3:
+			return this->v3;
 
-	default:
-		GameAssert( 0 );
-		return Vect();
+		default:
+			GameAssert( 0 );
+			return Vect();
 	}
 }
 
-const Matrix Matrix::operator+( const Matrix& mtx ) const
+Matrix Matrix::operator+( const Matrix& mtx ) const
 {
 	M128_TYPE row0 = this->v0.m + mtx.v0.m;
 	M128_TYPE row1 = this->v1.m + mtx.v1.m;
@@ -421,7 +421,7 @@ const Matrix Matrix::operator+( const Matrix& mtx ) const
 	return Matrix( row0, row1, row2, row3 );
 }
 
-const Matrix Matrix::operator-( const Matrix& mtx ) const
+Matrix Matrix::operator-( const Matrix& mtx ) const
 {
 	M128_TYPE row0 = this->v0.m - mtx.v0.m;
 	M128_TYPE row1 = this->v1.m - mtx.v1.m;
@@ -447,12 +447,12 @@ void Matrix::operator-=( const Matrix& mtx )
 	this->v3.m -= mtx.v3.m;
 }
 
-const Matrix operator*( const float a, const Matrix& mtx )
+Matrix operator*( float a, const Matrix& mtx )
 {
 	return mtx * a;
 }
 
-const Matrix Matrix::operator*( const float a ) const
+Matrix Matrix::operator*( float a ) const
 {
 #ifdef MATH_SIMD
 	M128_TYPE scalar = _mm_set1_ps(a);
@@ -470,7 +470,7 @@ const Matrix Matrix::operator*( const float a ) const
 	return Matrix( row0, row1, row2, row3 );
 }
 
-void Matrix::operator*=( const float a )
+void Matrix::operator*=( float a )
 {
 
 #ifdef MATH_SIMD
@@ -487,7 +487,7 @@ void Matrix::operator*=( const float a )
 	this->v3.m *= scalar;
 }
 
-const Matrix Matrix::operator*( const Matrix& mtx ) const
+Matrix Matrix::operator*( const Matrix& mtx ) const
 {
 	return Matrix( *this ) *= mtx;
 }
@@ -537,17 +537,17 @@ Matrix& Matrix::operator*=( const Matrix& mtx )
 	return *this;
 }
 
-const Matrix Matrix::operator+( ) const
+Matrix Matrix::operator+( ) const
 {
 	return *this;
 }
 
-const Matrix Matrix::operator-( ) const
+Matrix Matrix::operator-( ) const
 {
 	return *this * -1.0f;
 }
 
-const float Matrix::det() const
+float Matrix::det() const
 {
 
 #ifdef MATH_SIMD
@@ -623,7 +623,7 @@ Matrix& Matrix::T()
 	return *this;
 }
 
-const Matrix Matrix::getT() const
+Matrix Matrix::getT() const
 {
 	return Matrix( *this ).T();
 }
@@ -671,7 +671,7 @@ Matrix& Matrix::inv()
 	return *this;
 }
 
-const Matrix Matrix::getInv() const
+Matrix Matrix::getInv() const
 {
 	return Matrix( *this ).inv();
 }

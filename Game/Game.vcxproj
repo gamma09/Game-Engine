@@ -98,7 +98,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;DONT_OVERRIDE_NEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -125,7 +125,7 @@ MKDIR "$(IntDir)"
 MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </PreBuildEvent>
     <CustomBuildStep>
-      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;DONT_OVERRIDE_NEW;ADD_META_TAGS;_WINDOWS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
+      <Command>"$(SolutionDir)Tools\Reflection_Tool.exe" "$(SolutionDir)." "$(ProjectDir)." "$(ProjectDir)GeneratedFiles" "$(VC_ExecutablePath_x86)\cl.exe" "WIN32;_DEBUG;ADD_META_TAGS;_WINDOWS;_MBCS" "$(IncludePath)" "$(Configuration)"</Command>
     </CustomBuildStep>
     <CustomBuildStep>
       <Message>Building Reflection Data</Message>
