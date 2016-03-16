@@ -13,6 +13,9 @@ call :SubFolderClean Unify
 
 call :SubFolderClean DirectXTex
 
+call :SubFolderClean Browser
+call :SubFolderClean BrowserCLI
+
 call :SubFolderClean Editor
 call :SubFolderClean Engine
 call :SubFolderClean File_System
@@ -42,4 +45,5 @@ goto:eof
 	del /F /S /A:H *.suo
 	del /F /S *.out
 	rmdir /S /Q obj
+	rmdir /S /Q bin
 	popd

@@ -71,7 +71,7 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(SolutionDir)BrowserCLI\src;$(IncludePath)</IncludePath>
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
@@ -87,7 +87,7 @@
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(SolutionDir)BrowserCLI\src;$(IncludePath)</IncludePath>
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
@@ -244,6 +244,12 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
   <ItemGroup>
     <ProjectReference Include="..\Archive_Reader\Archive_Reader.vcxproj">
       <Project>{672888d1-69c6-4d12-8757-f8b4684a1ff2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\BrowserCLI\BrowserCLI.vcxproj">
+      <Project>{8ac27d89-17e9-4dc4-896c-5bfafddc4a41}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Browser\Browser.csproj">
+      <Project>{210f2aae-4670-427e-bdeb-bac085068b39}</Project>
     </ProjectReference>
     <ProjectReference Include="..\DirectXTex\DirectXTex.vcxproj">
       <Project>{d2957915-f885-4644-bf73-b13c151d2a80}</Project>

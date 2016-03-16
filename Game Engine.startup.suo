@@ -47,6 +47,13 @@
           "CommandLineArguments": ""
         }
       }
+    },
+    "Browser": {
+      "Projects": {
+        "Browser": {
+          "CommandLineArguments": ""
+        }
+      }
     }
   },
   "ActivateCommandLineArguments": false,

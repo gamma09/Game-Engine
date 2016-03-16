@@ -5,6 +5,7 @@
 #include <Timer.h>
 #include <Time.h>
 #include <Camera.h>
+#include <Browser.h>
 
 #include "Actor.h"
 
@@ -25,7 +26,9 @@ public:
 
 private:
 	// prevent them from calling wrong call
-	Editor();
+	Editor() = delete;
+
+	CLI::Browser browser;
 
 	Timer updateTimer;
 	Time totalTime;

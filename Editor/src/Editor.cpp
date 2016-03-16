@@ -33,7 +33,8 @@
 //-----------------------------------------------------------------------------
 Editor::Editor( const char* windowName, const int Width, const int Height ) :
 Engine( windowName, Width, Height ),
-wasCulled( false )
+wasCulled( false ),
+browser()
 {
 	// Do nothing
 }
