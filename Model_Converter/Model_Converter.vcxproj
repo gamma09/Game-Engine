@@ -98,6 +98,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <OpenMPSupport>false</OpenMPSupport>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,7 @@ COPY "$(ProjectDir)libs\fbx\dll\libfbxsdk_d32.dll" "$(TargetDir)"</Command>
       <TreatWarningAsError>true</TreatWarningAsError>
       <OpenMPSupport>false</OpenMPSupport>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

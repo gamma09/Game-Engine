@@ -12,9 +12,10 @@
 #include "UnlitTextureMaterial.h"
 #include "WireframeMaterial.h"
 #include "AppInfo.h"
+#include "EngineMessages.h"
 
-class bad_function_call;
 class Heap;
+
 
 class Engine abstract
 {
@@ -28,7 +29,10 @@ public:
 	virtual void Draw() abstract;
 	virtual void UnLoadContent() abstract;
 
+	virtual void CloseEngine();
+
 	void run();
+	void Close();
 
 private:
 	void CreateEngineWindow();
@@ -48,7 +52,7 @@ private:
 	// private functions
 	void PreLoadContent();
 
-public:
+protected:
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
 
@@ -56,7 +60,6 @@ public:
 	UnlitTextureMaterial* unlitTextureMaterial;
 	WireframeMaterial* wireframeMaterial;
 
-private:
 	IDXGISwapChain* swapChain;
 	ID3D11RenderTargetView* renderTarget;
 	ID3D11Texture2D* depthStencil;
@@ -66,9 +69,9 @@ private:
 
 	HWND hWindow;
 	bool isOpen;
+	
 	std::thread updateThread;
 
-public:
 	Heap* managerHeap;
 
 	AppInfo info;

@@ -1,4 +1,5 @@
 #include <vcclr.h>
+#include <string.h>
 #include <GameAssert.h>
 
 #include "CLIObjectTable.h"

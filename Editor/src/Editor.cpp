@@ -31,10 +31,11 @@
 //  Editor::Editor()
 //		Editor Engine Constructor
 //-----------------------------------------------------------------------------
-Editor::Editor( const char* windowName, const int Width, const int Height ) :
-Engine( windowName, Width, Height ),
-wasCulled( false ),
-browser()
+Editor::Editor( const char* windowName, const int Width, const int Height )
+	: Engine( windowName, Width, Height ),
+	wasCulled( false ),
+	browser( nullptr )//,
+	//inModal( false )
 {
 	// Do nothing
 }
@@ -46,6 +47,9 @@ browser()
 //-----------------------------------------------------------------------------
 void Editor::LoadContent()
 {
+	// First and foremost, we have to create the content browser
+	this->browser = new CLI::Browser();
+	this->browser->AddBrowserListener( this );
 
 	PerspectiveData perspective;
 	perspective.fov_Y = 50.0f * MATH_PI_180;
@@ -166,4 +170,73 @@ void Editor::UnLoadContent()
 	this->actor[3]->Remove_Reference();
 
 	this->light->Remove_Reference();
+}
+
+void Editor::CloseEngine()
+{
+	this->browser->Exit();
+}
+
+
+void Editor::OnModelSelected( ContentObject* model )
+{
+	model;
+	// TODO implement model selected
+}
+
+
+void Editor::OnModelDeselected()
+{
+	// TODO implement model deselected
+}
+
+void Editor::OnActorSelected( ContentObject* actor )
+{
+	actor;
+	// TODO implement actor selected
+}
+
+void Editor::OnActorDeselected()
+{
+	// TODO implement actor deselected
+}
+
+void Editor::OnActorCreated( ContentObject* model )
+{
+	model;
+	// TODO implement actor created
+}
+
+void Editor::OnActorDeleted( ContentObject* actor )
+{
+	actor;
+	// TODO implement actor deleted
+}
+
+void Editor::OnExit()
+{
+	PostMessage( this->hWindow, WM_ENGINE_DESTROY_WINDOW, 0, 0 );
+}
+
+void Editor::OnNewLevel()
+{
+	// TODO implement new level
+}
+
+void Editor::OnOpenLevel( const char* filepath )
+{
+	filepath;
+	// TODO implement open level
+}
+
+void Editor::OnSaveLevel( const char* filepath )
+{
+	filepath;
+	// TODO implement save level
+}
+
+void Editor::OnLoadModel( const char* filepath )
+{
+	filepath;
+	// TODO implement load model
 }

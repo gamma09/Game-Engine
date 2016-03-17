@@ -55,6 +55,7 @@
     <ClInclude Include="src\BoneManager.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraManager.h" />
+    <ClInclude Include="src\EngineMessages.h" />
     <ClInclude Include="src\DirectionLight.h" />
     <ClInclude Include="src\DirectionLightManager.h" />
     <ClInclude Include="src\DrawInfo.h" />
@@ -220,6 +221,7 @@
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -266,6 +268,7 @@ COPY "$(ProjectDir)glsl\*.glsl" "$(SolutionDir)Shaders\"</Command>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

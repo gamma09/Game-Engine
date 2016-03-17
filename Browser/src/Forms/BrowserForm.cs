@@ -62,6 +62,7 @@ namespace CS_Browser
 				DialogResult buttonPressed = DialogResult.Yes;
 				if( askUser )
 				{
+					// The other window needs to act like the message box is a modal dialog
 					buttonPressed = MessageBox.Show( this, "Do you want to save the current level?", "Save", MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button1 );
 				}
 
@@ -96,7 +97,9 @@ namespace CS_Browser
 				saveDialog.Title = "Save Level";
 				saveDialog.ValidateNames = true;
 
-				if( DialogResult.OK == saveDialog.ShowDialog( this ) )
+				DialogResult result = saveDialog.ShowDialog( this );
+
+				if( DialogResult.OK == result )
 				{
 					this.currentFile = saveDialog.FileName;
 				}
@@ -149,7 +152,7 @@ namespace CS_Browser
 
 		private void BrowserForm_Load( object sender, EventArgs e )
 		{
-			// TODO add cube as a default model
+			// Do nothing
 		}
 
 		protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
@@ -195,7 +198,9 @@ namespace CS_Browser
 			openDialog.Title = "Open Level";
 			openDialog.ValidateNames = true;
 
-			if( DialogResult.OK == openDialog.ShowDialog( this ) )
+			DialogResult result = openDialog.ShowDialog( this );
+
+			if( DialogResult.OK == result )
 			{
 				this.listActors.ClearSelected();
 				this.listLoadedModels.ClearSelected();
@@ -244,6 +249,8 @@ namespace CS_Browser
 			openDialog.SupportMultiDottedExtensions = true;
 			openDialog.Title = "Open Model File";
 			openDialog.ValidateNames = true;
+
+			DialogResult result = openDialog.ShowDialog( this );
 
 			if( DialogResult.OK == openDialog.ShowDialog( this ) )
 			{

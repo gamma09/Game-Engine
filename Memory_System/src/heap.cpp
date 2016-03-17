@@ -35,7 +35,8 @@ HeapInfo::HeapInfo( unsigned int size, unsigned int startAddr )
 	peakNumAlloc( 0 ),
 	currNumAlloc( 0 ),
 	peakBytesUsed( 0 ),
-	currBytesUsed( 0 )
+	currBytesUsed( 0 ),
+	currBytesFree( size )
 {
 }
 
@@ -85,6 +86,12 @@ VariableBlockHeap::VariableBlockHeap( unsigned int _size, LowLevelHeap&& inLowLe
 
 void* VariableBlockHeap::alloc( size_t size, Align align, const char* name, int lineNum )
 {
+	// Ensure that the low level heap is valid before the allocation
+#ifdef _DEBUG
+	this->lowLevelHeap.CheckValidity();
+	GameAssert( this->heapInfo.currNumAlloc + 1 == this->lowLevelHeap.CountAllocations() );
+#endif
+
 	unsigned int alignment = get_alignment( align );
 	unsigned int alignedSize = size + sizeof( TrackingBlock ) + alignment - 1;
 
@@ -108,6 +115,7 @@ void* VariableBlockHeap::alloc( size_t size, Align align, const char* name, int 
 
 	this->heapInfo.currBytesUsed += alignedSize;
 	this->heapInfo.peakBytesUsed = max( this->heapInfo.currBytesUsed, this->heapInfo.peakBytesUsed );
+	this->heapInfo.currBytesFree -= alignedSize;
 
 	// Have we exceeded the amount of memory specified for heap size?
 	GameAssert( ( this->heapInfo.totalHeapSize - sizeof( VariableBlockHeap ) ) >= this->heapInfo.currBytesUsed );
@@ -121,15 +129,28 @@ void* VariableBlockHeap::alloc( size_t size, Align align, const char* name, int 
 	void* p = block + 1;
 
 	void* alignedAddr = (void*) ( ( (unsigned int) p + alignment - 1 ) & ~( alignment - 1 ) );
-	TrackingBlock** topPtr = (TrackingBlock**) alignedAddr - 1;
+	TrackingBlock** topPtr = (TrackingBlock**) ( (size_t) alignedAddr - sizeof( TrackingBlock* ) );
 	*topPtr = block;
+
+	// Make sure the low level heap is valid after the allocation
+#ifdef _DEBUG
+	this->lowLevelHeap.CheckValidity();
+	GameAssert( this->heapInfo.currNumAlloc + 1 == this->lowLevelHeap.CountAllocations() );
+#endif
 
 	return alignedAddr;
 }
 
 void VariableBlockHeap::free( void* p )
 {
-	TrackingBlock* block = *( ( (TrackingBlock**) p ) - 1 );
+	// Make sure the heap is valid before the free
+#ifdef _DEBUG
+	this->lowLevelHeap.CheckValidity();
+	GameAssert( this->heapInfo.currNumAlloc + 1 == this->lowLevelHeap.CountAllocations() );
+#endif
+
+	TrackingBlock** topPtr = (TrackingBlock**) ( (size_t) p - sizeof( TrackingBlock*) );
+	TrackingBlock* block = *topPtr;
 
 	if( block->gNext != 0 )
 		block->gNext->gPrev = block->gPrev;
@@ -147,6 +168,8 @@ void VariableBlockHeap::free( void* p )
 	this->mem->memInfo.currBytesUsed -= block->allocSize;
 	this->mem->memInfo.currNumAlloc--;
 
+	this->heapInfo.currBytesFree += block->allocSize;
+
 	if( this->trackingBlockHead == block )
 		this->trackingBlockHead = block->hNext;
 
@@ -154,6 +177,12 @@ void VariableBlockHeap::free( void* p )
 		this->mem->globalTrackingBlockHead = block->gNext;
 
 	this->lowLevelHeap.Free( block );
+
+	// Make sure the heap is valid after the free
+#ifdef _DEBUG
+	this->lowLevelHeap.CheckValidity();
+	GameAssert( this->heapInfo.currNumAlloc + 1 == this->lowLevelHeap.CountAllocations() );
+#endif
 }
 
 

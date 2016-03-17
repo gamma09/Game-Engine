@@ -1,5 +1,4 @@
-﻿using System;
-namespace CS_Browser
+﻿namespace CS_Browser
 {
 
 	public interface IBrowserListener

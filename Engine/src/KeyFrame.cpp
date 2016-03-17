@@ -1,54 +1,62 @@
-#include <cstring>
+#include <string.h>
 #include <GameAssert.h>
 
 #include "KeyFrame.h"
+#include "MemorySetup.h"
 
-KeyFrame::KeyFrame() :
-	frameTimeMillis(0),
-	boneTransformationData(0)
+KeyFrame::KeyFrame()
+	: frameTimeMillis( 0 ),
+	boneTransformationData( nullptr ),
+	boneCount( 0 )
 {
 	// Do nothing
 }
 
-KeyFrame::KeyFrame(const uint32_t& boneCount, const unsigned char* rawFrameData) :
-	boneTransformationData(new Transform[boneCount])
+KeyFrame::KeyFrame( uint32_t boneCount, const unsigned char* rawFrameData )
+	: boneTransformationData( (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * boneCount ) ),
+	frameTimeMillis( *reinterpret_cast<const uint32_t*>( rawFrameData ) ),
+	boneCount( boneCount )
 {
-	this->frameTimeMillis = *reinterpret_cast<const uint32_t*>(rawFrameData);
-	memcpy(this->boneTransformationData, rawFrameData + sizeof(uint32_t) / sizeof(unsigned char), sizeof(Transform) * boneCount);
+	memcpy( this->boneTransformationData, rawFrameData + sizeof( uint32_t ) / sizeof( unsigned char ), sizeof( Transform ) * boneCount );
 }
 
-KeyFrame::KeyFrame(KeyFrame&& frame) :
-	frameTimeMillis(frame.frameTimeMillis),
-	boneTransformationData(frame.boneTransformationData)
+KeyFrame::KeyFrame( const KeyFrame& frame )
+	: frameTimeMillis( frame.frameTimeMillis ),
+	boneTransformationData( (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * frame.boneCount ) ),
+	boneCount( frame.boneCount )
 {
-	frame.boneTransformationData = 0;
+	memcpy( this->boneTransformationData, frame.boneTransformationData, sizeof( Transform ) * frame.boneCount );
 }
 
-KeyFrame& KeyFrame::operator=(KeyFrame&& frame)
+KeyFrame& KeyFrame::operator=( const KeyFrame& frame )
 {
 	this->frameTimeMillis = frame.frameTimeMillis;
-	this->boneTransformationData = frame.boneTransformationData;
-	frame.boneTransformationData = 0;
+	this->boneCount = frame.boneCount;
+	this->boneTransformationData = (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * frame.boneCount );
+	memcpy( this->boneTransformationData, frame.boneTransformationData, sizeof( Transform ) * frame.boneCount );
 
 	return *this;
 }
 
 KeyFrame::~KeyFrame()
 {
-	if (this->boneTransformationData != 0)
-		delete[] this->boneTransformationData;
+	if( this->boneTransformationData != 0 )
+	{
+		delete this->boneTransformationData;
+	}
 }
 
-const uint32_t KeyFrame::Get_Frame_Time() const
+uint32_t KeyFrame::Get_Frame_Time() const
 {
-	GameAssert(this->boneTransformationData != 0);
+	GameAssert( this->boneTransformationData != 0 );
 
 	return this->frameTimeMillis;
 }
 
-const Transform* const KeyFrame::Get_Transform(const uint32_t& boneIndex) const
+const Transform* const KeyFrame::Get_Transform( uint32_t boneIndex ) const
 {
-	GameAssert(this->boneTransformationData != 0);
+	GameAssert( this->boneTransformationData != 0 );
+	GameAssert( boneIndex < this->boneCount );
 
 	return this->boneTransformationData + boneIndex;
 }

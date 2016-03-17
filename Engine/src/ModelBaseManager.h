@@ -15,6 +15,7 @@ public:
 	static void Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize );
 	static void Destroy();
 
+	// Creates a modelbase from the specified file
 	ModelBase* Add( ID3D11Device* device, const char* archiveFilename );
 
 

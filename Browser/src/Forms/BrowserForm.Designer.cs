@@ -273,6 +273,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = menuStrip1;
 			this.Name = "BrowserForm";
+			this.ShowInTaskbar = false;
 			this.Text = "Browser";
 			this.Load += new System.EventHandler(this.BrowserForm_Load);
 			menuStrip1.ResumeLayout(false);

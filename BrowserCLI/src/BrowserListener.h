@@ -2,6 +2,7 @@
 
 #include "ContentObject.h"
 
+
 namespace CLI
 {
 	class BrowserListener

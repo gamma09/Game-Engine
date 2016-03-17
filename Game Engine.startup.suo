@@ -1,9 +1,9 @@
 {
-  "SingleProjectMode": 3,
+  "SingleProjectMode": 1,
   "SingleProjectMruCount": 5,
   "MRU": [
-    "Game",
-    "Editor"
+    "Editor",
+    "Game"
   ],
   "MultiProjectConfigurations": {
     "Model Converter": {

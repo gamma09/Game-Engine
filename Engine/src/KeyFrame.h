@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include <stdint.h>
 #include <Vect.h>
 #include <Quat.h>
 
@@ -15,21 +15,20 @@ class KeyFrame
 {
 public:
 	KeyFrame();
-	KeyFrame(const uint32_t& boneCount, const unsigned char* rawFrameData);
-	KeyFrame(KeyFrame&& frame);
-	KeyFrame& operator=(KeyFrame&& frame);
+	KeyFrame( uint32_t boneCount, const unsigned char* rawFrameData );
+	KeyFrame( const KeyFrame& frame );
+	KeyFrame& operator=( const KeyFrame& frame );
 	~KeyFrame();
 
-	const uint32_t Get_Frame_Time() const;
-	const Transform* const Get_Transform(const uint32_t& boneIndex) const;
+	uint32_t Get_Frame_Time() const;
+	const Transform* const Get_Transform( uint32_t boneIndex ) const;
 
 
 private:
-	KeyFrame(const KeyFrame& frame);
-	KeyFrame& operator=(const KeyFrame& frame);
-	
+
 
 private:
 	uint32_t frameTimeMillis;
 	Transform* boneTransformationData;
+	uint32_t boneCount;
 };

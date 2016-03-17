@@ -20,8 +20,9 @@ class ModelBase : public ManagedObject, public ReferencedObject
 {
 public:
 
-
+	// Creates a model based on the specified file
 	void Set( ID3D11Device* device, const char* const archiveFile );
+	
 	virtual void Reset() override;
 
 	Bone* const Create_Skeleton_From_Model() const;

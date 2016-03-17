@@ -215,6 +215,9 @@
     <ClInclude Include="src\WireframeMaterial.h">
       <Filter>Material</Filter>
     </ClInclude>
+    <ClInclude Include="src\EngineMessages.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="hlsl\LitTexture.vs.hlsl">

@@ -103,6 +103,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <OpenMPSupport>false</OpenMPSupport>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +138,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <OpenMPSupport>false</OpenMPSupport>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

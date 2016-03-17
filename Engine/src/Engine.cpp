@@ -15,6 +15,8 @@
 #include "ModelBaseManager.h"
 #include "TextureManager.h"
 
+
+
 void Engine::run()
 {
 	this->PreLoadContent();
@@ -48,6 +50,11 @@ void Engine::run()
 	UnLoadContent();
 }
 
+void Engine::Close()
+{
+	PostMessage( this->hWindow, WM_CLOSE, 0, 0 );
+}
+
 void Engine::UpdateThreadEntry( Engine* engine )
 {
 	while( engine->isOpen )
@@ -63,7 +70,7 @@ LRESULT CALLBACK Engine::WindowCallback( HWND hWnd, UINT message, WPARAM wParam,
 	switch( message )
 	{
 		case WM_CLOSE:
-			DestroyWindow( engine->hWindow );
+			engine->CloseEngine();
 			break;
 
 		case WM_DESTROY:
@@ -77,11 +84,20 @@ LRESULT CALLBACK Engine::WindowCallback( HWND hWnd, UINT message, WPARAM wParam,
 			EndPaint( engine->hWindow, &ps );
 			break;
 
+		case WM_ENGINE_DESTROY_WINDOW:
+			DestroyWindow( engine->hWindow );
+			break;
+
 		default:
 			return DefWindowProc( hWnd, message, wParam, lParam );
 	}
 
 	return 0;
+}
+
+void Engine::CloseEngine()
+{
+	DestroyWindow( this->hWindow );
 }
 
 void Engine::PreLoadContent()

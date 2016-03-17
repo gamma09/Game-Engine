@@ -4,6 +4,9 @@
 #error "BrowserListenerCLI.h may not be included outside of the BrowserCLI package."
 #endif
 
+#define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
+#include <Windows.h>
 #include <GameAssert.h>
 #include "BrowserListener.h"
 #include "ContentObjectCLI.h"

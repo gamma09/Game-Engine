@@ -6,6 +6,7 @@
 
 #include "Animation.h"
 #include "KeyFrame.h"
+#include "MemorySetup.h"
 
 Animation::Animation()
 	: keyFrameCount( 0 ),
@@ -15,39 +16,45 @@ Animation::Animation()
 }
 
 Animation::Animation( uint32_t boneCount, const unsigned char* frameData )
+	: keyFrameCount( *reinterpret_cast<const uint32_t*>( frameData ) )
 {
-	this->keyFrameCount = *reinterpret_cast<const uint32_t*>( frameData );
-	this->keyFrames = new KeyFrame[this->keyFrameCount];
+	this->keyFrames = (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * this->keyFrameCount );
 
 	const unsigned char* framePtr = frameData + sizeof( uint32_t ) / sizeof( unsigned char );
 	const uint32_t frameSize = ( sizeof( uint32_t ) + boneCount * sizeof( Transform ) ) / sizeof( unsigned char );
 
 	for( uint32_t i = 0; i < this->keyFrameCount; i++, framePtr += frameSize )
-		this->keyFrames[i] = std::move( KeyFrame( boneCount, framePtr ) );
+	{
+		this->keyFrames[i] = KeyFrame( boneCount, framePtr );
+	}
 }
 
-Animation::Animation( Animation&& anim ) :
-keyFrameCount( anim.keyFrameCount ),
-keyFrames( anim.keyFrames )
+Animation::Animation( const Animation& anim )
+	: keyFrameCount( anim.keyFrameCount ),
+	keyFrames( (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * anim.keyFrameCount ) )
 {
-	anim.keyFrameCount = 0;
-	anim.keyFrames = 0;
+	for( unsigned int i = 0; i < anim.keyFrameCount; i++ )
+	{
+		this->keyFrames[i] = anim.keyFrames[i];
+	}
 }
 
-Animation& Animation::operator=( Animation&& anim )
+Animation& Animation::operator=( const Animation& anim )
 {
 	this->keyFrameCount = anim.keyFrameCount;
-	this->keyFrames = anim.keyFrames;
-	anim.keyFrameCount = 0;
-	anim.keyFrames = 0;
+	this->keyFrames = (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * anim.keyFrameCount );
+	for( unsigned int i = 0; i < anim.keyFrameCount; i++ )
+	{
+		this->keyFrames[i] = anim.keyFrames[i];
+	}
 
 	return *this;
 }
 
 Animation::~Animation()
 {
-	if( this->keyFrames != 0 )
-		delete[] this->keyFrames;
+	if( this->keyFrames != nullptr )
+		delete this->keyFrames;
 }
 
 Matrix Animation::Get_Transform( uint32_t time, uint32_t boneIndex ) const

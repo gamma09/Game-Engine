@@ -19,6 +19,8 @@ namespace CLI
 	public:
 		ContentObjectCLI( ContentObject* nativeObject )
 		{
+			nativeObject;
+
 			GameAssert( nativeObject != nullptr );
 		}
 

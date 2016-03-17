@@ -81,7 +81,7 @@ struct Triangle
 	unsigned int vertexC;
 };
 
-const static Triangle pyramidTriList[] =
+const static Triangle cubeTriList[] =
 {
 	{ 0, 2, 1 }, // Good
 	{ 1, 2, 3 }, // Good
@@ -154,18 +154,18 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize, TemporaryHeap::Instance() ) );
 
 	Header* header = reinterpret_cast<Header*>( modelData );
-	this->boneParentList = new( AnimHeap::Instance(), ALIGN_4 ) int[header->boneCount];
-	memcpy( this->boneParentList, reinterpret_cast<int*>( modelData + sizeof( Header ) ), sizeof(int) * header->boneCount);
+	this->boneParentList = (int*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( int ) * header->boneCount );
+	memcpy( this->boneParentList, reinterpret_cast<int*>( modelData + sizeof( Header ) ), sizeof( int ) * header->boneCount );
 
-	this->boneMeshes = new( AnimHeap::Instance(), ALIGN_4 ) Mesh[header->boneCount];
+	this->boneMeshes = (Mesh*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( Mesh ) * header->boneCount );
 	this->boneCount = header->boneCount;
 	unsigned char* animData = modelData + sizeof( Header ) + header->boneCount * sizeof( int );
 
 	this->animCount = header->animCount;
-	this->anims = new( AnimHeap::Instance(), ALIGN_4 ) Animation[this->animCount];
+	this->anims = (Animation*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( Animation ) * this->animCount );
 	for( unsigned int i = 0; i < header->animCount; i++ )
 	{
-		this->anims[i] = std::move( Animation( header->boneCount, animData ) );
+		this->anims[i] = Animation( header->boneCount, animData );
 		animData += 4 + this->anims[i].Get_KeyFrame_Count() * ( 4 + header->boneCount * sizeof( Transform ) );
 	}
 
@@ -180,7 +180,7 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	this->textureCount = header->textureCount;
 	this->textureHead = 0;
 
-	char* ptr = reinterpret_cast<char*>(triangles) +header->triangleCount * sizeof( Triangle );
+	char* ptr = reinterpret_cast<char*>(triangles) + header->triangleCount * sizeof( Triangle );
 	Texture* tail = 0;
 	if( header->textureCount != 0 )
 	{
@@ -204,7 +204,7 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &vertexBufferDesc, &vertexBufferInitData, &this->boneMeshes[0].verticesBuffer ) ), "Couldn't create vertex buffer." );
 
 	D3D11_BUFFER_DESC indexBufferDesc ={ sizeof( Triangle ) * 12, D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER, 0, 0, 0 };
-	D3D11_SUBRESOURCE_DATA indexBufferInitData ={ pyramidTriList, 0, 0 };
+	D3D11_SUBRESOURCE_DATA indexBufferInitData ={ cubeTriList, 0, 0 };
 
 	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &indexBufferDesc, &indexBufferInitData, &this->boneMeshes[0].indicesBuffer ) ), "Couldn't create index buffer." );
 
@@ -253,6 +253,7 @@ void ModelBase::Reset()
 	this->boneMeshes[0].indicesBuffer->Release();
 	this->boneMeshes[0].verticesBuffer->Release();
 
+	delete this->boneParentList;
 	delete this->anims;
 	delete this->boneMeshes;
 

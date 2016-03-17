@@ -1,17 +1,48 @@
 #pragma once
 
+#ifdef _DEBUG
+#define BLOCK_PADDING_SIZE 16
+#endif
+
 struct LowLevelFreeBlock
 {
+#ifdef _DEBUG
+	// Used to ensure no one is corrupting the block header memory
+	unsigned char prepadding[BLOCK_PADDING_SIZE];
+#endif
+
 	unsigned int size;
 	LowLevelFreeBlock* next;
 	LowLevelFreeBlock* prev;
+
+	
+#ifdef _DEBUG
+	// Used to ensure the low level heap is not revisiting nodes
+	bool visited;
+
+	// Used to ensure no one is corrupting the block header memory
+	unsigned char postpadding[BLOCK_PADDING_SIZE];
+#endif
 };
 
 struct LowLevelUsedBlock
 {
+#ifdef _DEBUG
+	// Used to ensure no one is corrupting the block header memory
+	unsigned char prepadding[BLOCK_PADDING_SIZE];
+#endif
+
 	unsigned int size;
 	LowLevelUsedBlock* next;
 	LowLevelUsedBlock* prev;
+
+	
+#ifdef _DEBUG
+	// Used to ensure the low level heap is not revisiting nodes
+	bool visited;
+	// Used to ensure no one is corrupting the block header memory
+	unsigned char postpadding[BLOCK_PADDING_SIZE];
+#endif
 };
 
 class LowLevelHeap
@@ -24,6 +55,11 @@ public:
 
 	void* Allocate( unsigned int size );
 	void Free( void* ptr );
+
+#ifdef _DEBUG
+	unsigned int CountAllocations() const;
+	void CheckValidity() const;
+#endif
 
 private:
 	void AllocateFullBlock( LowLevelFreeBlock* freeBlock, LowLevelFreeBlock* prevFree, LowLevelFreeBlock* nextFree, LowLevelUsedBlock* prevUsed, LowLevelUsedBlock* nextUsed );

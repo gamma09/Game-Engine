@@ -19,6 +19,7 @@ struct HeapInfo
 	unsigned int currNumAlloc;
 	unsigned int peakBytesUsed;
 	unsigned int currBytesUsed;
+	unsigned int currBytesFree;
 
 	HeapInfo();
 	HeapInfo( unsigned int size, unsigned int startAddr );
@@ -44,6 +45,10 @@ public:
 
 	virtual TrackingBlock* GetHeapTrackingHead() const { return nullptr; }
 	inline LowLevelHeap&& RipOutLowLevelHeap() { return std::move( lowLevelHeap ); }
+
+#ifdef _DEBUG
+	inline const LowLevelHeap* GetLowLevelHeap() { return &this->lowLevelHeap; }
+#endif
 
 protected:
 	Heap( LowLevelHeap&& lowLevelHeap, unsigned int size, Mem* mem );
