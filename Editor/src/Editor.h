@@ -69,5 +69,5 @@ private:
 
 	Camera* moveableCamera;
 	DirectionLight* light;
-	bool wasCulled;
+	UpdateStrategy* updater;
 };

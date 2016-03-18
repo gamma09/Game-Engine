@@ -9,7 +9,9 @@ SceneAsset::SceneAsset()
 	: name( nullptr ),
 	modelsHead( nullptr ),
 	actorsHead( nullptr ),
-	listLock()
+	listLock(),
+	lockCount( 0 ),
+	lockOwner( 0 )
 {
 	this->listLock.clear();
 }
@@ -17,7 +19,9 @@ SceneAsset::SceneAsset()
 SceneAsset::SceneAsset( const char* name )
 	: actorsHead( nullptr ),
 	modelsHead( nullptr ),
-	listLock()
+	listLock(),
+	lockCount( 0 ),
+	lockOwner( 0 )
 {
 	this->listLock.clear();
 
@@ -84,8 +88,7 @@ ModelAsset* SceneAsset::AddModel( const char* archiveFile )
 
 	delete pathname;
 
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	asset->next = this->modelsHead;
 
@@ -93,8 +96,7 @@ ModelAsset* SceneAsset::AddModel( const char* archiveFile )
 
 	this->modelsHead = asset;
 
-	// Unlock the lists, so that others can look at them
-	this->listLock.clear( std::memory_order_release );
+	this->UnlockScene();
 
 	return asset;
 }
@@ -112,8 +114,7 @@ ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* mater
 	size_t numberSize = actorNameSize - strlen( actorName );
 	char* numberStart = strchr( actorName, 0 );
 
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	// For now, we only allow up to 10000 instances of a particular model in the scene -> to increase this, you must also increase the actorNameSize
 	for( unsigned int i = 0; i < 10000; i++ )
@@ -135,16 +136,14 @@ ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* mater
 	asset->next = this->actorsHead;
 	this->actorsHead = asset;
 
-	// Unlock the lists, so that others can look at them
-	this->listLock.clear( std::memory_order_release );
+	this->UnlockScene();
 
 	return asset;
 }
 
 void SceneAsset::RemoveActor( const ActorAsset& actor )
 {
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	ActorAsset* prev = nullptr;
 	ActorAsset* curr = this->actorsHead;
@@ -170,8 +169,7 @@ void SceneAsset::RemoveActor( const ActorAsset& actor )
 		prev->next = curr->next;
 	}
 
-	// Unlock the lists, so that others can look at them
-	this->listLock.clear( std::memory_order_release );
+	this->UnlockScene();
 
 	delete curr;
 }
@@ -194,8 +192,7 @@ bool SceneAsset::Contains( const ActorAsset& actor )
 {
 	bool retVal = false;
 
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	for( const ActorAsset* curr = this->actorsHead; curr != nullptr; curr = curr->next )
 	{
@@ -205,8 +202,7 @@ bool SceneAsset::Contains( const ActorAsset& actor )
 		}
 	}
 	
-	// Unlock the lists, so that others can look at them - we can do this relaxed, as we didn't modify the list
-	this->listLock.clear( std::memory_order_relaxed );
+	this->UnlockScene();
 
 	return retVal;
 }
@@ -215,29 +211,25 @@ unsigned int SceneAsset::GetUsageCount( const ModelAsset& model )
 {
 	unsigned int usageCount = 0;
 
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	for( const ActorAsset* curr = this->actorsHead; curr != nullptr; curr = curr->next )
 	{
 		usageCount += ( curr->model == model ) ? 1 : 0;
 	}
 
-	// Unlock the lists, so that others can look at them - we can do this relaxed, as we didn't modify the list
-	this->listLock.clear( std::memory_order_relaxed );
+	this->UnlockScene();
 
 	return usageCount;
 }
 
 bool SceneAsset::Exists( const char* assetName )
 {
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	bool exists = this->ExistsInLock( assetName );
 
-	// Unlock the lists, so that others can look at them - we can do this relaxed, as we didn't modify the list
-	this->listLock.clear( std::memory_order_relaxed );
+	this->UnlockScene();
 
 	return exists;
 }
@@ -265,28 +257,52 @@ bool SceneAsset::ExistsInLock( const char* assetName ) const
 
 void SceneAsset::Update( uint32_t totalTimeMillis )
 {
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
 	{
 		actor->Update( totalTimeMillis );
 	}
 
-	// Unlock the lists, so that others can look at them
-	this->listLock.clear( std::memory_order_release );
+	this->UnlockScene();
 }
 
 void SceneAsset::Draw( DrawInfo& info )
 {
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) ) { std::this_thread::yield(); }
+	this->LockScene();
 
 	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
 	{
 		actor->Draw( info );
 	}
 
-	// Unlock the lists, so that others can look at them
-	this->listLock.clear( std::memory_order_relaxed );
+	this->UnlockScene();
+}
+
+void SceneAsset::LockScene()
+{
+	// Lock the lists
+	while( this->listLock.test_and_set( std::memory_order_acq_rel ) )
+	{
+		if( this->lockOwner == GetCurrentThreadId() )
+		{
+			break;
+		}
+		std::this_thread::yield();
+	}
+
+	this->lockOwner = GetCurrentThreadId();
+	this->lockCount += 1;
+}
+
+void SceneAsset::UnlockScene()
+{
+	GameAssert( GetCurrentThreadId() == this->lockOwner );
+
+	this->lockCount -= 1;
+	if( this->lockCount == 0 )
+	{
+		this->lockOwner = 0;
+		this->listLock.clear( std::memory_order_release );
+	}
 }

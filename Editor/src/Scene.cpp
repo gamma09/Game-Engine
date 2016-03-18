@@ -63,6 +63,8 @@ ActorObject* Scene::AddActor( ID3D11Device* device, const ModelObject& model, co
 	GameAssert( material != nullptr );
 	GameAssert( updateStrategy != nullptr );
 
+	this->asset->LockScene();
+
 	// Add the actor
 	ActorObject* obj = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->asset, *model.GetModelAsset(), material, updateStrategy );
 
@@ -79,6 +81,8 @@ ActorObject* Scene::AddActor( ID3D11Device* device, const ModelObject& model, co
 
 	this->actorsHead = obj;
 
+	this->asset->UnlockScene();
+
 	this->browser->AddActor( obj );
 
 	return obj;
@@ -87,6 +91,8 @@ ActorObject* Scene::AddActor( ID3D11Device* device, const ModelObject& model, co
 void Scene::RemoveActor( ActorObject* actor )
 {
 	GameAssert( actor != nullptr );
+
+	this->asset->LockScene();
 
 	if( actor->prev == nullptr )
 	{
@@ -106,6 +112,8 @@ void Scene::RemoveActor( ActorObject* actor )
 	this->browser->RemoveActor( actor );
 
 	delete actor;
+
+	this->asset->UnlockScene();
 }
 
 void Scene::Update( uint32_t totalTimeMillis ) const

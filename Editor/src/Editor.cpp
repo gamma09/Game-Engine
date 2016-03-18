@@ -33,8 +33,8 @@
 //-----------------------------------------------------------------------------
 Editor::Editor( const char* windowName, const int Width, const int Height )
 	: Engine( windowName, Width, Height ),
-	wasCulled( false ),
-	browser( nullptr )//,
+	browser( nullptr ),
+	updater( new( AssetHeap::Instance(), ALIGN_4 ) AnimatingStrategy() ) //,
 	//inModal( false )
 {
 	// Do nothing
@@ -74,30 +74,23 @@ void Editor::LoadContent()
 	// D - move right
 	KeyBindingManager::Instance()->Add( 0x44, new( TemporaryHeap::Instance(), ALIGN_4 ) MoveAction( this->moveableCamera, 1.0f, 0.0f, 0.0f ) );
 
-	UpdateStrategy* updater = new( TemporaryHeap::Instance(), ALIGN_4 ) AnimatingStrategy();
-
 	this->scene = new( AssetHeap::Instance(), ALIGN_4 ) Scene( this->browser, "Test Scene" );
 	ModelObject* model1 = this->scene->AddModel( this->device, "../resources/soldier_animated_jump.spu" );
 	ModelObject* model2 = this->scene->AddModel( this->device, "../resources/teddy_tga.spu" );
 
-	ActorObject* soldier1 = this->scene->AddActor( this->device, *model1, this->unlitTextureMaterial, updater );
-	soldier1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
-	soldier1->GetActorAsset()->GetActor()->Update_Model_Matrix();
-	soldier1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
-
-	ActorObject* soldier2 = this->scene->AddActor( this->device, *model1, this->unlitTextureMaterial, updater );
+	ActorObject* soldier2 = this->scene->AddActor( this->device, *model1, this->unlitTextureMaterial, this->updater );
 	soldier2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	soldier2->GetActorAsset()->GetActor()->position[X] = -125.0f;
 	soldier2->GetActorAsset()->GetActor()->Update_Model_Matrix();
 	soldier2->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 500, 0 );
 
-	ActorObject* teddy1 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	ActorObject* teddy1 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, this->updater );
 	teddy1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	teddy1->GetActorAsset()->GetActor()->position[Y] = -175.0f;
 	teddy1->GetActorAsset()->GetActor()->Update_Model_Matrix();
 	teddy1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
-	ActorObject* teddy2 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	ActorObject* teddy2 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, this->updater );
 	teddy2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	teddy2->GetActorAsset()->GetActor()->position[X] = -125.0f;
 	teddy2->GetActorAsset()->GetActor()->position[Y] = -175.0f;
@@ -188,16 +181,20 @@ void Editor::OnActorDeselected()
 	// TODO implement actor deselected
 }
 
-void Editor::OnActorCreated( ContentObject* model )
+void Editor::OnActorCreated( ContentObject* modelObj )
 {
-	model;
-	// TODO implement actor created
+	ModelObject* model = static_cast<ModelObject*>( modelObj );
+	ActorObject* actor = this->scene->AddActor( this->device, *model, this->unlitTextureMaterial, updater );
+
+	actor->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	actor->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	actor->GetActorAsset()->GetActor()->Get_Model().Start_Animation( Time::quotient( this->totalTime, MILLISECOND ), 0 );
 }
 
-void Editor::OnActorDeleted( ContentObject* actor )
+void Editor::OnActorDeleted( ContentObject* actorObj )
 {
-	actor;
-	// TODO implement actor deleted
+	ActorObject* actor = static_cast<ActorObject*>( actorObj );
+	this->scene->RemoveActor( actor );
 }
 
 void Editor::OnExit()

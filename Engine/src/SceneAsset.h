@@ -38,6 +38,9 @@ public:
 	void Update( uint32_t totalTimeMillis );
 	void Draw( DrawInfo& info );
 
+	void LockScene();
+	void UnlockScene();
+
 
 private:
 	bool ExistsInLock( const char* assetName ) const;
@@ -50,6 +53,8 @@ private:
 	char* name;
 
 	std::atomic_flag listLock;
+	DWORD lockOwner;
+	DWORD lockCount;
 
 	ModelAsset* modelsHead;
 	ActorAsset* actorsHead;
