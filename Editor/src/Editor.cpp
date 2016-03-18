@@ -13,13 +13,13 @@
 #include <DirectionLight.h>
 #include <DrawInfo.h>
 #include <DebuggerSetup.h>
-
 #include <WireframeMaterial.h>
 
 #include "Editor.h"
+#include "Scene.h"
 
-
-
+#include "ModelObject.h"
+#include "ActorObject.h"
 #include "StationaryStrategy.h"
 #include "AnimatingStrategy.h"
 
@@ -76,40 +76,36 @@ void Editor::LoadContent()
 
 	UpdateStrategy* updater = new( TemporaryHeap::Instance(), ALIGN_4 ) AnimatingStrategy();
 
-	ModelBase* model = ModelBaseManager::Instance()->Add( this->device, "../resources/soldier_animated_jump.spu" );
-	this->actor[0] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
-	this->actor[0]->Add_Reference();
-	this->actor[0]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[0]->Update_Model_Matrix();
-	this->actor[0]->Get_Model().Start_Animation( 0, 0 );
+	this->scene = new( AssetHeap::Instance(), ALIGN_4 ) Scene( this->browser, "Test Scene" );
+	ModelObject* model1 = this->scene->AddModel( this->device, "../resources/soldier_animated_jump.spu" );
+	ModelObject* model2 = this->scene->AddModel( this->device, "../resources/teddy_tga.spu" );
 
-	this->actor[1] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
-	this->actor[1]->Add_Reference();
-	this->actor[1]->position[X] = -125.0f;
-	this->actor[1]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[1]->Update_Model_Matrix();
-	this->actor[1]->Get_Model().Start_Animation( 500, 0 );
+	ActorObject* soldier1 = this->scene->AddActor( this->device, *model1, this->unlitTextureMaterial, updater );
+	soldier1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	soldier1->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	soldier1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
-	ModelBase* model2 = ModelBaseManager::Instance()->Add( this->device, "../resources/teddy_tga.spu" );
-	this->actor[2] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
-	this->actor[2]->Add_Reference();
-	this->actor[2]->position[Y] = -175.0f;
-	this->actor[2]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[2]->Update_Model_Matrix();
-	this->actor[2]->Get_Model().Start_Animation( 0, 0 );
+	ActorObject* soldier2 = this->scene->AddActor( this->device, *model1, this->unlitTextureMaterial, updater );
+	soldier2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	soldier2->GetActorAsset()->GetActor()->position[X] = -125.0f;
+	soldier2->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	soldier2->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 500, 0 );
 
-	this->actor[3] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
-	this->actor[3]->Add_Reference();
-	this->actor[3]->position[Y] = -175.0f;
-	this->actor[3]->position[X] = -125.0f;
-	this->actor[3]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[3]->Update_Model_Matrix();
-	this->actor[3]->Get_Model().Start_Animation( 0, 1 );
+	ActorObject* teddy1 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	teddy1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	teddy1->GetActorAsset()->GetActor()->position[Y] = -175.0f;
+	teddy1->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	teddy1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
+
+	ActorObject* teddy2 = this->scene->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	teddy2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	teddy2->GetActorAsset()->GetActor()->position[X] = -125.0f;
+	teddy2->GetActorAsset()->GetActor()->position[Y] = -175.0f;
+	teddy2->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	teddy2->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 1 );
 
 	this->light = DirectionLightManager::Instance()->Add( -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f );
 	this->light->Add_Reference();
-
-
 }
 
 const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
@@ -132,10 +128,7 @@ void Editor::Update()
 
 	this->moveableCamera->Update_Position( totalTimeMillis );
 
-	this->actor[0]->Update( totalTimeMillis );
-	this->actor[1]->Update( totalTimeMillis );
-	this->actor[2]->Update( totalTimeMillis );
-	this->actor[3]->Update( totalTimeMillis );
+	this->scene->Update( totalTimeMillis );
 }
 
 //-----------------------------------------------------------------------------
@@ -151,10 +144,7 @@ void Editor::Draw()
 	info.light = this->light;
 	info.context = this->deviceContext;
 
-	this->actor[0]->Draw( info );
-	this->actor[1]->Draw( info );
-	this->actor[2]->Draw( info );
-	this->actor[3]->Draw( info );
+	this->scene->Draw( info );
 }
 
 //-----------------------------------------------------------------------------
@@ -164,10 +154,7 @@ void Editor::Draw()
 //-----------------------------------------------------------------------------
 void Editor::UnLoadContent()
 {
-	this->actor[0]->Remove_Reference();
-	this->actor[1]->Remove_Reference();
-	this->actor[2]->Remove_Reference();
-	this->actor[3]->Remove_Reference();
+	delete this->scene;
 
 	this->light->Remove_Reference();
 }

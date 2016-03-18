@@ -16,6 +16,12 @@
     <Filter Include="GeneratedFiles">
       <UniqueIdentifier>{a2eef9f0-be58-4e09-b966-48770d2ee558}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{8747a35a-b09b-4e4e-976f-ccadca0f8c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{0739c861-fe78-4c29-8313-1baf9398a5bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AnimatingStrategy.h">
@@ -28,6 +34,15 @@
       <Filter>Input\Actions</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\ModelObject.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ActorObject.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -44,5 +59,14 @@
       <Filter>GeneratedFiles</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\ModelObject.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ActorObject.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -154,15 +154,15 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize, TemporaryHeap::Instance() ) );
 
 	Header* header = reinterpret_cast<Header*>( modelData );
-	this->boneParentList = (int*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( int ) * header->boneCount );
+	this->boneParentList = newArray( int, header->boneCount, AnimHeap::Instance(), ALIGN_4 );
 	memcpy( this->boneParentList, reinterpret_cast<int*>( modelData + sizeof( Header ) ), sizeof( int ) * header->boneCount );
 
-	this->boneMeshes = (Mesh*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( Mesh ) * header->boneCount );
+	this->boneMeshes = newArray( Mesh, header->boneCount, AnimHeap::Instance(), ALIGN_4 );
 	this->boneCount = header->boneCount;
 	unsigned char* animData = modelData + sizeof( Header ) + header->boneCount * sizeof( int );
 
 	this->animCount = header->animCount;
-	this->anims = (Animation*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( Animation ) * this->animCount );
+	this->anims = newArray( Animation, this->animCount, AnimHeap::Instance(), ALIGN_4 );
 	for( unsigned int i = 0; i < header->animCount; i++ )
 	{
 		this->anims[i] = Animation( header->boneCount, animData );

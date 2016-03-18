@@ -4,7 +4,7 @@
 
 #ifdef ADD_META_TAGS
 
-#define REFL_CLASS_DECLARATION( Type ) { CLASS_IS_REFLECTED: Type; } { CLASS_FILE: __FILE__; }
+#define REFL_CLASS_DECLARATION( Type ) public: { CLASS_IS_REFLECTED: Type; } { CLASS_FILE: __FILE__; }
 #define REFL_VAR_DECLARATION( type, name ) { VARIABLE_IS_REFLECTED: type name; }
 
 #else

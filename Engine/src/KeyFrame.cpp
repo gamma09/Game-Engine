@@ -13,7 +13,7 @@ KeyFrame::KeyFrame()
 }
 
 KeyFrame::KeyFrame( uint32_t boneCount, const unsigned char* rawFrameData )
-	: boneTransformationData( (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * boneCount ) ),
+	: boneTransformationData( newArray( Transform, boneCount, AnimHeap::Instance(), ALIGN_16 ) ),
 	frameTimeMillis( *reinterpret_cast<const uint32_t*>( rawFrameData ) ),
 	boneCount( boneCount )
 {
@@ -22,7 +22,7 @@ KeyFrame::KeyFrame( uint32_t boneCount, const unsigned char* rawFrameData )
 
 KeyFrame::KeyFrame( const KeyFrame& frame )
 	: frameTimeMillis( frame.frameTimeMillis ),
-	boneTransformationData( (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * frame.boneCount ) ),
+	boneTransformationData( newArray( Transform, frame.boneCount, AnimHeap::Instance(), ALIGN_16 ) ),
 	boneCount( frame.boneCount )
 {
 	memcpy( this->boneTransformationData, frame.boneTransformationData, sizeof( Transform ) * frame.boneCount );
@@ -32,7 +32,7 @@ KeyFrame& KeyFrame::operator=( const KeyFrame& frame )
 {
 	this->frameTimeMillis = frame.frameTimeMillis;
 	this->boneCount = frame.boneCount;
-	this->boneTransformationData = (Transform*) Allocate( AnimHeap::Instance(), ALIGN_16, sizeof( Transform ) * frame.boneCount );
+	this->boneTransformationData = newArray( Transform, frame.boneCount, AnimHeap::Instance(), ALIGN_16 );
 	memcpy( this->boneTransformationData, frame.boneTransformationData, sizeof( Transform ) * frame.boneCount );
 
 	return *this;

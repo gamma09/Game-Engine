@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <Engine.h>
 #include <BrowserListener.h>
 
@@ -14,6 +15,7 @@ using namespace CLI;
 
 class Heap;
 class DirectionLight;
+class Scene;
 
 class Editor : public Engine, public BrowserListener
 {
@@ -63,8 +65,9 @@ private:
 	Timer updateTimer;
 	Time totalTime;
 
+	Scene* scene;
+
 	Camera* moveableCamera;
-	Actor* actor[4];
 	DirectionLight* light;
 	bool wasCulled;
 };

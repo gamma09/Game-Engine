@@ -18,7 +18,7 @@ Animation::Animation()
 Animation::Animation( uint32_t boneCount, const unsigned char* frameData )
 	: keyFrameCount( *reinterpret_cast<const uint32_t*>( frameData ) )
 {
-	this->keyFrames = (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * this->keyFrameCount );
+	this->keyFrames = newArray( KeyFrame, this->keyFrameCount, AnimHeap::Instance(), ALIGN_4 );
 
 	const unsigned char* framePtr = frameData + sizeof( uint32_t ) / sizeof( unsigned char );
 	const uint32_t frameSize = ( sizeof( uint32_t ) + boneCount * sizeof( Transform ) ) / sizeof( unsigned char );
@@ -31,7 +31,7 @@ Animation::Animation( uint32_t boneCount, const unsigned char* frameData )
 
 Animation::Animation( const Animation& anim )
 	: keyFrameCount( anim.keyFrameCount ),
-	keyFrames( (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * anim.keyFrameCount ) )
+	keyFrames( newArray( KeyFrame, anim.keyFrameCount, AnimHeap::Instance(), ALIGN_4 ) )
 {
 	for( unsigned int i = 0; i < anim.keyFrameCount; i++ )
 	{
@@ -42,7 +42,7 @@ Animation::Animation( const Animation& anim )
 Animation& Animation::operator=( const Animation& anim )
 {
 	this->keyFrameCount = anim.keyFrameCount;
-	this->keyFrames = (KeyFrame*) Allocate( AnimHeap::Instance(), ALIGN_4, sizeof( KeyFrame ) * anim.keyFrameCount );
+	this->keyFrames = newArray( KeyFrame, anim.keyFrameCount, AnimHeap::Instance(), ALIGN_4 );
 	for( unsigned int i = 0; i < anim.keyFrameCount; i++ )
 	{
 		this->keyFrames[i] = anim.keyFrames[i];

@@ -19,9 +19,8 @@ namespace CLI
 	public:
 		ContentObjectCLI( ContentObject* nativeObject )
 		{
-			nativeObject;
-
 			GameAssert( nativeObject != nullptr );
+			this->nativeObject = nativeObject;
 		}
 
 		virtual String^ ToString() override

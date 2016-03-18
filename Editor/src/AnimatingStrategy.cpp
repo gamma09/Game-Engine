@@ -12,7 +12,7 @@ AnimatingStrategy::~AnimatingStrategy()
 	// Do nothing
 }
 
-void AnimatingStrategy::Update(Actor& actor, const uint32_t& time)
+void AnimatingStrategy::Update(Actor& actor, uint32_t time)
 {
 	actor.Get_Model().Update_Animation(time);
 }

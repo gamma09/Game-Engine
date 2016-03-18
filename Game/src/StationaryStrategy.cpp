@@ -10,7 +10,7 @@ StationaryStrategy::~StationaryStrategy()
 	// Do nothing
 }
 
-void StationaryStrategy::Update(Actor&, const uint32_t&)
+void StationaryStrategy::Update(Actor&, uint32_t)
 {
 	// Do nothing
 }

@@ -11,7 +11,7 @@ public:
 	UpdateStrategy() : ReferencedObject() { }
 	virtual ~UpdateStrategy() { }
 
-	virtual void Update(Actor& actor, const uint32_t& time) abstract;
+	virtual void Update(Actor& actor, uint32_t time) abstract;
 
 private:
 	UpdateStrategy(const UpdateStrategy& strategy);

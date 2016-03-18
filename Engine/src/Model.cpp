@@ -6,7 +6,7 @@
 #include "Animation.h"
 #include "BoneManager.h"
 
-void Model::Set( Material* _material, ModelBase* _baseModel )
+void Model::Set( const Material* _material, ModelBase* _baseModel )
 {
 	this->material = _material;
 	this->baseModel = _baseModel;

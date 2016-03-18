@@ -8,7 +8,7 @@ public:
 	AnimatingStrategy();
 	virtual ~AnimatingStrategy();
 
-	virtual void Update(Actor& actor, const uint32_t& time) override;
+	virtual void Update(Actor& actor, uint32_t time) override;
 
 protected:
 	virtual void Free_Me() override;

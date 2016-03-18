@@ -119,3 +119,43 @@ AnimHeap::~AnimHeap()
 {
 	Mem::destroyHeap( this->heap );
 }
+
+
+
+
+AssetHeap* AssetHeap::instance = nullptr;
+
+void AssetHeap::Create()
+{
+	GameAssert( instance == nullptr );
+
+	instance = new AssetHeap();
+}
+
+void AssetHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* AssetHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// We can keep this one fairly small - just 1 MB should be enough
+#define ASSET_HEAP_SIZE 1024 * 1024
+
+AssetHeap::AssetHeap()
+{
+	Mem::createVariableBlockHeap( this->heap, ASSET_HEAP_SIZE );
+}
+
+AssetHeap::~AssetHeap()
+{
+	Mem::destroyHeap( this->heap );
+}

@@ -33,7 +33,7 @@ void ActorManager::Destroy()
 	instance = 0;
 }
 
-Actor* ActorManager::Add( Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
+Actor* ActorManager::Add( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
 {
 	Actor* actor = static_cast<Actor*>( this->Add_Object() );
 	actor->Set( material, modelBase, updateStrategy );

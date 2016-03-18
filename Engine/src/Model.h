@@ -13,7 +13,7 @@ class Model : public HierarchyElement
 {
 public:
 
-	void Set( Material* material, ModelBase* baseModel );
+	void Set( const Material* material, ModelBase* baseModel );
 	virtual void Reset();
 
 	virtual const Matrix& Get_Matrix() const override;
@@ -39,7 +39,7 @@ private:
 private:
 	Matrix world;
 	ModelBase* baseModel;
-	Material* material;
+	const Material* material;
 	uint32_t activeTexture;
 
 	uint32_t currentAnimStartFrame;

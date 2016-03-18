@@ -230,17 +230,23 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ActorObject.h" />
     <ClInclude Include="src\AnimatingStrategy.h" />
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\ModelObject.h" />
     <ClInclude Include="src\MoveAction.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\StationaryStrategy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\GeneratedReflectionCode.cpp" />
+    <ClCompile Include="src\ActorObject.cpp" />
     <ClCompile Include="src\AnimatingStrategy.cpp" />
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ModelObject.cpp" />
     <ClCompile Include="src\MoveAction.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\StationaryStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>

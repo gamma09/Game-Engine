@@ -14,10 +14,10 @@ struct DrawInfo;
 class Actor : public PCSNode, public ManagedObject, public ReferencedObject
 {
 public:
-	void Set( Material* material, ModelBase* modelBase, UpdateStrategy* strategy );
+	void Set( const Material* material, ModelBase* modelBase, UpdateStrategy* strategy );
 	virtual void Reset();
 
-	void Update( const uint32_t& timeDelta );
+	void Update( uint32_t time );
 	bool Draw( DrawInfo& info ) const;
 
 	void Update_Model_Matrix();

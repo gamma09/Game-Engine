@@ -68,3 +68,23 @@ private:
 	Heap* heap;
 	static AnimHeap* instance;
 };
+
+class AssetHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	AssetHeap();
+	~AssetHeap();
+
+	AssetHeap( const AssetHeap& ) = delete;
+	AssetHeap& operator=( const AssetHeap& ) = delete;
+
+private:
+	Heap* heap;
+	static AssetHeap* instance;
+};

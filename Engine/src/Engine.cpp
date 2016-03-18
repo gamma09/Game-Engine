@@ -454,6 +454,7 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	TemporaryHeap::Create();
 	ConstantBufferHeap::Create();
 	AnimHeap::Create();
+	AssetHeap::Create();
 
 	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Actor.cpp" />
+    <ClCompile Include="src\ActorAsset.cpp" />
     <ClCompile Include="src\ActorManager.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\AppInfo.cpp" />
@@ -38,9 +39,11 @@
     <ClCompile Include="src\LitTextureMaterial.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\ModelAsset.cpp" />
     <ClCompile Include="src\ModelBase.cpp" />
     <ClCompile Include="src\ModelBaseManager.cpp" />
     <ClCompile Include="src\Moveable.cpp" />
+    <ClCompile Include="src\SceneAsset.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\UnlitTextureMaterial.cpp" />
@@ -48,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Actor.h" />
+    <ClInclude Include="src\ActorAsset.h" />
     <ClInclude Include="src\ActorManager.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\AppInfo.h" />
@@ -71,10 +75,12 @@
     <ClInclude Include="src\MemorySetup.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\ModelAsset.h" />
     <ClInclude Include="src\ModelBase.h" />
     <ClInclude Include="src\ModelBaseManager.h" />
     <ClInclude Include="src\Moveable.h" />
     <ClInclude Include="src\ReflectedVect.h" />
+    <ClInclude Include="src\SceneAsset.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\UnlitTextureMaterial.h" />

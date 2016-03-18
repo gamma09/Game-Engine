@@ -19,7 +19,7 @@ public:
 	static void Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize );
 	static void Destroy();
 
-	Actor* Add( Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy );
+	Actor* Add( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy );
 
 
 

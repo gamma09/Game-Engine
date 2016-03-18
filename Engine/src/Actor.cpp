@@ -17,7 +17,7 @@ Actor::Actor()
 {
 }
 
-void Actor::Set( Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
+void Actor::Set( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
 {
 	GameAssert( modelBase != 0 );
 	GameAssert( updateStrategy != 0 );
@@ -56,7 +56,7 @@ void Actor::Free_Me()
 	ActorManager::Instance()->Remove( this );
 }
 
-void Actor::Update( const uint32_t& currentTime )
+void Actor::Update( uint32_t currentTime )
 {
 	this->updateStrategy->Update( *this, currentTime );
 }
