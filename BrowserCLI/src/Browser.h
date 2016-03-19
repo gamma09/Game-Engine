@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BrowserListener.h"
+
 namespace CLI
 {
 	class BrowserListener;
@@ -7,7 +9,7 @@ namespace CLI
 	class ContentObject;
 
 
-	class Browser
+	class Browser : public BrowserListener
 	{
 	public:
 		Browser();
@@ -25,6 +27,24 @@ namespace CLI
 		void Exit() const;
 		void SetDirtyFlag( bool bDirty ) const;
 		void SetCurrentFile( const char* filename ) const;
+
+
+
+		virtual void OnModelSelected( ContentObject* model ) override;
+		virtual void OnModelDeselected() override;
+
+		virtual void OnActorSelected( ContentObject* actor ) override;
+		virtual void OnActorDeselected() override;
+
+		virtual void OnActorCreated( ContentObject* model ) override;
+		virtual void OnActorDeleted( ContentObject* actor ) override;
+
+		virtual void OnExit() override;
+
+		virtual void OnNewLevel() override;
+		virtual void OnOpenLevel( const char* filepath ) override;
+		virtual void OnSaveLevel( const char* filepath ) override;
+		virtual void OnLoadModel( const char* filepath ) override;
 
 
 	private:

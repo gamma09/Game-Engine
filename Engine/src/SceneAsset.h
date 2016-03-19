@@ -1,16 +1,19 @@
 #pragma once
 
 #include <stdint.h>
-#include <atomic>
 #include <Reflection.h>
+#include "Asset.h"
 #include "DrawInfo.h"
+#include "YieldMutex.h"
 
 class ModelAsset;
 class ActorAsset;
 class Material;
 class UpdateStrategy;
 
-class SceneAsset
+struct ID3D11Device;
+
+class SceneAsset : public Asset<SceneAsset>
 {
 	// TODO make this class use a custom serialization function
 	REFLECTED_CLASS( SceneAsset );
@@ -19,9 +22,10 @@ public:
 	SceneAsset();
 	SceneAsset( const char* name );
 
-	~SceneAsset();
+	// SceneAssets should not be deleted directly - instead, you should call DeleteAsset()
+	virtual ~SceneAsset() override;
 
-	ModelAsset* AddModel( const char* archiveName );
+	ModelAsset* AddModel( ID3D11Device* device, const char* archiveName );
 	ActorAsset* AddActor( const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
 
 	void RemoveActor( const ActorAsset& actor );
@@ -38,8 +42,7 @@ public:
 	void Update( uint32_t totalTimeMillis );
 	void Draw( DrawInfo& info );
 
-	void LockScene();
-	void UnlockScene();
+	YieldMutex::Lock LockScene();
 
 
 private:
@@ -52,9 +55,7 @@ private:
 private:
 	char* name;
 
-	std::atomic_flag listLock;
-	DWORD lockOwner;
-	DWORD lockCount;
+	YieldMutex listsMutex;
 
 	ModelAsset* modelsHead;
 	ActorAsset* actorsHead;

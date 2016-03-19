@@ -37,8 +37,11 @@
     <Filter Include="Material\HLSL">
       <UniqueIdentifier>{72344d0a-69c5-43b1-846e-346972e97a29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets">
+    <Filter Include="Asset">
       <UniqueIdentifier>{7d94c3a1-3099-47cd-b3e8-1294ca04f848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Events">
+      <UniqueIdentifier>{d02fb3ac-9222-42f4-85b4-ef72f46445c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -121,13 +124,22 @@
       <Filter>Material</Filter>
     </ClCompile>
     <ClCompile Include="src\ModelAsset.cpp">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
     </ClCompile>
     <ClCompile Include="src\ActorAsset.cpp">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneAsset.cpp">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YieldMutex.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UpdateEventManager.cpp">
+      <Filter>Core\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ChangeSceneUpdateEvent.cpp">
+      <Filter>Asset\Events</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -231,13 +243,31 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\ModelAsset.h">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
     </ClInclude>
     <ClInclude Include="src\ActorAsset.h">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
     </ClInclude>
     <ClInclude Include="src\SceneAsset.h">
-      <Filter>Assets</Filter>
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="src\YieldMutex.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UpdateEvent.h">
+      <Filter>Core\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UpdateEventManager.h">
+      <Filter>Core\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ChangeSceneUpdateEvent.h">
+      <Filter>Asset\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetDeleteListener.h">
+      <Filter>Asset\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Asset.h">
+      <Filter>Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

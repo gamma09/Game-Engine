@@ -235,7 +235,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ClInclude Include="src\Editor.h" />
     <ClInclude Include="src\ModelObject.h" />
     <ClInclude Include="src\MoveAction.h" />
-    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\NewSceneUpdateEvent.h" />
     <ClInclude Include="src\StationaryStrategy.h" />
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +246,7 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ModelObject.cpp" />
     <ClCompile Include="src\MoveAction.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\NewSceneUpdateEvent.cpp" />
     <ClCompile Include="src\StationaryStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>

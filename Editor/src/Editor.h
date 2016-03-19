@@ -4,8 +4,7 @@
 #include <Engine.h>
 #include <BrowserListener.h>
 
-#include <Timer.h>
-#include <Time.h>
+
 #include <Camera.h>
 #include <Browser.h>
 
@@ -14,8 +13,6 @@
 using namespace CLI;
 
 class Heap;
-class DirectionLight;
-class Scene;
 
 class Editor : public Engine, public BrowserListener
 {
@@ -27,8 +24,7 @@ public:
 	// Engine implementation
 	//-----------------------------------------------------
 	virtual void LoadContent() override;
-	virtual void Update() override;
-	virtual void Draw() override;
+	virtual void Update( uint32_t totalTimeMillis ) override;
 	virtual void UnLoadContent() override;
 
 	// We only want to close the engine window if the browser says we can
@@ -60,14 +56,8 @@ private:
 
 	CLI::Browser* browser;
 
-	//bool inModal;
-
-	Timer updateTimer;
-	Time totalTime;
-
-	Scene* scene;
-
+	// TODO move cameras to scene asset
 	Camera* moveableCamera;
-	DirectionLight* light;
+	
 	UpdateStrategy* updater;
 };

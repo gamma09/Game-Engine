@@ -19,19 +19,12 @@ public:
 	Game( const char* windowName, const int Width, const int Height );
 
 	virtual void LoadContent() override;
-	virtual void Update() override;
-	virtual void Draw() override;
+	virtual void Update( uint32_t updateTime ) override;
 	virtual void UnLoadContent() override;
 
 private:
 	// prevent them from calling wrong call
 	Game();
 
-	Timer updateTimer;
-	Time totalTime;
-
 	Camera* moveableCamera;
-	Actor* actor[4];
-	DirectionLight* light;
-	bool wasCulled;
 };

@@ -5,22 +5,40 @@
 
 
 
-ActorObject::ActorObject( SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
+ActorObject::ActorObject( CLI::Browser* inBrowser, SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
 	: CLI::ContentObject(),
-	scene( scene )
+	scene( scene ),
+	browser( inBrowser )
 {
 	GameAssert( scene != nullptr );
+	GameAssert( inBrowser != nullptr );
+	GameAssert( updateStrategy != nullptr );
 
-	this->asset = scene->AddActor( model, material, updateStrategy );
+	{
+		YieldMutex::Lock lock = scene->LockScene();
+		this->asset = scene->AddActor( model, material, updateStrategy );
+		this->asset->SetDeleteListener( this );
+	}
+
 	this->SetName( this->asset->name );
+	this->browser->AddActor( this );
 }
 
 ActorObject::~ActorObject()
 {
-	this->scene->RemoveActor( *this->asset );
+	// Scene asset handles actor asset destruction
 }
 
 ActorAsset* ActorObject::GetActorAsset() const
 {
 	return this->asset;
+}
+
+void ActorObject::AssetDeleted( ActorAsset* actor )
+{
+	GameAssert( actor == this->asset );
+
+	this->browser->RemoveActor( this );
+
+	delete this;
 }

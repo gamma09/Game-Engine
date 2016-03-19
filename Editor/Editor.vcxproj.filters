@@ -40,7 +40,7 @@
     <ClInclude Include="src\ActorObject.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene.h">
+    <ClInclude Include="src\NewSceneUpdateEvent.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,7 +65,7 @@
     <ClCompile Include="src\ActorObject.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
+    <ClCompile Include="src\NewSceneUpdateEvent.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>

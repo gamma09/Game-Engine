@@ -10,8 +10,13 @@ bool read_asset( const char * const archiveFilename, ChunkType type, const char 
 {
 	FileHandle archive;
 	FileError status = File::open( archive, archiveFilename, FileMode::FILE_READ );
+
 	if( status != FILE_SUCCESS )
+	{
+		DWORD errorCode = GetLastError();
+		errorCode;
 		return false;
+	}
 
 	PackageHeader header;
 	GameVerify( FILE_SUCCESS == File::read( archive, &header, sizeof( PackageHeader ) ) );

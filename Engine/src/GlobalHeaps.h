@@ -88,3 +88,23 @@ private:
 	Heap* heap;
 	static AssetHeap* instance;
 };
+
+class EventHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	EventHeap();
+	~EventHeap();
+
+	EventHeap( const EventHeap& ) = delete;
+	EventHeap& operator=( const EventHeap& ) = delete;
+
+private:
+	Heap* heap;
+	static EventHeap* instance;
+};

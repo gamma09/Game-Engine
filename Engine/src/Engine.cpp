@@ -50,6 +50,28 @@ void Engine::run()
 	UnLoadContent();
 }
 
+const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
+
+void Engine::Update( uint32_t totalTimeMillis )
+{
+#ifdef _DEBUG
+	out( "Time: %d\n", totalTimeMillis );
+#endif
+
+	KeyBindingManager::Instance()->Check_Input();
+	this->sceneAsset->Update( totalTimeMillis );
+}
+
+void Engine::Draw()
+{
+	DrawInfo info;
+	info.camera = CameraManager::Instance()->Get_Active_Camera();
+	info.light = this->light;
+	info.context = this->deviceContext;
+
+	this->sceneAsset->Draw( info );
+}
+
 void Engine::Close()
 {
 	PostMessage( this->hWindow, WM_CLOSE, 0, 0 );
@@ -59,7 +81,18 @@ void Engine::UpdateThreadEntry( Engine* engine )
 {
 	while( engine->isOpen )
 	{
-		engine->Update();
+			
+		Time timeSinceUpdate = engine->updateTimer.toc();
+		engine->updateTimer.tic();
+		engine->totalTime += timeSinceUpdate;
+		uint32_t totalTimeMillis = Time::quotient( engine->totalTime, MILLISECOND );
+		
+		engine->updateEventManager.ProcessPreUpdateEvents( totalTimeMillis );
+		{
+			YieldMutex::Lock updateLock( engine->updateMutex );
+			engine->Update( totalTimeMillis );
+		}
+		engine->updateEventManager.ProcessPostUpdateEvents( totalTimeMillis );
 	}
 }
 
@@ -441,7 +474,10 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	swapChain( nullptr ),
 	renderTarget( nullptr ),
 	depthStencil( nullptr ),
-	depthStencilView( nullptr )
+	depthStencilView( nullptr ),
+	drawMutex(),
+	updateMutex(),
+	updateEventManager()
 {
 	this->info[Window_Width] = Width;
 	this->info[Window_Height] = Height;
@@ -455,6 +491,7 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	ConstantBufferHeap::Create();
 	AnimHeap::Create();
 	AssetHeap::Create();
+	EventHeap::Create();
 
 	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
 
@@ -479,6 +516,8 @@ Engine::~Engine()
 
 	Mem::destroyHeap( this->managerHeap );
 
+	EventHeap::Destroy();
+	AssetHeap::Destroy();
 	AnimHeap::Destroy();
 	TemporaryHeap::Destroy();
 	ConstantBufferHeap::Destroy();

@@ -7,15 +7,21 @@
 #include <thread>
 #include <stdio.h>
 #include <string.h>
+#include <atomic>
+#include <Timer.h>
+#include <Time.h>
 
 #include "LitTextureMaterial.h"
 #include "UnlitTextureMaterial.h"
 #include "WireframeMaterial.h"
 #include "AppInfo.h"
 #include "EngineMessages.h"
+#include "YieldMutex.h"
+#include "SceneAsset.h"
+#include "UpdateEventManager.h"
 
 class Heap;
-
+class DirectionLight;
 
 class Engine abstract
 {
@@ -25,8 +31,8 @@ public:
 
 	// required overloading
 	virtual void LoadContent() abstract;
-	virtual void Update() abstract;
-	virtual void Draw() abstract;
+	virtual void Update( uint32_t totalTimeMillis );
+	virtual void Draw();
 	virtual void UnLoadContent() abstract;
 
 	virtual void CloseEngine();
@@ -56,9 +62,21 @@ protected:
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
 
+	Timer updateTimer;
+	Time totalTime;
+	UpdateEventManager updateEventManager;
+	SceneAsset* sceneAsset;
+
+	// TODO move lights to scene
+	DirectionLight* light;
+
+	// TODO move materials to scene
 	LitTextureMaterial* litTextureMaterial;
 	UnlitTextureMaterial* unlitTextureMaterial;
 	WireframeMaterial* wireframeMaterial;
+
+	YieldMutex drawMutex;
+	YieldMutex updateMutex;
 
 	IDXGISwapChain* swapChain;
 	ID3D11RenderTargetView* renderTarget;
@@ -68,12 +86,17 @@ protected:
 	unsigned int vsyncInterval;
 
 	HWND hWindow;
+	AppInfo info;
+
+private:
 	bool isOpen;
 	
 	std::thread updateThread;
 
 	Heap* managerHeap;
 
-	AppInfo info;
+
+
+	friend class ChangeSceneUpdateEvent;
 };
 

@@ -159,3 +159,42 @@ AssetHeap::~AssetHeap()
 {
 	Mem::destroyHeap( this->heap );
 }
+
+
+
+EventHeap* EventHeap::instance = nullptr;
+
+void EventHeap::Create()
+{
+	GameAssert( instance == nullptr );
+
+	instance = new EventHeap();
+}
+
+void EventHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* EventHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// We can keep this one extremely small - just 8 KB should be enough for now
+#define EVENT_HEAP_SIZE 8 * 1024
+
+EventHeap::EventHeap()
+{
+	Mem::createVariableBlockHeap( this->heap, EVENT_HEAP_SIZE );
+}
+
+EventHeap::~EventHeap()
+{
+	Mem::destroyHeap( this->heap );
+}

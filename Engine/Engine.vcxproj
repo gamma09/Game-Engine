@@ -28,6 +28,7 @@
     <ClCompile Include="src\BoneManager.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraManager.cpp" />
+    <ClCompile Include="src\ChangeSceneUpdateEvent.cpp" />
     <ClCompile Include="src\DirectionLight.cpp" />
     <ClCompile Include="src\DirectionLightManager.cpp" />
     <ClCompile Include="src\Engine.cpp" />
@@ -47,7 +48,9 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\UnlitTextureMaterial.cpp" />
+    <ClCompile Include="src\UpdateEventManager.cpp" />
     <ClCompile Include="src\WireframeMaterial.cpp" />
+    <ClCompile Include="src\YieldMutex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Actor.h" />
@@ -55,10 +58,13 @@
     <ClInclude Include="src\ActorManager.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\AppInfo.h" />
+    <ClInclude Include="src\Asset.h" />
+    <ClInclude Include="src\AssetDeleteListener.h" />
     <ClInclude Include="src\Bone.h" />
     <ClInclude Include="src\BoneManager.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CameraManager.h" />
+    <ClInclude Include="src\ChangeSceneUpdateEvent.h" />
     <ClInclude Include="src\EngineMessages.h" />
     <ClInclude Include="src\DirectionLight.h" />
     <ClInclude Include="src\DirectionLightManager.h" />
@@ -84,8 +90,11 @@
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\UnlitTextureMaterial.h" />
+    <ClInclude Include="src\UpdateEvent.h" />
+    <ClInclude Include="src\UpdateEventManager.h" />
     <ClInclude Include="src\UpdateStrategy.h" />
     <ClInclude Include="src\WireframeMaterial.h" />
+    <ClInclude Include="src\YieldMutex.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="hlsl\LitTexture.ps.hlsl">

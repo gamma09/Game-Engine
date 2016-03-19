@@ -6,25 +6,20 @@
 #include "ModelAsset.h"
 
 SceneAsset::SceneAsset()
-	: name( nullptr ),
+	: Asset(),
+	name( nullptr ),
 	modelsHead( nullptr ),
 	actorsHead( nullptr ),
-	listLock(),
-	lockCount( 0 ),
-	lockOwner( 0 )
+	listsMutex()
 {
-	this->listLock.clear();
+	// Do nothing
 }
 
 SceneAsset::SceneAsset( const char* name )
 	: actorsHead( nullptr ),
 	modelsHead( nullptr ),
-	listLock(),
-	lockCount( 0 ),
-	lockOwner( 0 )
+	listsMutex()
 {
-	this->listLock.clear();
-
 	GameAssert( name != nullptr );
 
 	size_t size = strlen( name ) + 1;
@@ -39,22 +34,20 @@ SceneAsset::~SceneAsset()
 	{
 		ActorAsset* actor = this->actorsHead;
 		this->actorsHead = this->actorsHead->next;
-
-		delete actor;
+		actor->DeleteAsset();
 	}
 
 	while( this->modelsHead != nullptr )
 	{
 		ModelAsset* model = this->modelsHead;
 		this->modelsHead = this->modelsHead->next;
-
-		delete model;
+		model->DeleteAsset();
 	}
 
 	delete this->name;
 }
 
-ModelAsset* SceneAsset::AddModel( const char* archiveFile )
+ModelAsset* SceneAsset::AddModel( ID3D11Device* device, const char* archiveFile )
 {
 	size_t size = strlen( archiveFile ) + 1;
 	char* pathname = newArray( char, size, TemporaryHeap::Instance(), ALIGN_4 );
@@ -83,20 +76,20 @@ ModelAsset* SceneAsset::AddModel( const char* archiveFile )
 
 	*( strchr( name, '.' ) ) = 0;
 
-	ModelAsset* asset = new( AssetHeap::Instance(), ALIGN_4 ) ModelAsset( archiveFile, name );
+	ModelAsset* asset = new( AssetHeap::Instance(), ALIGN_4 ) ModelAsset( device, archiveFile, name );
 	GameAssert( !this->Exists( name ) );
 
 	delete pathname;
 
-	this->LockScene();
+	{
+		YieldMutex::Lock lock = this->LockScene();
 
-	asset->next = this->modelsHead;
+		asset->next = this->modelsHead;
 
-	std::atomic_thread_fence( std::memory_order_release );
+		std::atomic_thread_fence( std::memory_order_release );
 
-	this->modelsHead = asset;
-
-	this->UnlockScene();
+		this->modelsHead = asset;
+	}
 
 	return asset;
 }
@@ -114,7 +107,7 @@ ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* mater
 	size_t numberSize = actorNameSize - strlen( actorName );
 	char* numberStart = strchr( actorName, 0 );
 
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
 	// For now, we only allow up to 10000 instances of a particular model in the scene -> to increase this, you must also increase the actorNameSize
 	for( unsigned int i = 0; i < 10000; i++ )
@@ -136,42 +129,41 @@ ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* mater
 	asset->next = this->actorsHead;
 	this->actorsHead = asset;
 
-	this->UnlockScene();
-
 	return asset;
 }
 
 void SceneAsset::RemoveActor( const ActorAsset& actor )
 {
-	this->LockScene();
-
-	ActorAsset* prev = nullptr;
-	ActorAsset* curr = this->actorsHead;
-	while( curr != nullptr )
+	ActorAsset* curr = nullptr;
 	{
-		if( *curr == actor )
+		YieldMutex::Lock lock = this->LockScene();
+
+		ActorAsset* prev = nullptr;
+		ActorAsset* curr = this->actorsHead;
+		while( curr != nullptr )
 		{
-			break;
+			if( *curr == actor )
+			{
+				break;
+			}
+
+			prev = curr;
+			curr = curr->next;
 		}
 
-		prev = curr;
-		curr = curr->next;
-	}
-	
-	GameAssert( curr != nullptr );
+		GameAssert( curr != nullptr );
 
-	if( prev == nullptr )
-	{
-		this->actorsHead = curr->next;
-	}
-	else
-	{
-		prev->next = curr->next;
+		if( prev == nullptr )
+		{
+			this->actorsHead = curr->next;
+		}
+		else
+		{
+			prev->next = curr->next;
+		}
 	}
 
-	this->UnlockScene();
-
-	delete curr;
+	curr->DeleteAsset();
 }
 
 bool SceneAsset::Contains( const ModelAsset& model ) const
@@ -190,48 +182,38 @@ bool SceneAsset::Contains( const ModelAsset& model ) const
 
 bool SceneAsset::Contains( const ActorAsset& actor )
 {
-	bool retVal = false;
-
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
 	for( const ActorAsset* curr = this->actorsHead; curr != nullptr; curr = curr->next )
 	{
 		if( *curr == actor )
 		{
-			retVal = true;
+			return true;
 		}
 	}
-	
-	this->UnlockScene();
 
-	return retVal;
+	return false;
 }
 
 unsigned int SceneAsset::GetUsageCount( const ModelAsset& model )
 {
 	unsigned int usageCount = 0;
 
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
 	for( const ActorAsset* curr = this->actorsHead; curr != nullptr; curr = curr->next )
 	{
 		usageCount += ( curr->model == model ) ? 1 : 0;
 	}
 
-	this->UnlockScene();
-
 	return usageCount;
 }
 
 bool SceneAsset::Exists( const char* assetName )
 {
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
-	bool exists = this->ExistsInLock( assetName );
-
-	this->UnlockScene();
-
-	return exists;
+	return this->ExistsInLock( assetName );
 }
 
 bool SceneAsset::ExistsInLock( const char* assetName ) const
@@ -257,52 +239,25 @@ bool SceneAsset::ExistsInLock( const char* assetName ) const
 
 void SceneAsset::Update( uint32_t totalTimeMillis )
 {
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
 	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
 	{
 		actor->Update( totalTimeMillis );
 	}
-
-	this->UnlockScene();
 }
 
 void SceneAsset::Draw( DrawInfo& info )
 {
-	this->LockScene();
+	YieldMutex::Lock lock = this->LockScene();
 
 	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
 	{
 		actor->Draw( info );
 	}
-
-	this->UnlockScene();
 }
 
-void SceneAsset::LockScene()
+YieldMutex::Lock SceneAsset::LockScene()
 {
-	// Lock the lists
-	while( this->listLock.test_and_set( std::memory_order_acq_rel ) )
-	{
-		if( this->lockOwner == GetCurrentThreadId() )
-		{
-			break;
-		}
-		std::this_thread::yield();
-	}
-
-	this->lockOwner = GetCurrentThreadId();
-	this->lockCount += 1;
-}
-
-void SceneAsset::UnlockScene()
-{
-	GameAssert( GetCurrentThreadId() == this->lockOwner );
-
-	this->lockCount -= 1;
-	if( this->lockCount == 0 )
-	{
-		this->lockOwner = 0;
-		this->listLock.clear( std::memory_order_release );
-	}
+	return YieldMutex::Lock( this->listsMutex );
 }

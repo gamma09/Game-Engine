@@ -13,6 +13,7 @@
 #include <DirectionLight.h>
 #include <DrawInfo.h>
 #include <DebuggerSetup.h>
+#include <ActorAsset.h>
 
 #include <WireframeMaterial.h>
 
@@ -32,8 +33,7 @@
 //		Game Engine Constructor
 //-----------------------------------------------------------------------------
 Game::Game( const char* windowName, const int Width, const int Height )
-	: Engine( windowName, Width, Height ),
-	wasCulled( false )
+	: Engine( windowName, Width, Height )
 {
 	// Do nothing
 }
@@ -71,40 +71,36 @@ void Game::LoadContent()
 
 	UpdateStrategy* updater = new( TemporaryHeap::Instance(), ALIGN_4 ) AnimatingStrategy();
 
-	ModelBase* model = ModelBaseManager::Instance()->Add( this->device, "../resources/soldier_animated_jump.spu" );
-	this->actor[0] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
-	this->actor[0]->Add_Reference();
-	this->actor[0]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[0]->Update_Model_Matrix();
-	this->actor[0]->Get_Model().Start_Animation( 0, 0 );
+	this->sceneAsset = new( AssetHeap::Instance(), ALIGN_4 ) SceneAsset( "Test Scene" );
 
-	this->actor[1] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model, updater );
-	this->actor[1]->Add_Reference();
-	this->actor[1]->position[X] = -125.0f;
-	this->actor[1]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[1]->Update_Model_Matrix();
-	this->actor[1]->Get_Model().Start_Animation( 500, 0 );
+	ModelAsset* model = this->sceneAsset->AddModel( this->device, "../resources/soldier_animated_jump.spu" );
+	ActorAsset* actor1 = this->sceneAsset->AddActor( *model, this->unlitTextureMaterial, updater );
+	actor1->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	actor1->GetActor()->Update_Model_Matrix();
+	actor1->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
-	ModelBase* model2 = ModelBaseManager::Instance()->Add( this->device, "../resources/teddy_tga.spu" );
-	this->actor[2] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
-	this->actor[2]->Add_Reference();
-	this->actor[2]->position[Y] = -175.0f;
-	this->actor[2]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[2]->Update_Model_Matrix();
-	this->actor[2]->Get_Model().Start_Animation( 0, 0 );
+	ActorAsset* actor2 = this->sceneAsset->AddActor( *model, this->unlitTextureMaterial, updater );
+	actor2->GetActor()->position[X] = -125.0f;
+	actor2->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	actor2->GetActor()->Update_Model_Matrix();
+	actor2->GetActor()->Get_Model().Start_Animation( 500, 0 );
 
-	this->actor[3] = ActorManager::Instance()->Add( this->unlitTextureMaterial, model2, updater );
-	this->actor[3]->Add_Reference();
-	this->actor[3]->position[Y] = -175.0f;
-	this->actor[3]->position[X] = -125.0f;
-	this->actor[3]->Get_Model().Change_Active_Texture( 1 );
-	this->actor[3]->Update_Model_Matrix();
-	this->actor[3]->Get_Model().Start_Animation( 0, 1 );
+	ModelAsset* model2 = this->sceneAsset->AddModel( this->device, "../resources/teddy_tga.spu" );
+	ActorAsset* actor3 = this->sceneAsset->AddActor( *model2, this->unlitTextureMaterial, updater );
+	actor3->GetActor()->position[Y] = -175.0f;
+	actor3->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	actor3->GetActor()->Update_Model_Matrix();
+	actor3->GetActor()->Get_Model().Start_Animation( 0, 0 );
+
+	ActorAsset* actor4 = this->sceneAsset->AddActor( *model2, this->unlitTextureMaterial, updater );
+	actor4->GetActor()->position[X] = -125.0f;
+	actor4->GetActor()->position[Y] = -175.0f;
+	actor4->GetActor()->Get_Model().Change_Active_Texture( 1 );
+	actor4->GetActor()->Update_Model_Matrix();
+	actor4->GetActor()->Get_Model().Start_Animation( 0, 1 );
 
 	this->light = DirectionLightManager::Instance()->Add( -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f );
 	this->light->Add_Reference();
-
-
 }
 
 const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
@@ -115,41 +111,11 @@ const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
 //      Use this function to control process order
 //      Input, AI, Physics, Animation, and Graphics
 //-----------------------------------------------------------------------------
-void Game::Update()
+void Game::Update( uint32_t totalTimeMillis )
 {
-	Time timeSinceUpdate = this->updateTimer.toc();
-	this->updateTimer.tic();
-	this->totalTime += timeSinceUpdate;
-	uint32_t totalTimeMillis = Time::quotient( this->totalTime, MILLISECOND );
-	out( "Time: %d\n", totalTimeMillis );
-
-	KeyBindingManager::Instance()->Check_Input();
+	Engine::Update( totalTimeMillis );
 
 	this->moveableCamera->Update_Position( totalTimeMillis );
-
-	this->actor[0]->Update( totalTimeMillis );
-	this->actor[1]->Update( totalTimeMillis );
-	this->actor[2]->Update( totalTimeMillis );
-	this->actor[3]->Update( totalTimeMillis );
-}
-
-//-----------------------------------------------------------------------------
-// Game::Draw()
-//		This function is called once per frame
-//	    Use this for draw graphics to the screen.
-//      Only do rendering here
-//-----------------------------------------------------------------------------
-void Game::Draw()
-{
-	DrawInfo info;
-	info.camera = CameraManager::Instance()->Get_Active_Camera();
-	info.light = this->light;
-	info.context = this->deviceContext;
-
-	this->actor[0]->Draw( info );
-	this->actor[1]->Draw( info );
-	this->actor[2]->Draw( info );
-	this->actor[3]->Draw( info );
 }
 
 //-----------------------------------------------------------------------------
@@ -159,10 +125,7 @@ void Game::Draw()
 //-----------------------------------------------------------------------------
 void Game::UnLoadContent()
 {
-	this->actor[0]->Remove_Reference();
-	this->actor[1]->Remove_Reference();
-	this->actor[2]->Remove_Reference();
-	this->actor[3]->Remove_Reference();
+	this->sceneAsset->DeleteAsset();
 
 	this->light->Remove_Reference();
 }

@@ -4,7 +4,8 @@
 #include "MemorySetup.h"
 
 ModelAsset::ModelAsset()
-	: file( nullptr ),
+	: Asset(),
+	file( nullptr ),
 	name( nullptr ),
 	modelBase( nullptr ),
 	next( nullptr )
@@ -13,12 +14,12 @@ ModelAsset::ModelAsset()
 }
 
 
-ModelAsset::ModelAsset( const char* archiveFile, const char* name )
-	: modelBase( nullptr ),
-	next( nullptr )
+ModelAsset::ModelAsset( ID3D11Device* device, const char* archiveFile, const char* name )
+	: next( nullptr )
 {
 	GameAssert( archiveFile != nullptr );
 	GameAssert( name != nullptr );
+	GameAssert( device != nullptr );
 
 	size_t fileStrSize = strlen( archiveFile ) + 1;
 	this->file = newArray( char, fileStrSize, AssetHeap::Instance(), ALIGN_4 );
@@ -27,6 +28,9 @@ ModelAsset::ModelAsset( const char* archiveFile, const char* name )
 	size_t nameSize = strlen( name ) + 1;
 	this->name = newArray( char, nameSize, AssetHeap::Instance(), ALIGN_4 );
 	strcpy_s( this->name, nameSize, name );
+
+	this->modelBase = ModelBaseManager::Instance()->Add( device, this->file );
+	this->modelBase->Add_Reference();
 }
 
 ModelAsset::ModelAsset( const ModelAsset& asset )
@@ -103,16 +107,6 @@ ModelAsset::~ModelAsset()
 	{
 		this->modelBase->Remove_Reference();
 	}
-}
-
-void ModelAsset::SetupModelBase( ID3D11Device* device )
-{
-	GameAssert( this->modelBase == nullptr );
-	GameAssert( this->file != nullptr );
-	GameAssert( this->name != nullptr );
-
-	this->modelBase = ModelBaseManager::Instance()->Add( device, this->file );
-	this->modelBase->Add_Reference();
 }
 
 ModelBase* ModelAsset::GetModelBase() const

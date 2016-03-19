@@ -44,31 +44,40 @@ namespace CLI
 	Browser::Browser()
 		: impl( new BrowserImpl() )
 	{
-		// Do nothing
+		this->AddBrowserListener( this );
 	}
 
 	Browser::~Browser()
 	{
-		delete this->impl;
+		if( this->impl != nullptr )
+		{
+			delete this->impl;
+		}
 	}
 
 	void Browser::AddBrowserListener( BrowserListener* listener ) const
 	{
 		GameAssert( listener != nullptr );
 
-		BrowserListenerCLI^ listenerCLI = gcnew BrowserListenerCLI( listener );
-		this->impl->table.Add( listener, listenerCLI );
-		this->impl->browser->AddBrowserListener( listenerCLI );
+		if( this->impl != nullptr )
+		{
+			BrowserListenerCLI^ listenerCLI = gcnew BrowserListenerCLI( listener );
+			this->impl->table.Add( listener, listenerCLI );
+			this->impl->browser->AddBrowserListener( listenerCLI );
+		}
 	}
 
 	void Browser::RemoveBrowserListener( BrowserListener* listener ) const
 	{
 		GameAssert( listener != nullptr );
 
-		BrowserListenerCLI^ listenerCLI = static_cast<BrowserListenerCLI^>( this->impl->table.Remove( listener ) );
-		if( listenerCLI != nullptr )
+		if( this->impl != nullptr )
 		{
-			this->impl->browser->RemoveBrowserListener( listenerCLI );
+			BrowserListenerCLI^ listenerCLI = static_cast<BrowserListenerCLI^>( this->impl->table.Remove( listener ) );
+			if( listenerCLI != nullptr )
+			{
+				this->impl->browser->RemoveBrowserListener( listenerCLI );
+			}
 		}
 	}
 
@@ -76,19 +85,25 @@ namespace CLI
 	{
 		GameAssert( model != nullptr );
 
-		ContentObjectCLI^ modelCLI = gcnew ContentObjectCLI( model );
-		this->impl->table.Add( model, modelCLI );
-		this->impl->browser->AddModel( modelCLI );
+		if( this->impl != nullptr )
+		{
+			ContentObjectCLI^ modelCLI = gcnew ContentObjectCLI( model );
+			this->impl->table.Add( model, modelCLI );
+			this->impl->browser->AddModel( modelCLI );
+		}
 	}
 
 	void Browser::RemoveModel( ContentObject* model ) const
 	{
 		GameAssert( model != nullptr );
 
-		ContentObjectCLI^ modelCLI = static_cast<ContentObjectCLI^>( this->impl->table.Remove( model ) );
-		if( modelCLI != nullptr )
+		if( this->impl != nullptr )
 		{
-			this->impl->browser->RemoveModel( modelCLI );
+			ContentObjectCLI^ modelCLI = static_cast<ContentObjectCLI^>( this->impl->table.Remove( model ) );
+			if( modelCLI != nullptr )
+			{
+				this->impl->browser->RemoveModel( modelCLI );
+			}
 		}
 	}
 
@@ -96,41 +111,85 @@ namespace CLI
 	{
 		GameAssert( actor != nullptr );
 
-		ContentObjectCLI^ actorCLI = gcnew ContentObjectCLI( actor );
-		this->impl->table.Add( actor, actorCLI );
-		this->impl->browser->AddActor( actorCLI );
+		if( this->impl != nullptr )
+		{
+			if( this->impl != nullptr )
+			{
+				ContentObjectCLI^ actorCLI = gcnew ContentObjectCLI( actor );
+				this->impl->table.Add( actor, actorCLI );
+				this->impl->browser->AddActor( actorCLI );
+			}
+		}
 	}
 
 	void Browser::RemoveActor( ContentObject* actor ) const
 	{
 		GameAssert( actor != nullptr );
 
-		ContentObjectCLI^ actorCLI = static_cast<ContentObjectCLI^>( this->impl->table.Remove( actor ) );
-		if( actorCLI != nullptr )
+		if( this->impl != nullptr )
 		{
-			this->impl->browser->RemoveActor( actorCLI );
+
+			ContentObjectCLI^ actorCLI = static_cast<ContentObjectCLI^>( this->impl->table.Remove( actor ) );
+			if( actorCLI != nullptr )
+			{
+				this->impl->browser->RemoveActor( actorCLI );
+			}
 		}
 	}
 
 	void Browser::Exit() const
 	{
-		this->impl->browser->Exit();
+		if( this->impl != nullptr )
+		{
+			this->impl->browser->Exit();
+		}
 	}
 
 	void Browser::SetDirtyFlag( bool bDirty ) const
 	{
-		this->impl->browser->SetFileDirtyFlag( bDirty );
+		if( this->impl != nullptr )
+		{
+			this->impl->browser->SetFileDirtyFlag( bDirty );
+		}
 	}
 
 	void Browser::SetCurrentFile( const char* filename ) const
 	{
-		unsigned int size = strlen( filename ) + 1;
-		char* localCopy = new char[size];
-		strcpy_s( localCopy, size, filename );
+		if( this->impl != nullptr )
+		{
+			unsigned int size = strlen( filename ) + 1;
+			char* localCopy = new char[size];
+			strcpy_s( localCopy, size, filename );
 
-		String^ managedFilename = Marshal::PtrToStringAnsi( (IntPtr) localCopy );
-		this->impl->browser->SetCurrentFile( managedFilename );
+			String^ managedFilename = Marshal::PtrToStringAnsi( (IntPtr) localCopy );
+			this->impl->browser->SetCurrentFile( managedFilename );
 
-		delete localCopy;
+			delete localCopy;
+		}
 	}
+
+	void Browser::OnModelSelected( ContentObject* ) {}
+	void Browser::OnModelDeselected() {}
+
+	void Browser::OnActorSelected( ContentObject* ) {}
+	void Browser::OnActorDeselected() {}
+
+	void Browser::OnActorCreated( ContentObject* ) {}
+	void Browser::OnActorDeleted( ContentObject* ) {}
+
+	void Browser::OnExit()
+	{
+		if( this->impl != nullptr )
+		{
+			BrowserImpl* impl = this->impl;
+			this->impl = nullptr;
+
+			delete impl;
+		}
+	}
+
+	void Browser::OnNewLevel() {}
+	void Browser::OnOpenLevel( const char* ) {}
+	void Browser::OnSaveLevel( const char* ) {}
+	void Browser::OnLoadModel( const char* ) {}
 }

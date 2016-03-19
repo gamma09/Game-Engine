@@ -4,7 +4,8 @@
 #include "MemorySetup.h"
 
 ActorAsset::ActorAsset()
-	: name( nullptr ),
+	: Asset(),
+	name( nullptr ),
 	model(),
 	actor( nullptr ),
 	x( 0.0f ),
@@ -16,9 +17,7 @@ ActorAsset::ActorAsset()
 	sx( 1.0f ),
 	sy( 1.0f ),
 	sz( 1.0f ),
-	next( nullptr ),
-	material( nullptr ),
-	updateStrategy( nullptr )
+	next( nullptr )
 {
 	// Do nothing
 }
@@ -48,23 +47,15 @@ ActorAsset::ActorAsset( const char* name, const ModelAsset& model, const Materia
 	sx( 1.0f ),
 	sy( 1.0f ),
 	sz( 1.0f ),
-	next( nullptr ),
-	updateStrategy( updateStrategy ),
-	material( material )
+	next( nullptr )
 {
 	GameAssert( name != nullptr );
 
 	size_t nameSize = strlen( name ) + 1;
 	this->name = newArray( char, nameSize, AssetHeap::Instance(), ALIGN_4 );
 	strcpy_s( this->name, nameSize, name );
-}
 
-void ActorAsset::SetupActor( ID3D11Device* device )
-{
-	GameAssert( this->actor == nullptr );
-	GameAssert( device != nullptr );
-
-	this->actor = ActorManager::Instance()->Add( this->material, this->model.GetModelBase(), this->updateStrategy );
+	this->actor = ActorManager::Instance()->Add( material, this->model.GetModelBase(), updateStrategy );
 	this->actor->Add_Reference();
 
 	this->actor->position.set( this->x, this->y, this->z );
