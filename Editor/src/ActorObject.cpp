@@ -37,6 +37,7 @@ ActorAsset* ActorObject::GetActorAsset() const
 void ActorObject::AssetDeleted( ActorAsset* actor )
 {
 	GameAssert( actor == this->asset );
+	actor;
 
 	this->browser->RemoveActor( this );
 
