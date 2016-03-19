@@ -34,10 +34,10 @@
 Editor::Editor( const char* windowName, const int Width, const int Height )
 	: Engine( windowName, Width, Height ),
 	browser( nullptr ),
-	updater( new( AssetHeap::Instance(), ALIGN_4 ) AnimatingStrategy() ) //,
-	//inModal( false )
+	updater( new( AssetHeap::Instance(), ALIGN_4 ) AnimatingStrategy() )
 {
-	// Do nothing
+	// In addition to the scene references, add one last reference for the editor itself
+	this->updater->Add_Reference();
 }
 
 //-----------------------------------------------------------------------------

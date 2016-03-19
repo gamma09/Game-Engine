@@ -30,6 +30,7 @@ ModelAsset* ModelObject::GetModelAsset() const
 void ModelObject::AssetDeleted( ModelAsset* model )
 {
 	GameAssert( model == this->asset );
+	model;
 
 	this->browser->RemoveModel( this );
 

@@ -252,7 +252,7 @@ namespace CS_Browser
 
 			DialogResult result = openDialog.ShowDialog( this );
 
-			if( DialogResult.OK == openDialog.ShowDialog( this ) )
+			if( DialogResult.OK == result )
 			{
 				string modelFile = openDialog.FileName;
 
