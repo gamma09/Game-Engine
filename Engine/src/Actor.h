@@ -9,16 +9,14 @@
 
 class UpdateStrategy;
 class Material;
-struct DrawInfo;
 
 class Actor : public PCSNode, public ManagedObject, public ReferencedObject
 {
 public:
-	void Set( const Material* material, ModelBase* modelBase, UpdateStrategy* strategy );
+	void Set( ID3D11Device* device, const Material* material, ModelBase* modelBase, UpdateStrategy* strategy );
 	virtual void Reset();
 
 	void Update( uint32_t time );
-	bool Draw( DrawInfo& info ) const;
 
 	void Update_Model_Matrix();
 	Model& Get_Model();
@@ -39,7 +37,7 @@ private:
 	Actor& operator=( const Actor& actor );
 
 private:
-	Model model;
+	Model* model;
 	UpdateStrategy* updateStrategy;
 
 public:
@@ -58,7 +56,4 @@ public:
 	float sy;
 	// scale along Z axis
 	float sz;
-
-private:
-	float maxSize;
 };

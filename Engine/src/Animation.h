@@ -10,7 +10,7 @@ class Animation
 public:
 
 	Animation();
-	Animation( uint32_t boneCount, const unsigned char* frameData );
+	Animation( uint32_t boneCount, unsigned char*& frameData );
 	Animation( const Animation& anim );
 	Animation& operator=( const Animation& anim );
 	~Animation();

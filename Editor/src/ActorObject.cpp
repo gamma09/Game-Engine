@@ -5,7 +5,7 @@
 
 
 
-ActorObject::ActorObject( CLI::Browser* inBrowser, SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
+ActorObject::ActorObject( ID3D11Device* device, CLI::Browser* inBrowser, SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
 	: CLI::ContentObject(),
 	scene( scene ),
 	browser( inBrowser )
@@ -16,7 +16,7 @@ ActorObject::ActorObject( CLI::Browser* inBrowser, SceneAsset* scene, const Mode
 
 	{
 		YieldMutex::Lock lock = scene->LockScene();
-		this->asset = scene->AddActor( model, material, updateStrategy );
+		this->asset = scene->AddActor( device, model, material, updateStrategy );
 		this->asset->SetDeleteListener( this );
 	}
 

@@ -8,12 +8,12 @@
 #include "Engine.h"
 #include "GlobalHeaps.h"
 #include "ActorManager.h"
-#include "BoneManager.h"
 #include "CameraManager.h"
 #include "DirectionLightManager.h"
 #include "KeyBindingManager.h"
 #include "ModelBaseManager.h"
 #include "TextureManager.h"
+#include "DirectXAssert.h"
 
 
 
@@ -36,12 +36,16 @@ void Engine::run()
 		}
 		else
 		{
-			this->deviceContext->ClearRenderTargetView( this->renderTarget, DirectX::Colors::LightBlue );
-			this->deviceContext->ClearDepthStencilView( this->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
+			this->annotation->BeginEvent( L"Engine Frame" );
+			{
+				this->deviceContext->ClearRenderTargetView( this->renderTarget, DirectX::Colors::LightBlue );
+				this->deviceContext->ClearDepthStencilView( this->depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 
-			Draw();
+				Draw();
 
-			this->swapChain->Present( this->vsyncInterval, 0 );
+				this->swapChain->Present( this->vsyncInterval, 0 );
+			}
+			this->annotation->EndEvent();
 		}
 	}
 
@@ -64,12 +68,27 @@ void Engine::Update( uint32_t totalTimeMillis )
 
 void Engine::Draw()
 {
-	DrawInfo info;
-	info.camera = CameraManager::Instance()->Get_Active_Camera();
-	info.light = this->light;
-	info.context = this->deviceContext;
+	this->annotation->BeginEvent( L"Engine::Draw()" );
+	{
+		this->annotation->BeginEvent( L"Draw Lit Material" );
+		{
+			this->litTextureMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+		}
+		this->annotation->EndEvent();
 
-	this->sceneAsset->Draw( info );
+		this->annotation->BeginEvent( L"Draw Unlit Material" );
+		{
+			this->unlitTextureMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+		}
+		this->annotation->EndEvent();
+
+		this->annotation->BeginEvent( L"Draw Wireframe Material" );
+		{
+			this->wireframeMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+		}
+		this->annotation->EndEvent();
+	}
+	this->annotation->EndEvent();
 }
 
 void Engine::Close()
@@ -293,6 +312,8 @@ void Engine::SetupDirect3D()
 	}
 
 	GameCheckFatal( SUCCEEDED( hr ), "Failed to create D3D11 device." );
+	GameCheckFatalDx( this->deviceContext->QueryInterface( __uuidof( ID3DUserDefinedAnnotation ), reinterpret_cast<void**>( &this->annotation ) ), "Couldn't retrieve a user annotation struct from Device Context." );
+
 	UINT maxQualityLevel;
 	this->device->CheckMultisampleQualityLevels( DXGI_FORMAT_R8G8B8A8_UNORM, this->info[Samples], &maxQualityLevel );
 	while( !maxQualityLevel )
@@ -302,11 +323,11 @@ void Engine::SetupDirect3D()
 	}
 
 	IDXGIDevice* dxgiDevice = nullptr;
-	GameCheckFatal( SUCCEEDED( this->device->QueryInterface( __uuidof( IDXGIDevice ), reinterpret_cast<void**>( &dxgiDevice ) ) ), "Couldn't retrieve DXGIDevice." );
+	GameCheckFatalDx( this->device->QueryInterface( __uuidof( IDXGIDevice ), reinterpret_cast<void**>( &dxgiDevice ) ), "Couldn't retrieve DXGIDevice." );
 	IDXGIAdapter* adapter = nullptr;
-	GameCheckFatal( SUCCEEDED( dxgiDevice->GetAdapter( &adapter ) ), "Couldn't get the DXGI device adapter." );
+	GameCheckFatalDx( dxgiDevice->GetAdapter( &adapter ), "Couldn't get the DXGI device adapter." );
 	IDXGIFactory1* dxgiFactory = nullptr;
-	GameCheckFatal( SUCCEEDED( adapter->GetParent( __uuidof( IDXGIFactory1 ), reinterpret_cast<void**>( &dxgiFactory ) ) ), "Couldn't retrieve the DXGIFactory1 from the adapter." );
+	GameCheckFatalDx( adapter->GetParent( __uuidof( IDXGIFactory1 ), reinterpret_cast<void**>( &dxgiFactory ) ), "Couldn't retrieve the DXGIFactory1 from the adapter." );
 	adapter->Release();
 	dxgiDevice->Release();
 
@@ -355,8 +376,8 @@ void Engine::SetupDirect3D()
 		}
 
 		IDXGISwapChain1* tempSwapChain;
-		GameCheckFatal( SUCCEEDED( dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, &tempSwapChain ) ), "Could not create swap chain." );
-		GameCheckFatal( SUCCEEDED( tempSwapChain->QueryInterface( __uuidof( IDXGISwapChain ), reinterpret_cast<void**>( &this->swapChain ) ) ), "Could not retrieve regular swap chain from SwapChain1" );
+		GameCheckFatalDx(  dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, &tempSwapChain ), "Could not create swap chain." );
+		GameCheckFatalDx(  tempSwapChain->QueryInterface( __uuidof( IDXGISwapChain ), reinterpret_cast<void**>( &this->swapChain ) ), "Could not retrieve regular swap chain from SwapChain1" );
 		dxgiFactory2->Release();
 	}
 	else
@@ -386,7 +407,7 @@ void Engine::SetupDirect3D()
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		GameCheckFatal( SUCCEEDED( dxgiFactory->CreateSwapChain( this->device, &sd, &this->swapChain ) ), "Could not create swap chain." );
+		GameCheckFatalDx(  dxgiFactory->CreateSwapChain( this->device, &sd, &this->swapChain ), "Could not create swap chain." );
 		if( this->info[Fullscreen] )
 		{
 			this->swapChain->SetFullscreenState( TRUE, nullptr );
@@ -399,8 +420,8 @@ void Engine::SetupDirect3D()
 
 	// Create render target view
 	ID3D11Texture2D* pBackBuffer;
-	GameCheckFatal( SUCCEEDED( this->swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &pBackBuffer ) ) ), "Could not retrieve back buffer." );
-	GameCheckFatal( SUCCEEDED( this->device->CreateRenderTargetView( pBackBuffer, nullptr, &this->renderTarget ) ), "Could not create render target." );
+	GameCheckFatalDx(  this->swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &pBackBuffer ) ), "Could not retrieve back buffer." );
+	GameCheckFatalDx(  this->device->CreateRenderTargetView( pBackBuffer, nullptr, &this->renderTarget ), "Could not create render target." );
 	pBackBuffer->Release();
 
 	// Create depth stencil texture
@@ -416,7 +437,7 @@ void Engine::SetupDirect3D()
 	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthDesc.CPUAccessFlags = 0;
 	depthDesc.MiscFlags = 0;
-	GameCheckFatal( SUCCEEDED( this->device->CreateTexture2D( &depthDesc, nullptr, &this->depthStencil ) ), "Could not create depth stencil texture." );
+	GameCheckFatalDx(  this->device->CreateTexture2D( &depthDesc, nullptr, &this->depthStencil ), "Could not create depth stencil texture." );
 
 	// Create the depth stencil view
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -424,7 +445,7 @@ void Engine::SetupDirect3D()
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 	dsvDesc.Flags = 0;
-	GameCheckFatal( SUCCEEDED( this->device->CreateDepthStencilView( this->depthStencil, &dsvDesc, &this->depthStencilView ) ), "Could not create depth stencil view." );
+	GameCheckFatalDx(  this->device->CreateDepthStencilView( this->depthStencil, &dsvDesc, &this->depthStencilView ), "Could not create depth stencil view." );
 
 	this->deviceContext->OMSetRenderTargets( 1, &this->renderTarget, this->depthStencilView );
 
@@ -492,6 +513,7 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	AnimHeap::Create();
 	AssetHeap::Create();
 	EventHeap::Create();
+	ModelHeap::Create();
 
 	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
 
@@ -501,7 +523,6 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	ActorManager::Create( this->managerHeap, 12, 1 );
 	DirectionLightManager::Create( this->managerHeap, 1, 1 );
 	KeyBindingManager::Create( this->managerHeap, 4, 2 );
-	BoneManager::Create( this->managerHeap, 100, 10 );
 }
 
 Engine::~Engine()
@@ -512,10 +533,10 @@ Engine::~Engine()
 	TextureManager::Destroy();
 	CameraManager::Destroy();
 	ModelBaseManager::Destroy();
-	BoneManager::Destroy();
 
 	Mem::destroyHeap( this->managerHeap );
 
+	ModelHeap::Create();
 	EventHeap::Destroy();
 	AssetHeap::Destroy();
 	AnimHeap::Destroy();

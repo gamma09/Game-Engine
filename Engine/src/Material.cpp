@@ -5,8 +5,11 @@
 #include "Material.h"
 #include "GlobalHeaps.h"
 #include "MemorySetup.h"
-#include "DrawInfo.h"
+#include "ModelBaseManager.h"
 #include "ModelBase.h"
+#include "Model.h"
+#include "Camera.h"
+#include "DirectXAssert.h"
 
 
 //---------------------------------------------------------------------------------------------------------
@@ -80,14 +83,14 @@ void Material::Destroy()
 		this->vertexShader->Release();
 	}
 	
-	if( this->vertexShaderBuffers != nullptr )
+	if( this->extraVertexShaderBuffers != nullptr )
 	{
 		for( unsigned int i = 0; i < this->vertexShaderBufferCount; i++ )
 		{
-			this->vertexShaderBuffers[i]->Release();
+			this->extraVertexShaderBuffers[i]->Release();
 		}
 
-		delete this->vertexShaderBuffers;
+		delete this->extraVertexShaderBuffers;
 	}
 	
 	if( this->pixelShaderSamplers != nullptr )
@@ -106,10 +109,11 @@ Material::~Material()
 	this->Destroy();
 }
 
+
 Material::Material( const char* shaderFileBase, ID3D11Device* device )
 	: inputLayout( nullptr ),
 	vertexShader( nullptr ),
-	vertexShaderBuffers( nullptr ),
+	extraVertexShaderBuffers( nullptr ),
 	pixelShader( nullptr ),
 	pixelShaderBuffers( nullptr ),
 	pixelShaderSamplers( nullptr )
@@ -123,7 +127,7 @@ Material::Material( const char* shaderFileBase, ID3D11Device* device )
 
 	unsigned long size;
 	char* vertexShaderData = Load_File( file, size );
-	GameCheckFatal( SUCCEEDED( device->CreateVertexShader( vertexShaderData, size, nullptr, &this->vertexShader ) ), "Could not load compiled vertex shader." );
+	GameCheckFatalDx(  device->CreateVertexShader( vertexShaderData, size, nullptr, &this->vertexShader ), "Could not load compiled vertex shader." );
 
 	SetupInputLayout( device, vertexShaderData, size );
 	delete vertexShaderData;
@@ -132,35 +136,57 @@ Material::Material( const char* shaderFileBase, ID3D11Device* device )
 	strcat_s( file, ".ps.cso" );
 
 	char* pixelShaderData = Load_File( file, size );
-	GameCheckFatal( SUCCEEDED( device->CreatePixelShader( pixelShaderData, size, nullptr, &this->pixelShader ) ), "Could not load compiled pixel shader." );
+	GameCheckFatalDx(  device->CreatePixelShader( pixelShaderData, size, nullptr, &this->pixelShader ), "Could not load compiled pixel shader." );
 	delete pixelShaderData;
 }
 
-#define INPUT_LAYOUT_DESC_COUNT 3
+#define INPUT_LAYOUT_DESC_COUNT 11
 void Material::SetupInputLayout( ID3D11Device* device, const char* vertexShaderData, unsigned long dataSize )
 {
 	D3D11_INPUT_ELEMENT_DESC layout[INPUT_LAYOUT_DESC_COUNT] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 1, DXGI_FORMAT_R32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 2, DXGI_FORMAT_R32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 3, DXGI_FORMAT_R32_FLOAT, 0, 52, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 0, DXGI_FORMAT_R32_UINT, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 1, DXGI_FORMAT_R32_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 2, DXGI_FORMAT_R32_UINT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 3, DXGI_FORMAT_R32_UINT, 0, 68, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		
 	};
 
-	GameCheckFatal( SUCCEEDED( device->CreateInputLayout( layout, INPUT_LAYOUT_DESC_COUNT, vertexShaderData, dataSize, &this->inputLayout ) ), "Could not create vertex shader input layout." );
+	GameCheckFatalDx(  device->CreateInputLayout( layout, INPUT_LAYOUT_DESC_COUNT, vertexShaderData, dataSize, &this->inputLayout ), "Could not create vertex shader input layout." );
 }
 
-void Material::Draw( const DrawInfo& info ) const
+void Material::Draw( Camera* camera, const DirectionLight* light, ID3D11DeviceContext* context, ID3DUserDefinedAnnotation* annotation ) const
 {
-	info.context->IASetInputLayout( this->inputLayout );
-	info.context->VSSetShader( this->vertexShader, nullptr, 0 );
-	info.context->PSSetShader( this->pixelShader, nullptr, 0 );
+	annotation->BeginEvent( L"Shader Setup" );
+	{
+		context->IASetInputLayout( this->inputLayout );
+		context->VSSetShader( this->vertexShader, nullptr, 0 );
+		context->PSSetShader( this->pixelShader, nullptr, 0 );
 
-	this->PrepareBuffers( info );
+		camera->Update_Buffers( context );
 
-	info.context->VSSetConstantBuffers( 0, this->vertexShaderBufferCount, this->vertexShaderBuffers );
-	info.context->PSSetConstantBuffers( 0, this->pixelShaderBufferCount, this->pixelShaderBuffers );
-	info.context->PSSetSamplers( 0, this->pixelShaderSamplerCount, this->pixelShaderSamplers );
+		this->PrepareBuffers( context, light );
+		context->VSSetConstantBuffers( 5, this->vertexShaderBufferCount, this->extraVertexShaderBuffers );
+		context->PSSetConstantBuffers( 5, this->pixelShaderBufferCount, this->pixelShaderBuffers );
+		context->PSSetSamplers( 0, this->pixelShaderSamplerCount, this->pixelShaderSamplers );
 
-	// TODO This will change when skinning is finished
-	info.model->Draw( info );
+		context->RSSetState( this->rasterizer );
+	}
+	annotation->EndEvent();
+
+	annotation->BeginEvent( L"Draw All ModelBases" );
+	{
+		for( auto modelBase = ModelBaseManager::Instance()->Active_Iterator(); !modelBase.Is_At_End(); modelBase++ )
+		{
+			static_cast<ModelBase&>( *modelBase ).Draw( context, this, camera, annotation );
+		}
+	}
+	annotation->EndEvent();
 }

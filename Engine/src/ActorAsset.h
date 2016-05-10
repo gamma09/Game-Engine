@@ -4,7 +4,6 @@
 #include <Reflection.h>
 #include "Asset.h"
 #include "ModelAsset.h"
-#include "DrawInfo.h"
 
 class Actor;
 class Material;
@@ -16,7 +15,7 @@ class ActorAsset : public Asset<ActorAsset>
 	REFLECTED_CLASS( ActorAsset );
 public:
 	ActorAsset();
-	ActorAsset( const char* name, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
+	ActorAsset( ID3D11Device* device, const char* name, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
 
 	// Assets should not be deleted directly - call DeleteAsset() instead
 	virtual ~ActorAsset() override;
@@ -25,7 +24,6 @@ public:
 	bool operator==( const ActorAsset& actor ) const;
 
 	void Update( uint32_t totalTimeMillis ) const;
-	void Draw( DrawInfo& info ) const;
 
 
 private:

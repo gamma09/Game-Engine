@@ -15,7 +15,7 @@ class KeyFrame
 {
 public:
 	KeyFrame();
-	KeyFrame( uint32_t boneCount, const unsigned char* rawFrameData );
+	KeyFrame( uint32_t boneCount, unsigned char*& rawFrameData );
 	KeyFrame( const KeyFrame& frame );
 	KeyFrame& operator=( const KeyFrame& frame );
 	~KeyFrame();

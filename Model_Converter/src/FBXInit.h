@@ -1,8 +1,10 @@
 #pragma once
 
-#pragma warning( push, 3 )
+#include <string>
+
+using namespace std;
+
 #include <fbxsdk.h>
-#pragma warning( pop )
 
 void InitializeSdkObjects( FbxManager*& pManager, FbxScene*& pScene );
-void LoadScene( FbxManager* pManager, FbxDocument* pScene, const char* path, const char* filename );
+void LoadScene( FbxManager* pManager, FbxDocument* pScene, const string& path, const string& filename );

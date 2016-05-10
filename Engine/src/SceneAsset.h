@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <Reflection.h>
 #include "Asset.h"
-#include "DrawInfo.h"
 #include "YieldMutex.h"
 
 class ModelAsset;
@@ -26,7 +25,7 @@ public:
 	virtual ~SceneAsset() override;
 
 	ModelAsset* AddModel( ID3D11Device* device, const char* archiveName );
-	ActorAsset* AddActor( const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
+	ActorAsset* AddActor( ID3D11Device* device, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
 
 	void RemoveActor( const ActorAsset& actor );
 
@@ -40,7 +39,6 @@ public:
 	bool Exists( const char* assetName );
 
 	void Update( uint32_t totalTimeMillis );
-	void Draw( DrawInfo& info );
 
 	YieldMutex::Lock LockScene();
 

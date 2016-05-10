@@ -5,10 +5,12 @@
 #include "Vertex.h"
 #include "Triangle.h"
 #include "Texture.h"
-#include "AnimationInfo.h"
+#include "Animation.h"
+#include "Bone.h"
 
 using namespace std;
 
+#define TITLE_SIZE 20
 
 class ModelData
 {
@@ -23,6 +25,11 @@ public:
 	unsigned int Add_Vertex( const Vertex& v );
 	void Add_Triangle( const Vertex& v0, const Vertex& v1, const Vertex& v2 );
 	void Add_Texture( const char* textureName, const char* textureFile );
+	int Add_Bone( const Bone& bone );
+	void Add_Animation( const Animation& anim );
+	void Add_Influence( int controlPointIndex, const BoneInfluence& influence );
+
+	void Bind_Bone( unsigned int boneIndex, const Matrix& invBindMatrix );
 
 	void Set_Triangle_Texture( const unsigned int triangle, const short texture );
 
@@ -35,20 +42,23 @@ public:
 	const vector<Triangle>& Get_Triangle_List() const;
 	const vector<Texture>& Get_Texture_List() const;
 	const vector<short>& Get_Triangle_Texture_List() const;
-	AnimationInfo& Get_Animation_Info();
+	const vector<Bone>& Get_Bones() const;
+	const vector<Animation> Get_Animations() const;
 
 	void Get_Bounding_Sphere( float& radius, float& centerX, float& centerY, float& centerZ ) const;
+
+	void Normalize_Influences();
 
 private:
 
 	char* filename;
-	char title[20];
-
-	AnimationInfo animInfo;
+	char title[TITLE_SIZE];
 
 	vector<Vertex> vertexList;
 	vector<Triangle> triangleList;
 	vector<short> triangleTextureList;
 	vector<Texture> textureList;
+	vector<Animation> anims;
+	vector<Bone> bones;
 
 };

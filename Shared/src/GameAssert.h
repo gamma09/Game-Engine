@@ -13,7 +13,7 @@
 #include <crtdbg.h>
 	
 	#define GameVerify(a) assert(a)
-#define GameCheckFatal( a, msg )  (void) ((!!(a)) || \
+	#define GameCheckFatal( a, msg )  (void) ((!!(a)) || \
                 (1 != _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, NULL, "%s", msg)) || \
                 (_CrtDbgBreak(), 0))
 

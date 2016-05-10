@@ -3,6 +3,8 @@
 #include <MathEngine.h>
 #include <climits>
 
+#include "DebugPrint.h"
+
 
 ModelData::ModelData() :
 	vertexList(),
@@ -109,6 +111,34 @@ void ModelData::Add_Texture( const char* textureName, const char* textureFile )
 	this->textureList.push_back( texture );
 }
 
+int ModelData::Add_Bone( const Bone& bone )
+{
+	int index = this->bones.size();
+	this->bones.push_back( bone );
+	return index;
+}
+
+void ModelData::Add_Animation( const Animation& anim )
+{
+	this->anims.push_back( anim );
+}
+
+void ModelData::Add_Influence( int controlPointIndex, const BoneInfluence& influence )
+{
+	for( unsigned int i = 0; i < this->vertexList.size(); i++ )
+	{
+		if( this->vertexList[i].ControlPointIndex == controlPointIndex )
+		{
+			this->vertexList[i].Add_Bone_Influence( influence );
+		}
+	}
+}
+
+void ModelData::Bind_Bone( unsigned int boneIndex, const Matrix& invBindMatrix )
+{
+	this->bones[boneIndex].invBindMatrix = invBindMatrix;
+}
+
 void ModelData::Set_Triangle_Texture( const unsigned int triangle, const short texture )
 {
 	this->triangleTextureList[triangle] = texture;
@@ -127,7 +157,8 @@ void ModelData::Set_Base_Filename( const char* fbxFilename )
 
 void ModelData::Set_Title( const char* _title )
 {
-	strcpy_s( this->title, _title );
+	this->title[TITLE_SIZE - 1] = 0;
+	strncpy_s( this->title, _title, TITLE_SIZE - 1 );
 
 	// Convert title to lower case (for when the engine is loading it in)
 	for( int i = strlen( this->title ) - 1; i >= 0; i-- )
@@ -167,9 +198,14 @@ const vector<short>& ModelData::Get_Triangle_Texture_List() const
 	return this->triangleTextureList;
 }
 
-AnimationInfo& ModelData::Get_Animation_Info()
+const vector<Bone>& ModelData::Get_Bones() const
 {
-	return this->animInfo;
+	return this->bones;
+}
+
+const vector<Animation> ModelData::Get_Animations() const
+{
+	return this->anims;
 }
 
 void ModelData::Get_Bounding_Sphere( float& radius, float& centerX, float& centerY, float& centerZ ) const
@@ -231,4 +267,12 @@ void ModelData::Get_Bounding_Sphere( float& radius, float& centerX, float& cente
 	}
 
 	radius = sqrtf( radiusSqr );
+}
+
+void ModelData::Normalize_Influences()
+{
+	for( Vertex v : this->vertexList )
+	{
+		v.Normalize_Bone_Influences();
+	}
 }

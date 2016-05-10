@@ -29,10 +29,10 @@ void CameraManager::Destroy()
 	instance = 0;
 }
 
-Camera* const CameraManager::Add( const PerspectiveData& perspective, const OrientationData& orientation )
+Camera* const CameraManager::Add( ID3D11Device* device, const PerspectiveData& perspective, const OrientationData& orientation )
 {
 	Camera* camera = static_cast<Camera*>( this->Add_Object() );
-	camera->Set( perspective, orientation );
+	camera->Set( device, perspective, orientation );
 
 	if( this->activeCamera == 0 )
 		this->activeCamera = camera;

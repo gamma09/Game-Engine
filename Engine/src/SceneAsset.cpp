@@ -94,7 +94,7 @@ ModelAsset* SceneAsset::AddModel( ID3D11Device* device, const char* archiveFile 
 	return asset;
 }
 
-ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
+ActorAsset* SceneAsset::AddActor( ID3D11Device* device, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
 {
 	GameAssert( this->Contains( model ) );
 
@@ -122,7 +122,7 @@ ActorAsset* SceneAsset::AddActor( const ModelAsset& model, const Material* mater
 	// Make sure we didn't hit the 10000 instance cap
 	GameAssert( !this->ExistsInLock( actorName ) );
 
-	ActorAsset* asset = new( AssetHeap::Instance(), ALIGN_4 ) ActorAsset( actorName, model, material, updateStrategy );
+	ActorAsset* asset = new( AssetHeap::Instance(), ALIGN_4 ) ActorAsset( device, actorName, model, material, updateStrategy );
 
 	delete actorName;
 
@@ -244,16 +244,6 @@ void SceneAsset::Update( uint32_t totalTimeMillis )
 	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
 	{
 		actor->Update( totalTimeMillis );
-	}
-}
-
-void SceneAsset::Draw( DrawInfo& info )
-{
-	YieldMutex::Lock lock = this->LockScene();
-
-	for( const ActorAsset* actor = this->actorsHead; actor != nullptr; actor = actor->next )
-	{
-		actor->Draw( info );
 	}
 }
 

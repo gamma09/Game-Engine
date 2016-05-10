@@ -15,17 +15,16 @@ Animation::Animation()
 	// Do nothing
 }
 
-Animation::Animation( uint32_t boneCount, const unsigned char* frameData )
-	: keyFrameCount( *reinterpret_cast<const uint32_t*>( frameData ) )
+Animation::Animation( uint32_t boneCount, unsigned char*& frameData )
 {
+	this->keyFrameCount = *reinterpret_cast<const uint32_t*>( frameData );
+	frameData += sizeof( uint32_t );
+
 	this->keyFrames = newArray( KeyFrame, this->keyFrameCount, AnimHeap::Instance(), ALIGN_4 );
 
-	const unsigned char* framePtr = frameData + sizeof( uint32_t ) / sizeof( unsigned char );
-	const uint32_t frameSize = ( sizeof( uint32_t ) + boneCount * sizeof( Transform ) ) / sizeof( unsigned char );
-
-	for( uint32_t i = 0; i < this->keyFrameCount; i++, framePtr += frameSize )
+	for( uint32_t i = 0; i < this->keyFrameCount; i++ )
 	{
-		this->keyFrames[i] = KeyFrame( boneCount, framePtr );
+		this->keyFrames[i] = KeyFrame( boneCount, frameData );
 	}
 }
 

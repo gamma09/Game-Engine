@@ -11,7 +11,6 @@
 #include <DirectionLightManager.h>
 #include <Camera.h>
 #include <DirectionLight.h>
-#include <DrawInfo.h>
 #include <DebuggerSetup.h>
 #include <ActorAsset.h>
 
@@ -57,7 +56,7 @@ void Game::LoadContent()
 	orientation.lookAt = Vect( 0.0f, 0.0f, 0.0f );
 	orientation.up = Vect( 0.0f, 1.0f, 0.0f );
 
-	this->moveableCamera = CameraManager::Instance()->Add( perspective, orientation );
+	this->moveableCamera = CameraManager::Instance()->Add( this->device, perspective, orientation );
 
 
 	// W - move forward
@@ -74,25 +73,25 @@ void Game::LoadContent()
 	this->sceneAsset = new( AssetHeap::Instance(), ALIGN_4 ) SceneAsset( "Test Scene" );
 
 	ModelAsset* model = this->sceneAsset->AddModel( this->device, "../resources/soldier_animated_jump.spu" );
-	ActorAsset* actor1 = this->sceneAsset->AddActor( *model, this->unlitTextureMaterial, updater );
+	ActorAsset* actor1 = this->sceneAsset->AddActor( this->device, *model, this->unlitTextureMaterial, updater );
 	actor1->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	actor1->GetActor()->Update_Model_Matrix();
 	actor1->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
-	ActorAsset* actor2 = this->sceneAsset->AddActor( *model, this->unlitTextureMaterial, updater );
+	ActorAsset* actor2 = this->sceneAsset->AddActor( this->device, *model, this->unlitTextureMaterial, updater );
 	actor2->GetActor()->position[X] = -125.0f;
 	actor2->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	actor2->GetActor()->Update_Model_Matrix();
 	actor2->GetActor()->Get_Model().Start_Animation( 500, 0 );
 
 	ModelAsset* model2 = this->sceneAsset->AddModel( this->device, "../resources/teddy_tga.spu" );
-	ActorAsset* actor3 = this->sceneAsset->AddActor( *model2, this->unlitTextureMaterial, updater );
+	ActorAsset* actor3 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
 	actor3->GetActor()->position[Y] = -175.0f;
 	actor3->GetActor()->Get_Model().Change_Active_Texture( 1 );
 	actor3->GetActor()->Update_Model_Matrix();
 	actor3->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
-	ActorAsset* actor4 = this->sceneAsset->AddActor( *model2, this->unlitTextureMaterial, updater );
+	ActorAsset* actor4 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
 	actor4->GetActor()->position[X] = -125.0f;
 	actor4->GetActor()->position[Y] = -175.0f;
 	actor4->GetActor()->Get_Model().Change_Active_Texture( 1 );

@@ -61,6 +61,7 @@ private:
 protected:
 	ID3D11Device* device;
 	ID3D11DeviceContext* deviceContext;
+	ID3DUserDefinedAnnotation* annotation;
 
 	Timer updateTimer;
 	Time totalTime;
@@ -82,7 +83,6 @@ protected:
 	ID3D11RenderTargetView* renderTarget;
 	ID3D11Texture2D* depthStencil;
 	ID3D11DepthStencilView* depthStencilView;
-	// ID3D11RasterizerState* rasterizer; front is CW
 	unsigned int vsyncInterval;
 
 	HWND hWindow;

@@ -5,11 +5,12 @@
 #include <Browser.h>
 
 class SceneAsset;
+struct ID3D11Device;
 
 class ActorObject : public CLI::ContentObject, public AssetDeleteListener<ActorAsset>
 {
 public:
-	ActorObject( CLI::Browser* browser, SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
+	ActorObject( ID3D11Device* device, CLI::Browser* browser, SceneAsset* scene, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy );
 	virtual ~ActorObject() override;
 
 	ActorAsset* GetActorAsset() const;

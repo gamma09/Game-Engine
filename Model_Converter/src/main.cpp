@@ -1,13 +1,15 @@
 #define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
 #include <Windows.h>
 
 #include <cstring>
 #include <cstdio>
 #include <GameAssert.h>
+#include <Logger.h>
 
 #include "ErrorFormatter.h"
 #include "ModelData.h"
-#include "FBXReader.h"
+#include "FBXImporter.h"
 #include "ModelWriter.h"
 
 
@@ -22,7 +24,7 @@ void print_usage( const char* fullPath, bool displayFullHelp )
 		filename = lastSlash + 1;
 
 	fprintf( stderr, "USAGE:\n" );
-	fprintf( stderr, "   %s path\\to\\file.fbx version [-include texture.tga]\n", filename );
+	fprintf( stderr, "   %s path\\to\\file.fbx [-include texture.tga]\n", filename );
 	fprintf( stderr, "\n" );
 
 	if( !displayFullHelp )
@@ -38,10 +40,6 @@ void print_usage( const char* fullPath, bool displayFullHelp )
 		fprintf( stderr, "                FBX file may be specified for each execution of this command.\n" );
 		fprintf( stderr, "                All texture data associated with the FBX file will be included\n" );
 		fprintf( stderr, "                in the created archive. This parameter is required.\n" );
-		fprintf( stderr, "\n" );
-		fprintf( stderr, "     version    The version of the asset to write into the archive meta info.\n" );
-		fprintf( stderr, "                This string must be 19 characters or shorter. This parameter is\n" );
-		fprintf( stderr, "                required.\n" );
 		fprintf( stderr, "\n" );
 		fprintf( stderr, "\n" );
 		fprintf( stderr, "OPTIONS\n" );
@@ -107,11 +105,13 @@ void Parse_Path( const char* fbxFilePath, char*& path, char*& filename )
 
 
 
-
+const static char* const MODEL_CONVERTER_VERSION = "1.1";
 
 
 int main( int argc, char* argv[] )
 {
+	Logger::Start_Log( "converter.log", false );
+
 	for( int i = 0; i < argc; i++ )
 		to_lower( argv[i] );
 
@@ -127,12 +127,7 @@ int main( int argc, char* argv[] )
 		return ERROR_SUCCESS;
 	}
 
-	if( argc == 2 )
-	{
-		Print_Error_Message( "Error: Not enough arguments." );
-		return ERROR_BAD_ARGUMENTS;
-	}
-	if( argc > 5 )
+	if( argc > 4 )
 	{
 		Print_Error_Message( "Error: Too many arguments." );
 		return ERROR_BAD_ARGUMENTS;
@@ -140,7 +135,6 @@ int main( int argc, char* argv[] )
 
 	char* path;
 	char* fbxFilename;
-	char* version = new char[20];
 
 	Parse_Path( argv[1], path, fbxFilename );
 
@@ -156,32 +150,24 @@ int main( int argc, char* argv[] )
 		return ERROR_BAD_ARGUMENTS;
 	}
 
-	if( strlen( argv[2] ) >= 20 )
+	FBXImporter importer;
+	importer.Import( path, fbxFilename );
+
+	if( argc == 4 )
 	{
-		Print_Error_Message( "Error: version string must be less than 20 characters long.\n" );
-		return ERROR_BAD_ARGUMENTS;
-	}
-
-	strcpy_s( version, 20, argv[2] );
-
-	ModelData model;
-	model.Set_Base_Filename( fbxFilename );
-
-	FBXReader::Read( model, path, fbxFilename );
-
-	if( argc == 5 )
-	{
-		if( strcmp( argv[3], "-include" ) != 0 )
+		if( strcmp( argv[2], "-include" ) != 0 )
 		{
 			Print_Error_Message( "Error: unknown parameter/option.\n" );
 			return ERROR_BAD_ARGUMENTS;
 		}
 
-		char* additionalTexture = argv[4];
-		model.Add_Texture( additionalTexture, additionalTexture );
+		char* additionalTexture = argv[3];
+		importer.Add_Extra_Texture( additionalTexture );
 	}
 
-	ModelWriter::Write( model, path, model.Get_Base_Filename(), version );
+	ModelWriter::Write( importer.GetModelData(), path, MODEL_CONVERTER_VERSION );
+
+	Logger::Stop_Log();
 
 	return ERROR_SUCCESS;
 }

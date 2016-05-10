@@ -1,40 +1,19 @@
-
-//*****************************************************************************
-// Shader "Uniforms" (they're called constant buffers in DirectX)
-//*****************************************************************************
-#pragma pack_matrix( row_major )
-
-cbuffer cbCameraMatrices : register( b0 )
-{
-	float4x4 View;
-	float4x4 Projection;
-	float4x4 World;
-};
-
-
-
-//*****************************************************************************
-// Vertex shader inputs and outputs
-//*****************************************************************************
-
-struct VS_INPUT
-{
-	float4 position : POSITION;
-	float2 tc : TEXCOORD0;
-	float4 vertex_normal : NORMAL; // unused
-};
-
-struct VS_OUTPUT
-{
-	float4 position : SV_POSITION;
-	float2 tc : TEXCOORD0;
-};
-
+#include "Input.hlsli"
+#include "Skinning.hlsli"
+#include "UnlitTexture.hlsli"
 
 VS_OUTPUT main( VS_INPUT input )
 {
+	// Pre-computes the world * view * projection matrix (DirectX hlsl compiler will
+	// actually move this calculation before the vertex shader, so that it will be computed
+	// only once for every draw call)
+	float4x4 preWorldViewProj = PreshaderComputeWorldViewProjection();
+
+	float4 skinnedPosition = SkinVertex( input.position, input.boneIndices0, input.boneIndices1, input.boneIndices2, input.boneIndices3,
+	                                     input.boneWeights0, input.boneWeights1, input.boneWeights2, input.boneWeights3 );
+
 	VS_OUTPUT output;
-	output.position = mul( mul( mul( input.position, World ), View ), Projection );
+	output.position = mul( skinnedPosition, preWorldViewProj );
 	output.tc = input.tc;
 
 	return output;

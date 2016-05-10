@@ -1,7 +1,10 @@
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
+#define WIN32_EXTRA_LEAN
 #include <Windows.h>
+
+#define TEXTURE_NAME_SIZE 20
 
 class Texture
 {
@@ -22,7 +25,7 @@ private:
 
 
 
-	char textureName[20];
+	char textureName[TEXTURE_NAME_SIZE];
 	char textureFile[MAX_PATH];
 
 };

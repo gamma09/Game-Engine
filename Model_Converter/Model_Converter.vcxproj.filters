@@ -88,9 +88,6 @@
     <ClCompile Include="src\ModelWriter.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\FBXReader.cpp">
-      <Filter>FBX</Filter>
-    </ClCompile>
     <ClCompile Include="src\FBXInit.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
@@ -109,11 +106,14 @@
     <ClCompile Include="src\Animation.cpp">
       <Filter>Model\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\AnimationInfo.cpp">
-      <Filter>Model\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="src\Frame.cpp">
       <Filter>Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugPrint.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FBXImporter.cpp">
+      <Filter>FBX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="src\ModelWriter.h">
       <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FBXReader.h">
-      <Filter>FBX</Filter>
     </ClInclude>
     <ClInclude Include="src\FBXInit.h">
       <Filter>FBX</Filter>
@@ -148,9 +145,6 @@
       <Filter>Model\Animation</Filter>
     </ClInclude>
     <ClInclude Include="src\Frame.h">
-      <Filter>Model\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AnimationInfo.h">
       <Filter>Model\Animation</Filter>
     </ClInclude>
     <ClInclude Include="src\Bone.h">
@@ -843,6 +837,12 @@
     <ClInclude Include="libs\fbx\include\fbxsdk\utils\fbxusernotification.h">
       <Filter>_libs\fbx\include\fbxsdk\utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\DebugPrint.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FBXImporter.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\fbx\lib\libfbxsdk_d32.lib">
@@ -853,11 +853,11 @@
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libs\fbx\dll\libfbxsdk_d32.dll">
+    <ContentWithTargetPath Include="libs\fbx\dll\libfbxsdk_d32.dll">
       <Filter>_libs\fbx\dll</Filter>
-    </None>
-    <None Include="libs\fbx\dll\libfbxsdk_r32.dll">
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="libs\fbx\dll\libfbxsdk_r32.dll">
       <Filter>_libs\fbx\dll</Filter>
-    </None>
+    </ContentWithTargetPath>
   </ItemGroup>
 </Project>

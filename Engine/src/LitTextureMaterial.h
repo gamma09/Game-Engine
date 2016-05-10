@@ -11,13 +11,14 @@ public:
 	LitTextureMaterial( ID3D11Device* device );
 
 protected:
-	virtual void PrepareBuffers( const DrawInfo& info ) const override;
+	virtual void PrepareBuffers( ID3D11DeviceContext* context, const DirectionLight* light ) const override;
 
 
 private:
 	void SetupVertexShaderBuffers( ID3D11Device* device );
 	void SetupPixelShaderBuffers( ID3D11Device* device );
 	void SetupPixelShaderSamplers( ID3D11Device* device );
+	void SetupRasterizer( ID3D11Device* device );
 
 
 	LitTextureMaterial( const LitTextureMaterial& ) = delete;

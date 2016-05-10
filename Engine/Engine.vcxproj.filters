@@ -16,32 +16,29 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{c668a317-696f-4179-80dd-0f5f94f98cc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{49da30c7-2f5b-4a37-ba30-b3d0ee36dce6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{9d97b1ae-80b7-441e-a873-5c9977405686}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{2b60d538-2cca-4d4f-8edc-ff6f294da3ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Draw">
-      <UniqueIdentifier>{173c58a5-9e3c-4e15-8940-77134ff6efd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Update">
       <UniqueIdentifier>{3c3182cf-217e-49cb-bc73-a1180da780f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Material">
-      <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Material\HLSL">
-      <UniqueIdentifier>{72344d0a-69c5-43b1-846e-346972e97a29}</UniqueIdentifier>
     </Filter>
     <Filter Include="Asset">
       <UniqueIdentifier>{7d94c3a1-3099-47cd-b3e8-1294ca04f848}</UniqueIdentifier>
     </Filter>
     <Filter Include="Asset\Events">
       <UniqueIdentifier>{d02fb3ac-9222-42f4-85b4-ef72f46445c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{49da30c7-2f5b-4a37-ba30-b3d0ee36dce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\HLSL">
+      <UniqueIdentifier>{72344d0a-69c5-43b1-846e-346972e97a29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,28 +76,22 @@
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Animation.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Bone.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BoneManager.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\HierarchyElement.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\KeyFrame.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\Model.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\ModelBase.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\ModelBaseManager.cpp">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="src\GlobalHeaps.cpp">
       <Filter>Utility</Filter>
@@ -112,16 +103,16 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\LitTextureMaterial.cpp">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="src\Material.cpp">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="src\UnlitTextureMaterial.cpp">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="src\WireframeMaterial.cpp">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="src\ModelAsset.cpp">
       <Filter>Asset</Filter>
@@ -148,9 +139,6 @@
     </ClInclude>
     <ClInclude Include="src\ActorManager.h">
       <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DrawInfo.h">
-      <Filter>Core\Draw</Filter>
     </ClInclude>
     <ClInclude Include="src\Moveable.h">
       <Filter>Core\Update</Filter>
@@ -186,31 +174,22 @@
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="src\Animation.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Bone.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BoneManager.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\HierarchyElement.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\KeyFrame.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\Model.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\ModelBase.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\ModelBaseManager.h">
-      <Filter>Model</Filter>
+      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="src\GlobalHeaps.h">
       <Filter>Utility</Filter>
@@ -228,16 +207,16 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\LitTextureMaterial.h">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\Material.h">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\UnlitTextureMaterial.h">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\WireframeMaterial.h">
-      <Filter>Material</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineMessages.h">
       <Filter>Core</Filter>
@@ -269,25 +248,42 @@
     <ClInclude Include="src\Asset.h">
       <Filter>Asset</Filter>
     </ClInclude>
+    <ClInclude Include="src\DirectXAssert.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="hlsl\LitTexture.vs.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\UnlitTexture.vs.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\UnlitTexture.ps.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\LitTexture.ps.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\Wireframe.vs.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\Wireframe.ps.hlsl">
-      <Filter>Material\HLSL</Filter>
+      <Filter>Materials\HLSL</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hlsl\UnlitTexture.hlsli">
+      <Filter>Materials\HLSL</Filter>
+    </None>
+    <None Include="hlsl\LitTexture.hlsli">
+      <Filter>Materials\HLSL</Filter>
+    </None>
+    <None Include="hlsl\Skinning.hlsli">
+      <Filter>Materials\HLSL</Filter>
+    </None>
+    <None Include="hlsl\Input.hlsli">
+      <Filter>Materials\HLSL</Filter>
+    </None>
   </ItemGroup>
 </Project>

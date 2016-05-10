@@ -8,7 +8,7 @@
 #include "Camera.h"
 #include "DirectionLight.h"
 #include "Texture.h"
-#include "DrawInfo.h"
+#include "DirectXAssert.h"
 
 
 LitTextureMaterial::LitTextureMaterial()
@@ -23,6 +23,7 @@ LitTextureMaterial::LitTextureMaterial( ID3D11Device* device )
 	SetupVertexShaderBuffers( device );
 	SetupPixelShaderBuffers( device );
 	SetupPixelShaderSamplers( device );
+	SetupRasterizer( device );
 }
 
 LitTextureMaterial::~LitTextureMaterial()
@@ -30,40 +31,21 @@ LitTextureMaterial::~LitTextureMaterial()
 	// Do nothing
 }
 
-#define CAMERA_MATRICES_BUFFER_INDEX 0
-#define LIGHT_DATA_BUFFER_INDEX 1
-#define TEXTURE_VIEW_RESOURCE_INDEX 0
+#define LIGHT_DATA_BUFFER_INDEX 0
 
-void LitTextureMaterial::PrepareBuffers( const DrawInfo& info ) const
+void LitTextureMaterial::PrepareBuffers( ID3D11DeviceContext* context, const DirectionLight* light ) const
 {
-	// TODO glEnable( GL_CULL_FACE );
-	// TODO glFrontFace( GL_CW );
-	// TODO glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-
-	Vect lightData[2] ={ info.light->Get_Position(), info.light->Get_Color() };
-	Matrix cameraMatrices[3] ={ info.camera->Get_View(), info.camera->Get_Projection(), *info.worldMatrix };
-	info.context->UpdateSubresource( this->vertexShaderBuffers[CAMERA_MATRICES_BUFFER_INDEX], 0, nullptr, cameraMatrices, 0, 0 );
-	info.context->UpdateSubresource( this->vertexShaderBuffers[LIGHT_DATA_BUFFER_INDEX], 0, nullptr, lightData, 0, 0 );
-
-	ID3D11ShaderResourceView* textureResourceView = info.texture->Get_Texture_Resource();
-	info.context->PSSetShaderResources( TEXTURE_VIEW_RESOURCE_INDEX, 1, &textureResourceView );
+	Vect lightData[2] ={ light->Get_Position(), light->Get_Color() };
+	context->UpdateSubresource( this->extraVertexShaderBuffers[LIGHT_DATA_BUFFER_INDEX], 0, nullptr, lightData, 0, 0 );
 }
 
-#define VERTEX_SHADER_BUFFER_COUNT 2
+#define EXTRA_VERTEX_SHADER_BUFFER_COUNT 1
 
 void LitTextureMaterial::SetupVertexShaderBuffers( ID3D11Device* device )
 {
-	this->vertexShaderBufferCount = VERTEX_SHADER_BUFFER_COUNT;
-	D3D11_BUFFER_DESC bd[VERTEX_SHADER_BUFFER_COUNT] =
+	this->vertexShaderBufferCount = EXTRA_VERTEX_SHADER_BUFFER_COUNT;
+	D3D11_BUFFER_DESC bd[EXTRA_VERTEX_SHADER_BUFFER_COUNT] =
 	{
-		{
-			3 * sizeof( Matrix ),
-			D3D11_USAGE_DEFAULT,
-			D3D11_BIND_CONSTANT_BUFFER,
-			0,
-			0,
-			0
-		},
 		{
 			2 * sizeof( Vect ),
 			D3D11_USAGE_DEFAULT,
@@ -74,10 +56,10 @@ void LitTextureMaterial::SetupVertexShaderBuffers( ID3D11Device* device )
 		}
 	};
 
-	this->vertexShaderBuffers = new( ConstantBufferHeap::Instance(), ALIGN_4 ) ID3D11Buffer*[VERTEX_SHADER_BUFFER_COUNT];
-	for( unsigned int i = 0; i < VERTEX_SHADER_BUFFER_COUNT; i++ )
+	this->extraVertexShaderBuffers = new( ConstantBufferHeap::Instance(), ALIGN_4 ) ID3D11Buffer*[EXTRA_VERTEX_SHADER_BUFFER_COUNT];
+	for( unsigned int i = 0; i < EXTRA_VERTEX_SHADER_BUFFER_COUNT; i++ )
 	{
-		GameCheckFatal( SUCCEEDED( device->CreateBuffer( &bd[i], nullptr, &this->vertexShaderBuffers[i] ) ), "Could not create vertex shader's constant buffers." );
+		GameCheckFatalDx(  device->CreateBuffer( &bd[i], nullptr, &this->extraVertexShaderBuffers[i] ), "Could not create vertex shader's constant buffers." );
 	}
 }
 
@@ -114,6 +96,23 @@ void LitTextureMaterial::SetupPixelShaderSamplers( ID3D11Device* device )
 
 	for( unsigned int i = 0; i < PIXEL_SHADER_SAMPLER_COUNT; i++ )
 	{
-		GameCheckFatal( SUCCEEDED( device->CreateSamplerState( &sd[i], &this->pixelShaderSamplers[i] ) ), "Could not create pixel shader's texture samplers." );
+		GameCheckFatalDx(  device->CreateSamplerState( &sd[i], &this->pixelShaderSamplers[i] ), "Could not create pixel shader's texture samplers." );
 	}
+}
+
+void LitTextureMaterial::SetupRasterizer( ID3D11Device* device )
+{
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.FrontCounterClockwise = TRUE;
+	rasterizerDesc.DepthBias = 0;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	rasterizerDesc.DepthClipEnable = FALSE;
+	rasterizerDesc.ScissorEnable = FALSE;
+	rasterizerDesc.MultisampleEnable = TRUE;
+	rasterizerDesc.AntialiasedLineEnable = FALSE;
+
+	GameCheckFatalDx( device->CreateRasterizerState( &rasterizerDesc, &this->rasterizer ), "Could not create the rasterizer state." );
 }

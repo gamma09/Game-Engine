@@ -7,17 +7,17 @@
 #include "UpdateStrategy.h"
 #include "ActorManager.h"
 #include "ModelBase.h"
-#include "DrawInfo.h"
+#include "Material.h"
 
 Actor::Actor()
 	: PCSNode(),
 	ManagedObject(),
 	ReferencedObject(),
-	model()
+	model( nullptr )
 {
 }
 
-void Actor::Set( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
+void Actor::Set( ID3D11Device* device, const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
 {
 	GameAssert( modelBase != 0 );
 	GameAssert( updateStrategy != 0 );
@@ -29,7 +29,7 @@ void Actor::Set( const Material* material, ModelBase* modelBase, UpdateStrategy*
 	this->sx = 1.0f;
 	this->sy = 1.0f;
 	this->sz = 1.0f;
-	this->model.Set( material, modelBase );
+	this->model = modelBase->Create_Instance( device, material );
 	this->updateStrategy = updateStrategy;
 	this->updateStrategy->Add_Reference();
 
@@ -41,7 +41,7 @@ void Actor::Reset()
 {
 	GameAssert( this->Get_Reference_Count() == 0 );
 
-	this->model.Reset();
+	this->model->Delete_Instance();
 	this->updateStrategy->Remove_Reference();
 	this->updateStrategy = 0;
 }
@@ -63,18 +63,7 @@ void Actor::Update( uint32_t currentTime )
 
 Model& Actor::Get_Model()
 {
-	return this->model;
-}
-
-bool Actor::Draw( DrawInfo& info ) const
-{
-	if( info.camera->Should_Be_Drawn( Vect() * this->model.baseModel->Get_Bounding_Matrix() * this->model.world, this->maxSize * this->model.baseModel->Get_Bounding_Radius() ) )
-	{
-		this->model.Draw( info );
-		return true;
-	}
-	else
-		return false;
+	return *this->model;
 }
 
 void Actor::Update_Model_Matrix()
@@ -85,7 +74,6 @@ void Actor::Update_Model_Matrix()
 	transform *= Matrix( ROT_Z, this->rz );
 	transform *= Matrix( TRANS, this->position );
 
-	this->model.Set_World( transform );
-
-	this->maxSize = max( max( this->sx, this->sy ), this->sz );
+	this->model->Set_World( transform );
+	this->model->Set_Max_Size( max( max( this->sx, this->sy ), this->sz ) );
 }

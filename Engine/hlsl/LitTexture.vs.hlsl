@@ -1,43 +1,21 @@
+#include "Input.hlsli"
+#include "Skinning.hlsli"
+#include "LitTexture.hlsli"
 
-
-//*****************************************************************************
-// Shader "Uniforms" (they're called constant buffers in DirectX)
-//*****************************************************************************
-#pragma pack_matrix( row_major )
-cbuffer cbCameraMatrices : register( b0 )
-{
-	float4x4 View;
-	float4x4 Projection;
-	float4x4 World;
-};
-
-cbuffer cbLightData : register( b1 )
-{
-	float4 LightPosition;
-	float4 LightColor;
-};
-
-
-//*****************************************************************************
-// Vertex shader inputs and outputs
-//*****************************************************************************
-struct VS_INPUT
-{
-	float4 vertex : POSITION;
-	float2 texture_coordinate : TEXCOORD;
-	float4 vertex_normal : NORMAL;
-};
-
-struct VS_OUTPUT
-{
-	float4 position : VS_POSITION;
-	float4 diffuse_color : COLOR;
-	float2 texture_coordinate : TEXCOORD;
-};
 
 VS_OUTPUT main( VS_INPUT input )
 {
+	// Pre-computes the world * view * projection matrix (DirectX hlsl compiler will
+	// actually move this calculation before the vertex shader, so that it will be computed
+	// only once for every draw call)
+	float4x4 preWorldViewProj = PreshaderComputeWorldViewProjection();
+
+	float4 skinnedPosition = SkinVertex( input.position, input.boneIndices0, input.boneIndices1, input.boneIndices2, input.boneIndices3,
+	                                     input.boneWeights0, input.boneWeights1, input.boneWeights2, input.boneWeights3 );
+
 	// Calculates corrected vertex normals
+
+	// model_view-Matrix will be calculated preshader
 	float4x4 model_view_matrix = mul( World, View );
 	float4x4 model_normal_matrix;
 	model_normal_matrix._m00_m01_m02 = normalize( model_view_matrix._m00_m01_m02 );
@@ -56,7 +34,7 @@ VS_OUTPUT main( VS_INPUT input )
 
 	// get light direction and magnitude
 	float4 ecPosition1;
-	ecPosition1 = mul( input.vertex, model_view_matrix );
+	ecPosition1 = mul( input.position, model_view_matrix );
 	float4 ecPosition2;
 	ecPosition2 = ecPosition1 / ecPosition1.w;
 	float4 light_direction;
@@ -68,8 +46,8 @@ VS_OUTPUT main( VS_INPUT input )
 	VS_OUTPUT output;
 	output.diffuse_color.rgb = LightColor.rgb * fdot;
 	output.diffuse_color.a = LightColor.a;
-	output.position = mul( mul( input.vertex, model_view_matrix ), Projection );
-	output.texture_coordinate = input.texture_coordinate;
+	output.position = mul( skinnedPosition, preWorldViewProj );
+	output.texture_coordinate = input.tc;
 	
 	return output;
 }

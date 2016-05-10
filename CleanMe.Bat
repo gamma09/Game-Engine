@@ -19,6 +19,7 @@ call :SubFolderClean BrowserCLI
 call :SubFolderClean Editor
 call :SubFolderClean Engine
 call :SubFolderClean File_System
+call :SubFolderClean Logging_System
 call :SubFolderClean Game
 call :SubFolderClean Math_Engine
 call :SubFolderClean Memory_System
@@ -44,6 +45,7 @@ goto:eof
 	del /F /S *.sdf
 	del /F /S /A:H *.suo
 	del /F /S *.out
+	del /F /S *.log
 	rmdir /S /Q obj
 	rmdir /S /Q bin
 	popd

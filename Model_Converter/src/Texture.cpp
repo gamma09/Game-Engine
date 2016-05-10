@@ -2,7 +2,8 @@
 
 Texture::Texture( const char* textureName, const char* textureFile )
 {
-	strcpy_s( this->textureName, textureName );
+	this->textureName[TEXTURE_NAME_SIZE - 1] = 0;
+	strncpy_s( this->textureName, textureName, TEXTURE_NAME_SIZE - 1 );
 	for( int i = strlen( this->textureName ) - 1; i >= 0; i-- )
 	{
 		if( this->textureName[i] >= 'A' && this->textureName[i] <= 'Z' )

@@ -1,17 +1,18 @@
 #include <math.h>
+#include <d3d11_1.h>
 
 #include <GameAssert.h>
 #include <Quat.h>
 
 #include "Camera.h"
 #include "CameraManager.h"
+#include "DirectXAssert.h"
 
 Camera::Camera()
 	: ManagedObject(),
 	ReferencedObject(),
 	projection(),
 	view(),
-	projection_view_matrix(),
 	pos(),
 	facing(),
 	right(),
@@ -45,18 +46,54 @@ Camera::~Camera()
 	// Do nothing
 }
 
-void Camera::Set( const PerspectiveData& perspective, const OrientationData& orientation )
+void Camera::Set( ID3D11Device* device, const PerspectiveData& perspective, const OrientationData& orientation )
 {
 	this->_set_perspective( perspective );
 	this->_set_orientation( orientation );
 
 	this->_calculate_frustum();
-	this->_calculate_projection_view_matrix();
+
+	D3D11_BUFFER_DESC projectionBufferDesc ={
+		sizeof( Matrix ),
+		D3D11_USAGE_IMMUTABLE,
+		D3D11_BIND_CONSTANT_BUFFER,
+		0,
+		0,
+		0
+	};
+
+	D3D11_SUBRESOURCE_DATA projectionInitDesc ={
+		&this->projection,
+		0,
+		0
+	};
+
+	GameCheckFatalDx(  device->CreateBuffer( &projectionBufferDesc, &projectionInitDesc, &this->projectionBuffer ), "Could not create projection buffer." );
+
+	D3D11_BUFFER_DESC viewBufferDesc ={
+		sizeof( Matrix ),
+		D3D11_USAGE_DEFAULT,
+		D3D11_BIND_CONSTANT_BUFFER,
+		0,
+		0,
+		0
+	};
+
+	D3D11_SUBRESOURCE_DATA viewInitDesc ={
+		&this->view,
+		0,
+		0
+	};
+
+	GameCheckFatalDx(  device->CreateBuffer( &viewBufferDesc, &viewInitDesc, &this->viewBuffer ), "Could not create view buffer." );
 }
 
 void Camera::Reset()
 {
 	ManagedObject::Reset();
+
+	this->viewBuffer->Release();
+	this->projectionBuffer->Release();
 
 	GameAssert( this->Get_Reference_Count() == 0 );
 }
@@ -64,6 +101,17 @@ void Camera::Reset()
 void Camera::Free_Me()
 {
 	CameraManager::Instance()->Remove( this );
+}
+
+#define PROJECTION_MATRIX_BUFFER_INDEX 0
+#define VIEW_MATRIX_BUFFER_INDEX 1
+
+void Camera::Update_Buffers( ID3D11DeviceContext* context )
+{
+	context->VSSetConstantBuffers( PROJECTION_MATRIX_BUFFER_INDEX, 1, &this->projectionBuffer );
+
+	context->UpdateSubresource( this->viewBuffer, 0, nullptr, &this->view, 0, 0 );
+	context->VSSetConstantBuffers( VIEW_MATRIX_BUFFER_INDEX, 1, &this->viewBuffer );
 }
 
 bool Camera::Should_Be_Drawn( const Vect& position, float boundingRadius ) const
@@ -98,13 +146,6 @@ void Camera::Set_Position( const Vect& pos )
 
 	this->_calculate_view_matrix();
 	this->_calculate_frustum();
-	this->_calculate_projection_view_matrix();
-}
-
-
-const Matrix& Camera::Get_Projection_View() const
-{
-	return this->projection_view_matrix;
 }
 
 const Matrix& Camera::Get_Projection() const
@@ -127,7 +168,6 @@ void Camera::Update_Position( uint32_t time )
 
 	this->_calculate_view_matrix();
 	this->_calculate_frustum();
-	this->_calculate_projection_view_matrix();
 }
 
 
@@ -253,10 +293,4 @@ void Camera::_calculate_frustum()
 
 	this->bottomNorm = C.cross( A );
 	this->bottomNorm.norm();
-}
-
-void Camera::_calculate_projection_view_matrix()
-{
-	//this->projection_view_matrix = this->projection * this->view;
-	this->projection_view_matrix = this->view * this->projection;
 }

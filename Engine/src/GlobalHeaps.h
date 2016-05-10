@@ -108,3 +108,23 @@ private:
 	Heap* heap;
 	static EventHeap* instance;
 };
+
+class ModelHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	ModelHeap();
+	~ModelHeap();
+
+	ModelHeap( const ModelHeap& ) = delete;
+	ModelHeap& operator=( const ModelHeap& ) = delete;
+
+private:
+	Heap* heap;
+	static ModelHeap* instance;
+};

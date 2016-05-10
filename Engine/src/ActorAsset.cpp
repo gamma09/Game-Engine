@@ -35,7 +35,7 @@ ActorAsset::~ActorAsset()
 	}
 }
 
-ActorAsset::ActorAsset( const char* name, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
+ActorAsset::ActorAsset( ID3D11Device* device, const char* name, const ModelAsset& model, const Material* material, UpdateStrategy* updateStrategy )
 	: model( model ),
 	actor( nullptr ),
 	x( 0.0f ),
@@ -55,7 +55,7 @@ ActorAsset::ActorAsset( const char* name, const ModelAsset& model, const Materia
 	this->name = newArray( char, nameSize, AssetHeap::Instance(), ALIGN_4 );
 	strcpy_s( this->name, nameSize, name );
 
-	this->actor = ActorManager::Instance()->Add( material, this->model.GetModelBase(), updateStrategy );
+	this->actor = ActorManager::Instance()->Add( device, material, this->model.GetModelBase(), updateStrategy );
 	this->actor->Add_Reference();
 
 	this->actor->position.set( this->x, this->y, this->z );
@@ -80,9 +80,4 @@ bool ActorAsset::operator==( const ActorAsset& actor ) const
 void ActorAsset::Update( uint32_t totalTimeMillis ) const
 {
 	this->actor->Update( totalTimeMillis );
-}
-
-void ActorAsset::Draw( DrawInfo& info ) const
-{
-	this->actor->Draw( info );
 }

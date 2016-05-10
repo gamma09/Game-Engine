@@ -28,7 +28,7 @@ void InitializeSdkObjects( FbxManager*& pManager, FbxScene*& pScene )
 
 
 
-void LoadScene( FbxManager* pManager, FbxDocument* pScene, const char* path, const char* filename )
+void LoadScene( FbxManager* pManager, FbxDocument* pScene, const string& path, const string& filename )
 {
 	bool lStatus;
 
@@ -40,12 +40,10 @@ void LoadScene( FbxManager* pManager, FbxDocument* pScene, const char* path, con
 	FbxImporter* lImporter = FbxImporter::Create( pManager, "" );
 
 	// generate the full file name
-	int size = strlen( path ) + strlen( filename ) + 1;
-	char* filePath = new char[size];
-	sprintf_s( filePath, size, "%s%s", path, filename );
+	string filePath = path + filename;
 
 	// Initialize the importer by providing a filename	
-	const bool lImportStatus = lImporter->Initialize( filePath, -1, pManager->GetIOSettings() );
+	const bool lImportStatus = lImporter->Initialize( filePath.c_str(), -1, pManager->GetIOSettings() );
 
 	// Get the the file version number of the fbx file
 	int lFileMajor, lFileMinor, lFileRevision;

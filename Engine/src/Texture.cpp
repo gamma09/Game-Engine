@@ -6,6 +6,7 @@
 #include <DirectXTex.h>
 #include <asset_reader.h>
 
+#include "DirectXAssert.h"
 #include "MemorySetup.h"
 #include "Texture.h"
 #include "TextureManager.h"
@@ -73,8 +74,8 @@ Texture::Texture( ID3D11Device* device, const char* defaultArchive, const char* 
 	DirectX::ScratchImage image;
 
 	GameCheckFatal( read_asset( defaultArchive, TEXTURE_TYPE, textureName, bytes, size, TemporaryHeap::Instance() ), "Error: Could not load default texture from archive." );
-	GameCheckFatal( SUCCEEDED( DirectX::LoadFromTGAMemory( bytes, size, &metadata, image ) ), "Error: Could not read default texture's image data." );
-	GameCheckFatal( SUCCEEDED( DirectX::CreateShaderResourceView( device, image.GetImages(), image.GetImageCount(), metadata, &this->textureResource ) ), "Error: Could not create default texture's shader resource view." );
+	GameCheckFatalDx(  DirectX::LoadFromTGAMemory( bytes, size, &metadata, image ), "Error: Could not read default texture's image data." );
+	GameCheckFatalDx(  DirectX::CreateShaderResourceView( device, image.GetImages(), image.GetImageCount(), metadata, &this->textureResource ), "Error: Could not create default texture's shader resource view." );
 }
 
 Texture::Texture()

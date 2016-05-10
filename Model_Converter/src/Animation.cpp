@@ -1,5 +1,5 @@
 #include "Animation.h"
-
+#include "DebugPrint.h"
 
 Animation::Animation( const char* name ) :
 	frames(),

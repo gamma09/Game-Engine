@@ -9,31 +9,37 @@
 #include <utility>
 #include <d3d11_1.h>
 
+#include "DirectXAssert.h"
 #include "MemorySetup.h"
-#include "DrawInfo.h"
+#include "Model.h"
+#include "Camera.h"
 #include "ModelBase.h"
 #include "ModelBaseManager.h"
 #include "Texture.h"
 #include "TextureManager.h"
 #include "GlobalHeaps.h"
-#include "Mesh.h"
 #include "Animation.h"
-#include "BoneManager.h"
-#include "Bone.h"
 #include "KeyFrame.h"
+
+// Maximum number of bones that can influence a vertex - this corresponds to the constant in Input.hlsli by the same name
+#define MAX_INFLUENCE_COUNT 4
 
 ModelBase::ModelBase()
 	: ManagedObject(),
 	ReferencedObject(),
+	boundsMatrix(),
+	boundingRadius( 0.0f ),
+	verticesBuffer( nullptr ),
+	indicesBuffer( nullptr ),
+	triangleVertexCount( 0 ),
 	boneCount( 0 ),
-	boneMeshes( nullptr ),
+	boneParentList( nullptr ),
+	bindMatricesBuffer( nullptr ),
 	animCount( 0 ),
 	anims( nullptr ),
-	boneParentList( nullptr ),
 	textureCount( 0 ),
 	textureHead( nullptr ),
-	boundsMatrix(),
-	boundingRadius( 0.0f )
+	instancesHead( nullptr )
 {
 	// Do nothing
 }
@@ -70,6 +76,9 @@ struct Vertex
 	float normY;
 	float normZ;
 	float normW;
+
+	float boneWeight[MAX_INFLUENCE_COUNT];
+	unsigned int boneIndices[MAX_INFLUENCE_COUNT];
 };
 
 
@@ -143,6 +152,82 @@ const static Vertex cubeData[] =
 };
 
 
+void ModelBase::Read_Hierarchy( ID3D11Device* device, const Header& header, unsigned char*& modelData )
+{
+	this->boneCount = header.boneCount;
+	this->boneParentList = newArray( int, header.boneCount, AnimHeap::Instance(), ALIGN_4 );
+	Matrix* boneBindMatrices = newArray( Matrix, header.boneCount, AnimHeap::Instance(), ALIGN_16 );
+
+	for( unsigned int i = 0; i < header.boneCount; i++ )
+	{
+		this->boneParentList[i] = *reinterpret_cast<int*>( modelData );
+		modelData += sizeof( int );
+		boneBindMatrices[i] = *reinterpret_cast<Matrix*>( modelData );
+		modelData += sizeof( Matrix );
+	}
+
+	D3D11_BUFFER_DESC bindBufferDesc ={ sizeof( Matrix ) * header.boneCount, D3D11_USAGE_IMMUTABLE, D3D11_BIND_CONSTANT_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA bindBufferInitData ={ boneBindMatrices, 0, 0 };
+
+	GameCheckFatalDx(  device->CreateBuffer( &bindBufferDesc, &bindBufferInitData, &this->bindMatricesBuffer ), "Couldn't create bind matrices buffer." );
+}
+
+void ModelBase::Read_Animations( const Header& header, unsigned char*& modelData )
+{
+	this->animCount = header.animCount;
+	this->anims = newArray( Animation, header.animCount, AnimHeap::Instance(), ALIGN_4 );
+	for( unsigned int i = 0; i < header.animCount; i++ )
+	{
+		// Animation constructor handles updating the modelData pointer
+		this->anims[i] = Animation( header.boneCount, modelData );
+	}
+}
+
+void ModelBase::Read_Vertices( ID3D11Device* device, const Header& header, unsigned char*& modelData )
+{
+	Vertex* vertices = reinterpret_cast<Vertex*>( modelData );
+	modelData += header.vertexCount * sizeof( Vertex );
+
+	D3D11_BUFFER_DESC vertexBufferDesc ={ sizeof( Vertex ) * header.vertexCount, D3D11_USAGE_DEFAULT, D3D11_BIND_VERTEX_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA vertexBufferInitData ={ vertices, 0, 0 };
+
+	GameCheckFatalDx(  device->CreateBuffer( &vertexBufferDesc, &vertexBufferInitData, &this->verticesBuffer ), "Couldn't create vertex buffer." );
+}
+
+void ModelBase::Read_Triangles( ID3D11Device* device, const Header& header, unsigned char*& modelData )
+{
+	Triangle* triangles = reinterpret_cast<Triangle*>( modelData );
+	modelData += header.triangleCount * sizeof( Triangle );
+	this->triangleVertexCount = header.triangleCount * 3;
+
+	D3D11_BUFFER_DESC indexBufferDesc ={ sizeof( Triangle ) * header.triangleCount, D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER, 0, 0, 0 };
+	D3D11_SUBRESOURCE_DATA indexBufferInitData ={ triangles, 0, 0 };
+
+	GameCheckFatalDx(  device->CreateBuffer( &indexBufferDesc, &indexBufferInitData, &this->indicesBuffer ), "Couldn't create index buffer." );
+}
+
+void ModelBase::Read_Textures( ID3D11Device* device, const Header& header, unsigned char*& modelData, const char* const archiveFile )
+{
+	this->textureCount = header.textureCount;
+	this->textureHead = nullptr;
+
+	Texture* tail = nullptr;
+	if( header.textureCount != 0 )
+	{
+		this->textureHead = TextureManager::Instance()->Add( device, archiveFile, reinterpret_cast<char*>( modelData ) );
+		tail = this->textureHead;
+		modelData += strlen( reinterpret_cast<char*>( modelData ) ) + 1;
+
+		for( unsigned int i = 1; i < header.textureCount; i++ )
+		{
+			Texture* texture = TextureManager::Instance()->Add( device, archiveFile, reinterpret_cast<const char*>( modelData ) );
+			tail->nextTexture = texture;
+			tail = texture;
+			modelData += strlen( reinterpret_cast<const char*>( modelData ) ) + 1;
+		}
+	}
+}
+
 void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 {
 	unsigned char* modelName = nullptr;
@@ -153,95 +238,29 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	int modelSize;
 	GameVerify( read_asset( archiveFile, VERTS_TYPE, reinterpret_cast<char*>( modelName ), modelData, modelSize, TemporaryHeap::Instance() ) );
 
-	Header* header = reinterpret_cast<Header*>( modelData );
-	this->boneParentList = newArray( int, header->boneCount, AnimHeap::Instance(), ALIGN_4 );
-	memcpy( this->boneParentList, reinterpret_cast<int*>( modelData + sizeof( Header ) ), sizeof( int ) * header->boneCount );
+	Header header = *reinterpret_cast<Header*>( modelData );
+	modelData += sizeof( Header );
 
-	this->boneMeshes = newArray( Mesh, header->boneCount, AnimHeap::Instance(), ALIGN_4 );
-	this->boneCount = header->boneCount;
-	unsigned char* animData = modelData + sizeof( Header ) + header->boneCount * sizeof( int );
-
-	this->animCount = header->animCount;
-	this->anims = newArray( Animation, this->animCount, AnimHeap::Instance(), ALIGN_4 );
-	for( unsigned int i = 0; i < header->animCount; i++ )
-	{
-		this->anims[i] = Animation( header->boneCount, animData );
-		animData += 4 + this->anims[i].Get_KeyFrame_Count() * ( 4 + header->boneCount * sizeof( Transform ) );
-	}
-
-	Vertex* vertices = reinterpret_cast<Vertex*>( animData );
-	Triangle* triangles = reinterpret_cast<Triangle*>( reinterpret_cast<unsigned char*>(vertices) +header->vertexCount * sizeof( Vertex ) );
-
-	this->boundingRadius = header->radius;
-	Matrix scale( SCALE, header->radius, header->radius, header->radius );
-	Matrix translate( TRANS, header->boundsCenterX, header->boundsCenterY, header->boundsCenterZ );
+	// set bounding sphere from header (boundingRadius, boundsMatrix)
+	this->boundingRadius = header.radius;
+	Matrix scale( SCALE, header.radius, header.radius, header.radius );
+	Matrix translate( TRANS, header.boundsCenterX, header.boundsCenterY, header.boundsCenterZ );
 	this->boundsMatrix = scale * translate;
 
-	this->textureCount = header->textureCount;
-	this->textureHead = 0;
+	// read hierarchy (boneCount, boneParentList, boneBindMatrices)
+	Read_Hierarchy( device, header, modelData );
+	
+	// read animations (animCount, anims)
+	Read_Animations( header, modelData );
+	
+	// read vertices (verticesBuffer)
+	Read_Vertices( device, header, modelData );
 
-	char* ptr = reinterpret_cast<char*>(triangles) + header->triangleCount * sizeof( Triangle );
-	Texture* tail = 0;
-	if( header->textureCount != 0 )
-	{
-		this->textureHead = TextureManager::Instance()->Add( device, archiveFile, ptr );
-		tail = this->textureHead;
-		ptr += strlen( ptr ) + 1;
-
-		for( unsigned int i = 1; i < header->textureCount; i++ )
-		{
-			Texture* texture = TextureManager::Instance()->Add( device, archiveFile, ptr );
-			tail->nextTexture = texture;
-			tail = texture;
-			ptr += strlen( ptr ) + 1;
-		}
-	}
-
-	// TODO remove this when ready to skin
-	D3D11_BUFFER_DESC vertexBufferDesc ={ sizeof( Vertex ) * 24, D3D11_USAGE_DEFAULT, D3D11_BIND_VERTEX_BUFFER, 0, 0, 0 };
-	D3D11_SUBRESOURCE_DATA vertexBufferInitData ={ cubeData, 0, 0 };
-
-	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &vertexBufferDesc, &vertexBufferInitData, &this->boneMeshes[0].verticesBuffer ) ), "Couldn't create vertex buffer." );
-
-	D3D11_BUFFER_DESC indexBufferDesc ={ sizeof( Triangle ) * 12, D3D11_USAGE_DEFAULT, D3D11_BIND_INDEX_BUFFER, 0, 0, 0 };
-	D3D11_SUBRESOURCE_DATA indexBufferInitData ={ cubeTriList, 0, 0 };
-
-	GameCheckFatal( SUCCEEDED( device->CreateBuffer( &indexBufferDesc, &indexBufferInitData, &this->boneMeshes[0].indicesBuffer ) ), "Couldn't create index buffer." );
-
-	this->boneMeshes[0].triangleVertexCount = 36;
-
-	for( unsigned int i = 1; i < this->boneCount; i++ )
-	{
-		this->boneMeshes[i].triangleVertexCount = this->boneMeshes[0].triangleVertexCount;
-		this->boneMeshes[i].verticesBuffer = this->boneMeshes[0].verticesBuffer;
-		this->boneMeshes[i].indicesBuffer = this->boneMeshes[0].indicesBuffer;
-	}
-	// TODO stop removing here
-
-	//this->triangleVertexCount = header->triangleCount * 3;
-
-	//glGenVertexArrays(1, &this->vao);
-	//glBindVertexArray(this->vao);
-
-	//glGenBuffers(1, &this->vboVertices);
-	//glBindBuffer(GL_ARRAY_BUFFER, this->vboVertices);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * header->vertexCount, vertices, GL_STATIC_DRAW);
-
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (3 * sizeof(float)));
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (5 * sizeof(float)));
-
-	//glEnableVertexAttribArray(0);
-	//glEnableVertexAttribArray(1);
-	//glEnableVertexAttribArray(2);
-
-	//glGenBuffers(1, &this->vboIndices);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->vboIndices);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Triangle) * header->triangleCount, triangles, GL_STATIC_DRAW);
-	//
-
-	//// Disable model's vao
-	//glBindVertexArray(0);
+	// read triangles (indicesBuffer, triangleVertexCount)
+	Read_Triangles( device, header, modelData );
+	
+	// read textures (textureCount, textureHead)
+	Read_Textures( device, header, modelData, archiveFile );
 }
 
 void ModelBase::Reset()
@@ -249,13 +268,20 @@ void ModelBase::Reset()
 	ManagedObject::Reset();
 	GameAssert( this->Get_Reference_Count() == 0 );
 
-	// TODO change this to release buffers in every bone mesh when skinning
-	this->boneMeshes[0].indicesBuffer->Release();
-	this->boneMeshes[0].verticesBuffer->Release();
+	while( this->instancesHead )
+	{
+		ModelBaseInstance* next = this->instancesHead->next;
+		delete this->instancesHead;
+		this->instancesHead = next;
+	}
 
+	this->verticesBuffer->Release();
+	this->indicesBuffer->Release();
+	
 	delete this->boneParentList;
+	this->bindMatricesBuffer->Release();
+
 	delete this->anims;
-	delete this->boneMeshes;
 
 	while( this->textureHead != nullptr )
 	{
@@ -263,8 +289,6 @@ void ModelBase::Reset()
 		this->textureHead = head->nextTexture;
 		TextureManager::Instance()->Remove( head );
 	}
-
-
 }
 
 void ModelBase::Free_Me()
@@ -275,7 +299,9 @@ void ModelBase::Free_Me()
 const Texture* ModelBase::Get_Texture( const uint32_t textureID ) const
 {
 	if( textureID >= this->textureCount )
+	{
 		return TextureManager::Instance()->Default_Texture();
+	}
 	else
 	{
 		Texture* curr = this->textureHead;
@@ -299,48 +325,34 @@ float ModelBase::Get_Bounding_Radius() const
 const static unsigned int VERTEX_SIZE = sizeof( Vertex );
 const static unsigned int VERTEX_BUFFER_OFFSET = 0;
 
-void ModelBase::Draw( const DrawInfo& info ) const
+#define BIND_MATRICES_BUFFER_INDEX 2
+
+void ModelBase::Draw( ID3D11DeviceContext* context, const Material* material, const Camera* camera, ID3DUserDefinedAnnotation* annotation ) const
 {
-	GameAssert( info.boneIndex < this->boneCount );
+	GameAssert( context );
+	GameAssert( material );
 
-
-	info.context->IASetVertexBuffers( 0, 1, &this->boneMeshes[info.boneIndex].verticesBuffer, &VERTEX_SIZE, &VERTEX_BUFFER_OFFSET );
-	info.context->IASetIndexBuffer( this->boneMeshes[info.boneIndex].indicesBuffer, DXGI_FORMAT_R32_UINT, 0 );
-	info.context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-	info.context->DrawIndexed( this->boneMeshes[info.boneIndex].triangleVertexCount, 0, 0 );
-}
-
-Bone* const ModelBase::Create_Skeleton_From_Model() const
-{
-	Bone** boneyard = new( AnimHeap::Instance(), ALIGN_4 )  Bone*[this->boneCount];
-	for( unsigned int i = 0; i < this->boneCount; i++ )
-		boneyard[i] = BoneManager::Instance()->Add( i );
-
-	Bone* root = 0;
-	for( unsigned int i = 0; i < this->boneCount; i++ )
+	annotation->BeginEvent( L"ModelBase::Draw()" );
 	{
-		int parent = this->boneParentList[i];
-		if( parent == -1 )
+		context->VSSetConstantBuffers( BIND_MATRICES_BUFFER_INDEX, 1, &bindMatricesBuffer );
+		context->IASetVertexBuffers( 0, 1, &this->verticesBuffer, &VERTEX_SIZE, &VERTEX_BUFFER_OFFSET );
+		context->IASetIndexBuffer( this->indicesBuffer, DXGI_FORMAT_R32_UINT, 0 );
+		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+		for( ModelBaseInstance* model = this->instancesHead; model; model = model->next )
 		{
-			if( root == 0 )
+			if( model->Should_Be_Drawn( material, camera ) )
 			{
-				root = boneyard[i];
+				model->Draw( context, this->triangleVertexCount, annotation );
 			}
-			else
-			{
-				boneyard[i]->setSibling( root );
-				root = boneyard[i];
-			}
-		}
-		else
-		{
-			boneyard[i]->setSibling( boneyard[parent]->getChild() );
-			boneyard[parent]->setChild( boneyard[i] );
-			boneyard[i]->setParent( boneyard[parent] );
 		}
 	}
+	annotation->EndEvent();
+}
 
-	return root;
+uint32_t ModelBase::Get_Bone_Count() const
+{
+	return this->boneCount;
 }
 
 Matrix ModelBase::Get_Bone_Transform( const uint32_t animID, const uint32_t boneIndex, const uint32_t time ) const
@@ -356,4 +368,64 @@ const Animation& ModelBase::Get_Animation( const uint32_t animID ) const
 	GameAssert( animID < this->animCount );
 
 	return this->anims[animID];
+}
+
+int ModelBase::Get_Parent_Bone_Of_Bone( unsigned int boneIndex ) const
+{
+	GameAssert( boneIndex < this->boneCount );
+
+	return this->boneParentList[boneIndex];
+}
+
+Model* ModelBase::Create_Instance( ID3D11Device* device, const Material* material )
+{
+	Model* model = new( ModelHeap::Instance(), ALIGN_16 ) Model( device, material, this );
+	model->next = this->instancesHead;
+	if( this->instancesHead )
+	{
+		this->instancesHead->prev = model;
+	}
+
+	this->instancesHead = model;
+
+	return model;
+}
+
+void ModelBase::Delete_Instance( ModelBaseInstance* instance )
+{
+	if( instance->prev )
+	{
+		instance->prev->next = instance->next;
+	}
+	else
+	{
+		GameAssert( instance == this->instancesHead );
+		this->instancesHead = instance->next;
+	}
+
+	if( instance->next )
+	{
+		instance->next->prev = instance->prev;
+	}
+
+	delete instance;
+}
+
+
+
+
+ModelBaseInstance::ModelBaseInstance( ModelBase* inBaseModel)
+	: next( nullptr ),
+	prev( nullptr ),
+	baseModel( inBaseModel )
+{
+	this->baseModel->Add_Reference();
+}
+
+ModelBaseInstance::~ModelBaseInstance()
+{
+	if( baseModel )
+	{
+		baseModel->Remove_Reference();
+	}
 }

@@ -8,6 +8,7 @@ class Camera;
 class Heap;
 struct PerspectiveData;
 struct OrientationData;
+struct ID3D11Device;
 
 
 class CameraManager : public Manager
@@ -18,7 +19,7 @@ public:
 	static void Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize );
 	static void Destroy();
 
-	Camera* const Add( const PerspectiveData& perspective, const OrientationData& orientation );
+	Camera* const Add( ID3D11Device* device, const PerspectiveData& perspective, const OrientationData& orientation );
 	Camera* const Get_Active_Camera() const;
 	void Set_Active_Camera( Camera* const camera );
 

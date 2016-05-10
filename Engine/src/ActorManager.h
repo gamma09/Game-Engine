@@ -11,6 +11,8 @@ class Heap;
 class UpdateStrategy;
 class Material;
 
+struct ID3D11Device;
+
 class ActorManager : public Manager
 {
 public:
@@ -19,7 +21,7 @@ public:
 	static void Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize );
 	static void Destroy();
 
-	Actor* Add( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy );
+	Actor* Add( ID3D11Device* device, const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy );
 
 
 

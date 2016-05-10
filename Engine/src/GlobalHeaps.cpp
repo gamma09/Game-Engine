@@ -198,3 +198,42 @@ EventHeap::~EventHeap()
 {
 	Mem::destroyHeap( this->heap );
 }
+
+
+
+ModelHeap* ModelHeap::instance = nullptr;
+
+void ModelHeap::Create()
+{
+	GameAssert( instance == nullptr );
+
+	instance = new ModelHeap();
+}
+
+void ModelHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* ModelHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// This one will need to be big - so go 64 MB for now
+#define MODEL_HEAP_SIZE 64 * 1024 * 1024
+
+ModelHeap::ModelHeap()
+{
+	Mem::createVariableBlockHeap( this->heap, MODEL_HEAP_SIZE );
+}
+
+ModelHeap::~ModelHeap()
+{
+	Mem::destroyHeap( this->heap );
+}

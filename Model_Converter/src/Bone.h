@@ -2,10 +2,13 @@
 
 #include <string>
 #include <fbxsdk.h>
+#include <MathEngine.h>
+
+using namespace std;
 
 struct Bone
 {
 	int parentBone;
-	std::string name;
-	FbxNode* node;
+	string name;
+	Matrix invBindMatrix;
 };

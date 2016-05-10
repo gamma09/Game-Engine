@@ -8,6 +8,10 @@
 #include "Moveable.h"
 #include "ReflectedVect.h"
 
+struct ID3D11Buffer;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+
 struct PerspectiveData
 {
 	// field of view in radians for the Y-component
@@ -34,7 +38,7 @@ class Camera : public ManagedObject, public ReferencedObject, public Moveable
 {
 public:
 
-	void Set( const PerspectiveData& perspective, const OrientationData& orientation );
+	void Set( ID3D11Device* device, const PerspectiveData& perspective, const OrientationData& orientation );
 	virtual void Reset();
 
 	bool Should_Be_Drawn( const Vect& position, float boundingRadius ) const;
@@ -42,11 +46,12 @@ public:
 	Vect Get_Position() const;
 	void Set_Position( const Vect& pos );
 
-	const Matrix& Get_Projection_View() const;
 	const Matrix& Get_Projection() const;
 	const Matrix& Get_View() const;
 
 	virtual void Update_Position( uint32_t time ) override;
+
+	void Update_Buffers( ID3D11DeviceContext* context );
 
 protected:
 	virtual void Free_Me() override;
@@ -70,14 +75,18 @@ private:
 
 	void _calculate_frustum();
 	void _calculate_view_matrix();
-	void _calculate_projection_view_matrix();
 
 
 private:
 
-	Matrix projection;
+	
 	Matrix view;
-	Matrix projection_view_matrix;
+	Matrix projection;
+
+	Vect pos;
+	Vect facing;
+	Vect right;
+	Vect up;
 
 
 	/********************************************************************************
@@ -90,10 +99,7 @@ private:
 	 *  /   \
 	 * /     \
 	 ********************************************************************************/
-	Vect pos;
-	Vect facing;
-	Vect right;
-	Vect up;
+	
 
 	// world space coords for viewing frustum
 	Vect nearTopLeft;
@@ -121,4 +127,7 @@ private:
 
 	float near_distance;
 	float far_distance;
+
+	ID3D11Buffer* viewBuffer;
+	ID3D11Buffer* projectionBuffer;
 };

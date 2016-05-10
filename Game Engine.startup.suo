@@ -2,13 +2,14 @@
   "SingleProjectMode": 1,
   "SingleProjectMruCount": 5,
   "MRU": [
+    "Model_Converter",
     "Game",
     "Editor"
   ],
   "MultiProjectConfigurations": {
     "Model Converter": {
       "Projects": {
-        "ModelConverter": {
+        "Model_Converter": {
           "CommandLineArguments": ""
         }
       }
@@ -44,13 +45,6 @@
     "Editor": {
       "Projects": {
         "Editor": {
-          "CommandLineArguments": ""
-        }
-      }
-    },
-    "Browser": {
-      "Projects": {
-        "Browser": {
           "CommandLineArguments": ""
         }
       }

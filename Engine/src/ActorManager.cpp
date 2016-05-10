@@ -33,10 +33,10 @@ void ActorManager::Destroy()
 	instance = 0;
 }
 
-Actor* ActorManager::Add( const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
+Actor* ActorManager::Add( ID3D11Device* device, const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
 {
 	Actor* actor = static_cast<Actor*>( this->Add_Object() );
-	actor->Set( material, modelBase, updateStrategy );
+	actor->Set( device, material, modelBase, updateStrategy );
 	return actor;
 }
 

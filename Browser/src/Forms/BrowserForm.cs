@@ -62,6 +62,7 @@ namespace CS_Browser
 				DialogResult buttonPressed = DialogResult.Yes;
 				if( askUser )
 				{
+					this.Activate();
 					// The other window needs to act like the message box is a modal dialog
 					buttonPressed = MessageBox.Show( this, "Do you want to save the current level?", "Save", MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button1 );
 				}

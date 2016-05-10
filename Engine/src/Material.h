@@ -7,7 +7,18 @@ struct ID3D11InputLayout;
 struct ID3D11Buffer;
 struct ID3D11DeviceContext;
 struct ID3D11SamplerState;
-struct DrawInfo;
+struct ID3DUserDefinedAnnotation;
+struct ID3D11RasterizerState;
+class Camera;
+class DirectionLight;
+class Model;
+
+// This value corresponds to the define by the same name in Input.hlsli
+#define MAX_BONE_COUNT 256
+
+
+
+
 
 class Material
 {
@@ -15,12 +26,12 @@ protected:
 	Material();
 	Material( const char* shaderFileAsset, ID3D11Device* device );
 
-	virtual void PrepareBuffers( const DrawInfo& info ) const abstract;
+	virtual void PrepareBuffers( ID3D11DeviceContext* context, const DirectionLight* light ) const abstract;
 
 public:
 	virtual ~Material();
 
-	void Draw( const DrawInfo& info ) const;
+	void Draw( Camera* camera, const DirectionLight* light, ID3D11DeviceContext* context, ID3DUserDefinedAnnotation* annotation ) const;
 	
 
 
@@ -35,9 +46,10 @@ private:
 
 protected:
 	ID3D11InputLayout* inputLayout;
+	ID3D11RasterizerState* rasterizer;
 
 	ID3D11VertexShader* vertexShader;
-	ID3D11Buffer** vertexShaderBuffers;
+	ID3D11Buffer** extraVertexShaderBuffers;
 	unsigned int vertexShaderBufferCount;
 
 	ID3D11PixelShader* pixelShader;

@@ -15,7 +15,7 @@ const static char* UNIFIER_EXE = "Unify.exe";
 // Model file format is in the file:
 // Dave_Model_Format.txt
 
-void ModelWriter::Write_Model( ModelData& modelData, const char* path )
+void ModelWriter::Write_Model( const ModelData& modelData, const char* path )
 {
 	char buf[MAX_PATH];
 	sprintf_s( buf, "%s%s%s", path, modelData.Get_Base_Filename(), ".tmp" );
@@ -35,10 +35,10 @@ void ModelWriter::Write_Model( ModelData& modelData, const char* path )
 	fwrite( &centerY, sizeof( float ), 1, modelBin );
 	fwrite( &centerZ, sizeof( float ), 1, modelBin );
 
-	const vector<Bone>& boneList = modelData.Get_Animation_Info().Get_Hierarchy();
+	const vector<Bone>& boneList = modelData.Get_Bones();
 	unsigned int boneCount = boneList.size();
 
-	const vector<Animation>& animList = modelData.Get_Animation_Info().Get_Animations();
+	const vector<Animation>& animList = modelData.Get_Animations();
 	unsigned int animCount = animList.size();
 
 	const vector<Vertex>& vtxList = modelData.Get_Vertex_List();
@@ -65,10 +65,11 @@ void ModelWriter::Write_Model( ModelData& modelData, const char* path )
 	// Write the number of animations
 	fwrite( &animCount, sizeof( unsigned int ), 1, modelBin );
 
-	// Write all of the bones
+	// Write all of the bone's parents
 	for( auto it = boneList.cbegin(); it != boneList.cend(); it++ )
 	{
 		fwrite( &it->parentBone, sizeof( int ), 1, modelBin );
+		fwrite( &it->invBindMatrix, sizeof( Matrix ), 1, modelBin );
 	}
 
 	// Write all of the animations
@@ -98,7 +99,8 @@ void ModelWriter::Write_Model( ModelData& modelData, const char* path )
 	for( auto it = vtxList.cbegin(); it != vtxList.cend(); it++ )
 	{
 		Vertex v = *it;
-		fwrite( &v, sizeof( Vertex ), 1, modelBin );
+		SerializableVertex sv( v );
+		fwrite( &sv, sizeof( SerializableVertex ), 1, modelBin );
 	}
 
 	// Write the triangles
@@ -227,7 +229,7 @@ void Clean_Up_Blo_Files( const char* path )
 	GameVerify( FindClose( hFind ) );
 }
 
-void ModelWriter::Write( ModelData& modelData, const char* path, const char* archiveFilename, const char* version )
+void ModelWriter::Write( const ModelData& modelData, const char* path, const char* version )
 {
 	Write_Manifest( modelData, path );
 
@@ -245,6 +247,7 @@ void ModelWriter::Write( ModelData& modelData, const char* path, const char* arc
 	char executable[MAX_PATH];
 	sprintf_s( executable, "%s\\%s", dir, UNIFIER_EXE );
 
+	const char* archiveFilename = modelData.Get_Base_Filename();
 	int size = 2 + strlen( archiveFilename ) + strlen( ".spu" ) + 1 + strlen( "-n" ) + 1 + 2 + strlen( modelData.Get_Title() ) + 1 + strlen( "-v" ) + 1 + 2 + strlen( version ) + 1;
 	char* command = new char[size];
 	sprintf_s( command, size, "\"%s.spu\" -n \"%s\" -v \"%s\"", archiveFilename, modelData.Get_Title(), version );
