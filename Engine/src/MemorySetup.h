@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #define new(heap, align) new
 #define newArray( type, count, heap, align ) ((type)*) malloc( sizeof( type ) * count )
-#define Allocate( heap, align, size ) malloc( size )
+#define newPtr( heap, align, size ) malloc( size )
 #else
 #define new(heap, align) new((heap), (align), __FILE__, __LINE__)
 #define newArray( type, count, heap, align )  ( (type*) Allocate( sizeof( type ) * (count), heap, align, __FILE__, __LINE__ ) )

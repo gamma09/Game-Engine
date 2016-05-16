@@ -20,13 +20,13 @@ inline float4 slerp( float4 source, float4 target, float t )
 		tar = target;
 	}
 
-	
-
-
-	if( tmp > 1.0f && tmp - TOLERANCE >= 1.0f )
+	if( tmp > 1.0f )
 	{
 #ifdef _DEBUG
-		errorf( "Quaternions for slerp are not unit length." );
+		if( tmp - TOLERANCE >= 1.0f )
+		{
+			errorf( "Quaternions for slerp are not unit length." );
+		}
 #endif
 
 		tmp = 1.0f;

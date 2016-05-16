@@ -48,6 +48,7 @@ public:
 private:
 	void CreateEngineWindow();
 	void SetupDirect3D();
+	D3D_FEATURE_LEVEL CreateDirectXDevice( IDXGIFactory1* dxgiFactory1 );
 	void CreateSwapChain( IDXGIFactory1* dxgiFactory1 );
 	void SetupDirectXDebugging();
 	void SetupRenderView();

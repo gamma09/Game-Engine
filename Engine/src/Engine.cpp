@@ -301,7 +301,7 @@ static IDXGIAdapter1* FindBestPossibleAdapter( IDXGIFactory1* dxgiFactory1 )
 	return adapterToUse;
 }
 
-static D3D_FEATURE_LEVEL CreateDirectXDevice( IDXGIFactory1* dxgiFactory1, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext )
+D3D_FEATURE_LEVEL Engine::CreateDirectXDevice( IDXGIFactory1* dxgiFactory1 )
 {
 #ifdef _DEBUG
 	static const unsigned int CreateDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
@@ -324,9 +324,9 @@ static D3D_FEATURE_LEVEL CreateDirectXDevice( IDXGIFactory1* dxgiFactory1, ID3D1
 									REQUESTED_FEATURE_LEVEL_PRIORITY,       // What features we are requesting in order by priority (11.1 plz!)
 									REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT, // Length of the featureLevels array
 									D3D11_SDK_VERSION,                      // We want Direct3D sdk version from DirectX 11
-									ppDevice,                               // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
+									&this->device,                               // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
 									&deviceFeatureLevel,                    // We want to know what DirectX feature level we're using
-									ppContext );                            // We want a pointer to the Direct3D device context
+									&this->deviceContext );                            // We want a pointer to the Direct3D device context
 
 	if( hr == E_INVALIDARG )
 	{
@@ -338,9 +338,9 @@ static D3D_FEATURE_LEVEL CreateDirectXDevice( IDXGIFactory1* dxgiFactory1, ID3D1
 								&REQUESTED_FEATURE_LEVEL_PRIORITY[1],       // What features we are requesting in order by priority (11.0 plz!)
 								REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT - 1, // Length of the featureLevels array
 								D3D11_SDK_VERSION,                          // We want Direct3D sdk version from DirectX 11
-								ppDevice,                                   // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
+								&this->device,                                   // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
 								&deviceFeatureLevel,                        // We want to know what DirectX feature level we're using
-								ppContext );                                // We want a pointer to the Direct3D device context
+								&this->deviceContext );                                // We want a pointer to the Direct3D device context
 	}
 
 	GameCheckFatal( SUCCEEDED( hr ), "Failed to create D3D11 device." );
@@ -537,7 +537,7 @@ void Engine::SetupDirect3D()
 {
 	IDXGIFactory1* dxgiFactory1 = CreateFactoryForDXGI();
 
-	CreateDirectXDevice( dxgiFactory1, &this->device, &this->deviceContext );
+	CreateDirectXDevice( dxgiFactory1 );
 	CreateSwapChain( dxgiFactory1 );
 	SetupDirectXDebugging();
 	SetupRenderView();
