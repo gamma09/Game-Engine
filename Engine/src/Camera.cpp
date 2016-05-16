@@ -36,7 +36,8 @@ Camera::Camera()
 	far_height( 0.0f ),
 	far_width( 0.0f ),
 	near_distance( 0.0f ),
-	far_distance( 0.0f )
+	far_distance( 0.0f ),
+	hasChangedSinceLastDraw( true )
 {
 	// Do nothing
 }
@@ -53,7 +54,7 @@ void Camera::Set( ID3D11Device* device, const PerspectiveData& perspective, cons
 
 	this->_calculate_frustum();
 
-	D3D11_BUFFER_DESC projectionBufferDesc ={
+	D3D11_BUFFER_DESC invProjBufferDesc ={
 		sizeof( Matrix ),
 		D3D11_USAGE_IMMUTABLE,
 		D3D11_BIND_CONSTANT_BUFFER,
@@ -62,15 +63,17 @@ void Camera::Set( ID3D11Device* device, const PerspectiveData& perspective, cons
 		0
 	};
 
-	D3D11_SUBRESOURCE_DATA projectionInitDesc ={
-		&this->projection,
+	Matrix invProj = this->projection.getInv();
+
+	D3D11_SUBRESOURCE_DATA invProjInitDesc ={
+		&invProj,
 		0,
 		0
 	};
 
-	GameCheckFatalDx(  device->CreateBuffer( &projectionBufferDesc, &projectionInitDesc, &this->projectionBuffer ), "Could not create projection buffer." );
+	GameCheckFatalDx(  device->CreateBuffer( &invProjBufferDesc, &invProjInitDesc, &this->invProjBuffer ), "Could not create the inverse projection buffer." );
 
-	D3D11_BUFFER_DESC viewBufferDesc ={
+	D3D11_BUFFER_DESC viewProjBufferDesc ={
 		sizeof( Matrix ),
 		D3D11_USAGE_DEFAULT,
 		D3D11_BIND_CONSTANT_BUFFER,
@@ -79,21 +82,24 @@ void Camera::Set( ID3D11Device* device, const PerspectiveData& perspective, cons
 		0
 	};
 
-	D3D11_SUBRESOURCE_DATA viewInitDesc ={
-		&this->view,
+	Matrix viewProj = this->view * this->projection;
+
+	D3D11_SUBRESOURCE_DATA viewProjInitDesc ={
+		&viewProj,
 		0,
 		0
 	};
 
-	GameCheckFatalDx(  device->CreateBuffer( &viewBufferDesc, &viewInitDesc, &this->viewBuffer ), "Could not create view buffer." );
+	GameCheckFatalDx(  device->CreateBuffer( &viewProjBufferDesc, &viewProjInitDesc, &this->viewProjBuffer ), "Could not create buffer for view * projection." );
+	this->hasChangedSinceLastDraw = true;
 }
 
 void Camera::Reset()
 {
 	ManagedObject::Reset();
 
-	this->viewBuffer->Release();
-	this->projectionBuffer->Release();
+	this->viewProjBuffer->Release();
+	this->invProjBuffer->Release();
 
 	GameAssert( this->Get_Reference_Count() == 0 );
 }
@@ -103,15 +109,20 @@ void Camera::Free_Me()
 	CameraManager::Instance()->Remove( this );
 }
 
-#define PROJECTION_MATRIX_BUFFER_INDEX 0
-#define VIEW_MATRIX_BUFFER_INDEX 1
+#define INVERSE_PROJECTION_MATRIX_BUFFER_INDEX 0
+#define VIEW_PROJECTION_MATRIX_BUFFER_INDEX 0
 
 void Camera::Update_Buffers( ID3D11DeviceContext* context )
 {
-	context->VSSetConstantBuffers( PROJECTION_MATRIX_BUFFER_INDEX, 1, &this->projectionBuffer );
+	if( this->hasChangedSinceLastDraw )
+	{
+		this->hasChangedSinceLastDraw = false;
+		context->VSSetConstantBuffers( INVERSE_PROJECTION_MATRIX_BUFFER_INDEX, 1, &this->invProjBuffer );
 
-	context->UpdateSubresource( this->viewBuffer, 0, nullptr, &this->view, 0, 0 );
-	context->VSSetConstantBuffers( VIEW_MATRIX_BUFFER_INDEX, 1, &this->viewBuffer );
+		Matrix viewProj = this->view * this->projection;
+		context->UpdateSubresource( this->viewProjBuffer, 0, nullptr, &viewProj, 0, 0 );
+		context->CSSetConstantBuffers( VIEW_PROJECTION_MATRIX_BUFFER_INDEX, 1, &this->viewProjBuffer );
+	}
 }
 
 bool Camera::Should_Be_Drawn( const Vect& position, float boundingRadius ) const
@@ -144,8 +155,8 @@ void Camera::Set_Position( const Vect& pos )
 {
 	this->pos = pos;
 
-	this->_calculate_view_matrix();
 	this->_calculate_frustum();
+	this->_calculate_view_matrix();
 }
 
 const Matrix& Camera::Get_Projection() const
@@ -165,9 +176,9 @@ void Camera::Update_Position( uint32_t time )
 	const Vect& vel = this->Get_Velocity();
 	if( !vel.isZero() )
 		this->pos += vel * ( static_cast<float>( timeSinceLast ) / 1000.0f );
-
-	this->_calculate_view_matrix();
+	
 	this->_calculate_frustum();
+	this->_calculate_view_matrix();
 }
 
 
@@ -251,6 +262,8 @@ void Camera::_calculate_view_matrix()
 	this->view[m13] = -1.0f * this->pos.dot( this->up );
 	this->view[m14] = -1.0f * this->pos.dot( this->facing );
 	this->view[m15] = 1.0f;
+
+	this->hasChangedSinceLastDraw = true;
 }
 
 // requires:

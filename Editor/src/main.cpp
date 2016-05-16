@@ -4,7 +4,8 @@ int CALLBACK WinMain(HINSTANCE , HINSTANCE ,  LPSTR , int)
 {                                                   
 
 	Editor *pEditor = new Editor("Editor", 800,600);                                 
-	pEditor->run();                                  
+	pEditor->run();
+	delete pEditor;
 
 	return 0;                                       
 }

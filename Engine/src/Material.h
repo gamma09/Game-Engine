@@ -13,9 +13,6 @@ class Camera;
 class DirectionLight;
 class Model;
 
-// This value corresponds to the define by the same name in Input.hlsli
-#define MAX_BONE_COUNT 256
-
 
 
 

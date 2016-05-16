@@ -44,42 +44,35 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+	<OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
     <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
-    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+	<OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <SDLCheck>
-      </SDLCheck>
       <OpenMPSupport>false</OpenMPSupport>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
       <WarningLevel>Level4</WarningLevel>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent />
     <PreBuildEvent>
       <Command>RMDIR /S /Q "$(ProjectDir)GeneratedFiles"
 
@@ -106,19 +99,16 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <OpenMPSupport>false</OpenMPSupport>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4481</DisableSpecificWarnings>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>COPY "$(SolutionDir)Shaders\*.cso" "$(TargetDir)\."</Command>

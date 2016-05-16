@@ -217,6 +217,15 @@ void LowLevelHeap::CheckValidity() const
 	GameAssert( ( size_t ) this->usedTail < ( size_t ) this->rawMemory + this->size );
 	GameAssert( ( size_t ) this->freeTail < ( size_t ) this->rawMemory + this->size );
 
+	// Go through both lists and make sure we don't have elements in both
+	for( LowLevelUsedBlock* currUsed = this->usedHead; currUsed; currUsed = currUsed->next )
+	{
+		for( LowLevelFreeBlock* currFree = this->freeHead; currFree; currFree = currFree->next )
+		{
+			GameAssert( currUsed != reinterpret_cast<LowLevelUsedBlock*>( currFree ) );
+		}
+	}
+
 	// Finally, go back through both lists, tally up the total size, and make sure that it is reasonable
 	// ...also, reset all of the visited booleans back to false for next time
 	size_t allocationsSize = 0;
@@ -234,6 +243,19 @@ void LowLevelHeap::CheckValidity() const
 
 	// Make sure the total allocation and free size is within an order of magnitude of the heap size
 	GameAssert( EqualsWithinTolerance( allocationsSize, this->size, this->size / 10 ) );
+}
+
+bool LowLevelHeap::ContainsUsedBlock( LowLevelUsedBlock* block ) const
+{
+	for( LowLevelUsedBlock* curr = this->usedHead; curr; curr = curr->next )
+	{
+		if( curr == block )
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 #endif
@@ -391,8 +413,11 @@ static void GetSurroundingFreeBlocks( LowLevelUsedBlock* usedBlock, LowLevelFree
 void LowLevelHeap::Free( void* ptr )
 {
 	GameAssert( ptr != nullptr );
-
+	
 	LowLevelUsedBlock* current = (LowLevelUsedBlock*) ptr - 1;
+
+	GameAssert( this->ContainsUsedBlock( current ) );
+	
 	LowLevelFreeBlock* prevFree;
 	LowLevelFreeBlock* nextFree;
 	GetSurroundingFreeBlocks( current, this->freeHead, this->freeTail, prevFree, nextFree );

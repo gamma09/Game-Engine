@@ -34,11 +34,29 @@
     <Filter Include="Models">
       <UniqueIdentifier>{49da30c7-2f5b-4a37-ba30-b3d0ee36dce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Materials">
+    <Filter Include="Shading">
       <UniqueIdentifier>{88220132-42a3-412d-b615-623b2d19dc3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Materials\HLSL">
+    <Filter Include="Shading\HLSL">
       <UniqueIdentifier>{72344d0a-69c5-43b1-846e-346972e97a29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\HLSL\Animation">
+      <UniqueIdentifier>{dc394516-5575-4eb3-9cf4-5f1c5ebf7092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\HLSL\Skin">
+      <UniqueIdentifier>{87389589-a646-41ab-a0b7-f15009deb4a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\HLSL\Skin\Lit Texture">
+      <UniqueIdentifier>{26d9dbf2-c0b1-4a1a-8a2d-fbf60aad3374}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\HLSL\Skin\Wireframe">
+      <UniqueIdentifier>{98f949c5-85ef-40d0-adbb-ad862ae0402c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\HLSL\Skin\Unlit Texture">
+      <UniqueIdentifier>{1e29475d-ef82-4e81-beb1-e8b5bb070ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shading\Materials">
+      <UniqueIdentifier>{4ee19f71-9205-4313-b99e-50c3e798d919}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,9 +96,6 @@
     <ClCompile Include="src\Animation.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="src\HierarchyElement.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
     <ClCompile Include="src\KeyFrame.cpp">
       <Filter>Models</Filter>
     </ClCompile>
@@ -102,18 +117,6 @@
     <ClCompile Include="src\AppInfo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\LitTextureMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Material.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UnlitTextureMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="src\WireframeMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="src\ModelAsset.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
@@ -131,6 +134,24 @@
     </ClCompile>
     <ClCompile Include="src\ChangeSceneUpdateEvent.cpp">
       <Filter>Asset\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LitTextureMaterial.cpp">
+      <Filter>Shading\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Shading\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UnlitTextureMaterial.cpp">
+      <Filter>Shading\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WireframeMaterial.cpp">
+      <Filter>Shading\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CalculateSkeletonShader.cpp">
+      <Filter>Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileLoader.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +197,6 @@
     <ClInclude Include="src\Animation.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="src\HierarchyElement.h">
-      <Filter>Models</Filter>
-    </ClInclude>
     <ClInclude Include="src\KeyFrame.h">
       <Filter>Models</Filter>
     </ClInclude>
@@ -205,18 +223,6 @@
     </ClInclude>
     <ClInclude Include="src\ReflectedVect.h">
       <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LitTextureMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Material.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\UnlitTextureMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="src\WireframeMaterial.h">
-      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="src\EngineMessages.h">
       <Filter>Core</Filter>
@@ -251,39 +257,66 @@
     <ClInclude Include="src\DirectXAssert.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\SharedShaderDefines.h">
+      <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Shading\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LitTextureMaterial.h">
+      <Filter>Shading\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UnlitTextureMaterial.h">
+      <Filter>Shading\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WireframeMaterial.h">
+      <Filter>Shading\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CalculateSkeletonShader.h">
+      <Filter>Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FileLoader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="hlsl\LitTexture.vs.hlsl">
-      <Filter>Materials\HLSL</Filter>
+    <FxCompile Include="hlsl\LitTexture.ps.hlsl">
+      <Filter>Shading\HLSL\Skin\Lit Texture</Filter>
     </FxCompile>
-    <FxCompile Include="hlsl\UnlitTexture.vs.hlsl">
-      <Filter>Materials\HLSL</Filter>
+    <FxCompile Include="hlsl\LitTexture.vs.hlsl">
+      <Filter>Shading\HLSL\Skin\Lit Texture</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\UnlitTexture.ps.hlsl">
-      <Filter>Materials\HLSL</Filter>
+      <Filter>Shading\HLSL\Skin\Unlit Texture</Filter>
     </FxCompile>
-    <FxCompile Include="hlsl\LitTexture.ps.hlsl">
-      <Filter>Materials\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="hlsl\Wireframe.vs.hlsl">
-      <Filter>Materials\HLSL</Filter>
+    <FxCompile Include="hlsl\UnlitTexture.vs.hlsl">
+      <Filter>Shading\HLSL\Skin\Unlit Texture</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\Wireframe.ps.hlsl">
-      <Filter>Materials\HLSL</Filter>
+      <Filter>Shading\HLSL\Skin\Wireframe</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\Wireframe.vs.hlsl">
+      <Filter>Shading\HLSL\Skin\Wireframe</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\CalculateSkeleton.cs.hlsl">
+      <Filter>Shading\HLSL\Animation</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="hlsl\UnlitTexture.hlsli">
-      <Filter>Materials\HLSL</Filter>
-    </None>
     <None Include="hlsl\LitTexture.hlsli">
-      <Filter>Materials\HLSL</Filter>
+      <Filter>Shading\HLSL\Skin\Lit Texture</Filter>
     </None>
-    <None Include="hlsl\Skinning.hlsli">
-      <Filter>Materials\HLSL</Filter>
+    <None Include="hlsl\UnlitTexture.hlsli">
+      <Filter>Shading\HLSL\Skin\Unlit Texture</Filter>
     </None>
-    <None Include="hlsl\Input.hlsli">
-      <Filter>Materials\HLSL</Filter>
+    <None Include="hlsl\Interpolation.hlsli">
+      <Filter>Shading\HLSL\Animation</Filter>
+    </None>
+    <None Include="hlsl\VSInput.hlsli">
+      <Filter>Shading\HLSL\Skin</Filter>
+    </None>
+    <None Include="hlsl\PSInput.hlsli">
+      <Filter>Shading\HLSL</Filter>
     </None>
   </ItemGroup>
 </Project>

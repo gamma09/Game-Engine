@@ -34,7 +34,8 @@ call :SubFolderClean TinyXML
 call :SubFolderClean Shared
 call :SubFolderClean Time
 
-
+del /F /S Model_Converter\test\*.spu
+del /F /S Model_Converter\test\*.fbm
 
 goto:eof
 

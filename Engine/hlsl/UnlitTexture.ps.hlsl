@@ -1,5 +1,7 @@
+#pragma pack_matrix( row_major )
+
 #include "UnlitTexture.hlsli"
-#include "Input.hlsli"
+#include "PSInput.hlsli"
 
 float4 main( PS_INPUT input ) : SV_TARGET
 {

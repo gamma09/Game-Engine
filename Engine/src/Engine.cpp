@@ -1,10 +1,11 @@
-
+#include <initguid.h>
 #include <DirectXColors.h>
 #include <string.h>
 #include <DebuggerSetup.h>
 #include <GameAssert.h>
 #include <mem.h>
 
+#include "Camera.h"
 #include "Engine.h"
 #include "GlobalHeaps.h"
 #include "ActorManager.h"
@@ -58,10 +59,6 @@ const static Time MILLISECOND = Time( TIME_ONE_MILLISECOND );
 
 void Engine::Update( uint32_t totalTimeMillis )
 {
-#ifdef _DEBUG
-	out( "Time: %d\n", totalTimeMillis );
-#endif
-
 	KeyBindingManager::Instance()->Check_Input();
 	this->sceneAsset->Update( totalTimeMillis );
 }
@@ -70,21 +67,26 @@ void Engine::Draw()
 {
 	this->annotation->BeginEvent( L"Engine::Draw()" );
 	{
+		Camera* activeCamera = CameraManager::Instance()->Get_Active_Camera();
+		activeCamera->Update_Buffers( this->deviceContext );
+
+		this->skeletonShader->CalculateSkeletons( this->deviceContext, this->annotation );
+
 		this->annotation->BeginEvent( L"Draw Lit Material" );
 		{
-			this->litTextureMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+			this->litTextureMaterial->Draw( activeCamera, this->light, this->deviceContext, this->annotation );
 		}
 		this->annotation->EndEvent();
 
 		this->annotation->BeginEvent( L"Draw Unlit Material" );
 		{
-			this->unlitTextureMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+			this->unlitTextureMaterial->Draw( activeCamera, this->light, this->deviceContext, this->annotation );
 		}
 		this->annotation->EndEvent();
 
 		this->annotation->BeginEvent( L"Draw Wireframe Material" );
 		{
-			this->wireframeMaterial->Draw( CameraManager::Instance()->Get_Active_Camera(), this->light, this->deviceContext, this->annotation );
+			this->wireframeMaterial->Draw( activeCamera, this->light, this->deviceContext, this->annotation );
 		}
 		this->annotation->EndEvent();
 	}
@@ -157,12 +159,20 @@ void Engine::PreLoadContent()
 	this->CreateEngineWindow();
 	this->SetupDirect3D();
 
+	this->skeletonShader = new CalculateSkeletonShader( this->device );
 	this->litTextureMaterial = new LitTextureMaterial( this->device );
 	this->unlitTextureMaterial = new UnlitTextureMaterial( this->device );
 	this->wireframeMaterial = new WireframeMaterial( this->device );
 
 	TextureManager::Instance()->Create_Default_Texture( this->device );
 }
+
+
+
+
+
+
+#pragma region Windows and DirectX Environment Setup
 
 #define WINDOW_CLASS_NAME "GameEngineWindow"
 
@@ -235,85 +245,113 @@ void Engine::CreateEngineWindow()
 	SetWindowLongPtr( this->hWindow, GWLP_USERDATA, ( LONG_PTR ) this );
 }
 
-
-
-
-
-
-
-
-
-// First try to use a hardware driver; if that doesn't work, use a WARP driver (high performance software-based driver)
-// If those fail, fall back to using a slow-as-hell reference driver
-static const D3D_DRIVER_TYPE REQUESTED_DRIVER_TYPE_PRIORITY[] =
-{
-	D3D_DRIVER_TYPE_HARDWARE,
-	D3D_DRIVER_TYPE_WARP,
-	D3D_DRIVER_TYPE_REFERENCE
-};
-
-static const unsigned int REQUESTED_DRIVER_TYPE_PRIORITY_COUNT = sizeof( REQUESTED_DRIVER_TYPE_PRIORITY ) / sizeof( D3D_DRIVER_TYPE );
-
 // Priority for feature level - we want DirectX 11.1 if possible, but otherwise just try to load as high a version as possible
 static const D3D_FEATURE_LEVEL REQUESTED_FEATURE_LEVEL_PRIORITY[] =
 {
 	D3D_FEATURE_LEVEL_11_1,
-	D3D_FEATURE_LEVEL_11_0,
-	D3D_FEATURE_LEVEL_10_1,
-	D3D_FEATURE_LEVEL_10_0
+	D3D_FEATURE_LEVEL_11_0
 };
 
 static const unsigned int REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT = sizeof( REQUESTED_FEATURE_LEVEL_PRIORITY ) / sizeof( D3D_FEATURE_LEVEL );
 
 
-
-void Engine::SetupDirect3D()
+static IDXGIFactory1* CreateFactoryForDXGI()
 {
-	unsigned int CreateDeviceFlags = 0;
+	IDXGIFactory1* dxgiFactory1 = nullptr;
+	GameCheckFatalDx( CreateDXGIFactory1( __uuidof( IDXGIFactory1 ), reinterpret_cast<void**>( &dxgiFactory1 ) ), "Could not create the DXGI factory." );
 
-#ifdef _DEBUG
-	CreateDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
+	return dxgiFactory1;
+}
 
-	D3D_FEATURE_LEVEL featureLevel;
+// We need to enumerate what adapters (and displays) exist on the system and find the first one with a display plugged in and is hardware based, but we will settle for
+// one with a software driver if a hardware one cannot be found. If we only find adapters with no displays plugged in, bad shit happened.
+static IDXGIAdapter1* FindBestPossibleAdapter( IDXGIFactory1* dxgiFactory1 )
+{
+	IDXGIAdapter1* adapterToUse = nullptr;
+	bool adapterToUseIsHardware = false;
 
-	HRESULT hr;
-	for( unsigned int i = 0; i < REQUESTED_DRIVER_TYPE_PRIORITY_COUNT; i++ )
+	IDXGIAdapter1* adapter = nullptr;
+	for( int i = 0; dxgiFactory1->EnumAdapters1( i, &adapter ) != DXGI_ERROR_NOT_FOUND; i++ )
 	{
-		// first try to load driver with full feature set
-		hr = D3D11CreateDevice( NULL,                                   // use the default adapter - change this to change which screen to use maybe?
-								REQUESTED_DRIVER_TYPE_PRIORITY[i],      // use the fastest possible D3D driver
-								NULL,                                   // we aren't using D3D_DRIVER_TYPE_SOFTWARE, so the DLL module is NULL
-								CreateDeviceFlags,                      // Flags for creating the D3D device
-								REQUESTED_FEATURE_LEVEL_PRIORITY,       // What features we are requesting in order by priority
-								REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT, // Length of the featureLevels array
-								D3D11_SDK_VERSION,                      // We want Direct3D sdk version from DirectX 11
-								&this->device,                                // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
-								&featureLevel,                          // We want to know what DirectX feature level we're using
-								&this->deviceContext );                       // We want a pointer to the Direct3D device context
-
-		if( hr == E_INVALIDARG )
+		IDXGIOutput* output = nullptr;
+		bool hasOutputs = ( adapter->EnumOutputs( 0, &output ) != DXGI_ERROR_NOT_FOUND );
+		if( hasOutputs )
 		{
-			// We must be on a DirectX 11.0 platform...
-			hr = D3D11CreateDevice( NULL,                                       // use the default adapter - change this to change which screen to use maybe?
-									REQUESTED_DRIVER_TYPE_PRIORITY[i],          // use the fastest possible D3D driver
-									NULL,                                       // we aren't using D3D_DRIVER_TYPE_SOFTWARE, so the DLL module is NULL
-									CreateDeviceFlags,                          // Flags for creating the D3D device
-									&REQUESTED_FEATURE_LEVEL_PRIORITY[1],       // What features we are requesting in order by priority
-									REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT - 1, // Length of the featureLevels array
-									D3D11_SDK_VERSION,                          // We want Direct3D sdk version from DirectX 11
-									&this->device,                                    // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
-									&featureLevel,                              // We want to know what DirectX feature level we're using
-									&this->deviceContext );                           // We want a pointer to the Direct3D device context
+			output->Release();
+			DXGI_ADAPTER_DESC1 desc;
+			GameCheckFatalDx( adapter->GetDesc1( &desc ), "Could not retrieve info about the adapter." );
+			if( desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE && !adapterToUse )
+			{
+				adapterToUse = adapter;
+				adapterToUse->AddRef();
+				adapterToUseIsHardware = false;
+			}
+			else if( !adapterToUse )
+			{
+				adapterToUse = adapter;
+				adapterToUse->AddRef();
+				adapterToUseIsHardware = true;
+			}
 		}
 
-		if( SUCCEEDED( hr ) )
-			break;
+		adapter->Release();
+	}
+
+	GameCheckFatal( adapterToUse, "Could not find any adapters with a monitor attached!" );
+	return adapterToUse;
+}
+
+static D3D_FEATURE_LEVEL CreateDirectXDevice( IDXGIFactory1* dxgiFactory1, ID3D11Device** ppDevice, ID3D11DeviceContext** ppContext )
+{
+#ifdef _DEBUG
+	static const unsigned int CreateDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
+#else
+	static const unsigned int CreateDeviceFlags = 0;
+#endif
+	
+	D3D_FEATURE_LEVEL deviceFeatureLevel;
+
+	// Find an appropriate display adapter
+	// 1. It must have a monitor plugged in
+	// 2. Favor hardware over software
+	IDXGIAdapter1* adapter = FindBestPossibleAdapter( dxgiFactory1 );
+
+	// first try to load driver with full feature set (DirectX 11.1/11.2)
+	HRESULT hr = D3D11CreateDevice( adapter,                                // Use the adapter we selected (our priority was Hardware driver > Software driver)
+									D3D_DRIVER_TYPE_UNKNOWN,                // We chose an adapter ourselves, so the driver has already been determined
+									NULL,                                   // We chose an adapter ourselves, so no DLL module required
+									CreateDeviceFlags,                      // Flags for creating the D3D device
+									REQUESTED_FEATURE_LEVEL_PRIORITY,       // What features we are requesting in order by priority (11.1 plz!)
+									REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT, // Length of the featureLevels array
+									D3D11_SDK_VERSION,                      // We want Direct3D sdk version from DirectX 11
+									ppDevice,                               // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
+									&deviceFeatureLevel,                    // We want to know what DirectX feature level we're using
+									ppContext );                            // We want a pointer to the Direct3D device context
+
+	if( hr == E_INVALIDARG )
+	{
+		// We must be on a DirectX 11.0 platform...
+		hr = D3D11CreateDevice( adapter,                                    // use the default adapter - change this to change which screen to use maybe?
+								D3D_DRIVER_TYPE_UNKNOWN,                    // We chose an adapter ourselves, so the driver has already been determined
+								NULL,                                       // We chose an adapter ourselves, so no DLL module required
+								CreateDeviceFlags,                          // Flags for creating the D3D device
+								&REQUESTED_FEATURE_LEVEL_PRIORITY[1],       // What features we are requesting in order by priority (11.0 plz!)
+								REQUESTED_FEATURE_LEVEL_PRIORITY_COUNT - 1, // Length of the featureLevels array
+								D3D11_SDK_VERSION,                          // We want Direct3D sdk version from DirectX 11
+								ppDevice,                                   // We want a pointer to the Direct3D device that was created so that we can set up a swap chain
+								&deviceFeatureLevel,                        // We want to know what DirectX feature level we're using
+								ppContext );                                // We want a pointer to the Direct3D device context
 	}
 
 	GameCheckFatal( SUCCEEDED( hr ), "Failed to create D3D11 device." );
-	GameCheckFatalDx( this->deviceContext->QueryInterface( __uuidof( ID3DUserDefinedAnnotation ), reinterpret_cast<void**>( &this->annotation ) ), "Couldn't retrieve a user annotation struct from Device Context." );
 
+	adapter->Release();
+
+	return deviceFeatureLevel;
+}
+
+void Engine::CreateSwapChain( IDXGIFactory1* dxgiFactory1 )
+{
 	UINT maxQualityLevel;
 	this->device->CheckMultisampleQualityLevels( DXGI_FORMAT_R8G8B8A8_UNORM, this->info[Samples], &maxQualityLevel );
 	while( !maxQualityLevel )
@@ -322,17 +360,8 @@ void Engine::SetupDirect3D()
 		this->device->CheckMultisampleQualityLevels( DXGI_FORMAT_R8G8B8A8_UNORM, this->info[Samples], &maxQualityLevel );
 	}
 
-	IDXGIDevice* dxgiDevice = nullptr;
-	GameCheckFatalDx( this->device->QueryInterface( __uuidof( IDXGIDevice ), reinterpret_cast<void**>( &dxgiDevice ) ), "Couldn't retrieve DXGIDevice." );
-	IDXGIAdapter* adapter = nullptr;
-	GameCheckFatalDx( dxgiDevice->GetAdapter( &adapter ), "Couldn't get the DXGI device adapter." );
-	IDXGIFactory1* dxgiFactory = nullptr;
-	GameCheckFatalDx( adapter->GetParent( __uuidof( IDXGIFactory1 ), reinterpret_cast<void**>( &dxgiFactory ) ), "Couldn't retrieve the DXGIFactory1 from the adapter." );
-	adapter->Release();
-	dxgiDevice->Release();
-
 	IDXGIFactory2* dxgiFactory2 = nullptr;
-	dxgiFactory->QueryInterface( __uuidof( IDXGIFactory2 ), reinterpret_cast<void**>( &dxgiFactory2 ) );
+	dxgiFactory1->QueryInterface( __uuidof( IDXGIFactory2 ), reinterpret_cast<void**>( &dxgiFactory2 ) );
 	if( dxgiFactory2 != nullptr )
 	{
 		// We are using DirectX 11.1 or later
@@ -376,8 +405,9 @@ void Engine::SetupDirect3D()
 		}
 
 		IDXGISwapChain1* tempSwapChain;
-		GameCheckFatalDx(  dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, &tempSwapChain ), "Could not create swap chain." );
-		GameCheckFatalDx(  tempSwapChain->QueryInterface( __uuidof( IDXGISwapChain ), reinterpret_cast<void**>( &this->swapChain ) ), "Could not retrieve regular swap chain from SwapChain1" );
+		GameCheckFatalDx( dxgiFactory2->CreateSwapChainForHwnd( this->device, this->hWindow, &sd, pFsd, nullptr, &tempSwapChain ), "Could not create swap chain." );
+		GameCheckFatalDx( tempSwapChain->QueryInterface( __uuidof( IDXGISwapChain ), reinterpret_cast<void**>( &this->swapChain ) ), "Could not retrieve regular swap chain from SwapChain1" );
+		tempSwapChain->Release();
 		dxgiFactory2->Release();
 	}
 	else
@@ -407,7 +437,7 @@ void Engine::SetupDirect3D()
 		sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		GameCheckFatalDx(  dxgiFactory->CreateSwapChain( this->device, &sd, &this->swapChain ), "Could not create swap chain." );
+		GameCheckFatalDx( dxgiFactory1->CreateSwapChain( this->device, &sd, &this->swapChain ), "Could not create swap chain." );
 		if( this->info[Fullscreen] )
 		{
 			this->swapChain->SetFullscreenState( TRUE, nullptr );
@@ -415,13 +445,25 @@ void Engine::SetupDirect3D()
 	}
 
 	// Alt-Enter shall not switch between windowed and fullscreen!
-	dxgiFactory->MakeWindowAssociation( this->hWindow, DXGI_MWA_NO_ALT_ENTER );
-	dxgiFactory->Release();
+	dxgiFactory1->MakeWindowAssociation( this->hWindow, DXGI_MWA_NO_ALT_ENTER );
+}
 
+void Engine::SetupDirectXDebugging()
+{
+	GameCheckFatalDx( this->deviceContext->QueryInterface( __uuidof( ID3DUserDefinedAnnotation ), reinterpret_cast<void**>( &this->annotation ) ), "Couldn't retrieve a user annotation struct from Device Context." );
+
+#ifdef _DEBUG
+	GameCheckFatalDx( this->device->QueryInterface( __uuidof( ID3D11Debug ), reinterpret_cast<void**>( &this->debugInterface ) ), "Couldn't retrieve the debug layer from the Device." );
+	GameCheckFatalDx( DXGIGetDebugInterface1( 0, __uuidof( IDXGIDebug ), reinterpret_cast<void**>( &this->lowLevelDebugInterface ) ), "Couldn't retrieve the low-level debug layer." );
+#endif
+}
+
+void Engine::SetupRenderView()
+{
 	// Create render target view
 	ID3D11Texture2D* pBackBuffer;
-	GameCheckFatalDx(  this->swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &pBackBuffer ) ), "Could not retrieve back buffer." );
-	GameCheckFatalDx(  this->device->CreateRenderTargetView( pBackBuffer, nullptr, &this->renderTarget ), "Could not create render target." );
+	GameCheckFatalDx( this->swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &pBackBuffer ) ), "Could not retrieve back buffer." );
+	GameCheckFatalDx( this->device->CreateRenderTargetView( pBackBuffer, nullptr, &this->renderTarget ), "Could not create render target." );
 	pBackBuffer->Release();
 
 	// Create depth stencil texture
@@ -437,7 +479,7 @@ void Engine::SetupDirect3D()
 	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthDesc.CPUAccessFlags = 0;
 	depthDesc.MiscFlags = 0;
-	GameCheckFatalDx(  this->device->CreateTexture2D( &depthDesc, nullptr, &this->depthStencil ), "Could not create depth stencil texture." );
+	GameCheckFatalDx( this->device->CreateTexture2D( &depthDesc, nullptr, &this->depthStencil ), "Could not create depth stencil texture." );
 
 	// Create the depth stencil view
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -445,10 +487,14 @@ void Engine::SetupDirect3D()
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Texture2D.MipSlice = 0;
 	dsvDesc.Flags = 0;
-	GameCheckFatalDx(  this->device->CreateDepthStencilView( this->depthStencil, &dsvDesc, &this->depthStencilView ), "Could not create depth stencil view." );
-
+	GameCheckFatalDx( this->device->CreateDepthStencilView( this->depthStencil, &dsvDesc, &this->depthStencilView ), "Could not create depth stencil view." );
+	
+	// Setup the Output Merger stage
 	this->deviceContext->OMSetRenderTargets( 1, &this->renderTarget, this->depthStencilView );
+}
 
+void Engine::CreateViewport()
+{
 	// Setup the viewport
 	D3D11_VIEWPORT vp;
 	vp.Width = ( float ) this->info[Window_Width];
@@ -457,8 +503,13 @@ void Engine::SetupDirect3D()
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
-	this->deviceContext->RSSetViewports( 1, &vp );
 
+	// Setup the Rasterizer stage
+	this->deviceContext->RSSetViewports( 1, &vp );
+}
+
+void Engine::SetupCursor()
+{
 	if( this->info[Cursor] )
 	{
 		ReleaseCapture();
@@ -480,13 +531,29 @@ void Engine::SetupDirect3D()
 		// Capture cursor to user window
 		SetCapture( this->hWindow );
 	}
+}
+
+void Engine::SetupDirect3D()
+{
+	IDXGIFactory1* dxgiFactory1 = CreateFactoryForDXGI();
+
+	CreateDirectXDevice( dxgiFactory1, &this->device, &this->deviceContext );
+	CreateSwapChain( dxgiFactory1 );
+	SetupDirectXDebugging();
+	SetupRenderView();
+	CreateViewport();
+	SetupCursor();
 
 	this->vsyncInterval = this->info[Vsync] ? 1 : 0;
+	dxgiFactory1->Release();
 }
+
+#pragma endregion
 
 Engine::Engine( const char* windowName, const int Width, const int Height )
 	: info( windowName, 1 ),
 	isOpen( true ),
+	skeletonShader( nullptr ),
 	litTextureMaterial( nullptr ),
 	wireframeMaterial( nullptr ),
 	unlitTextureMaterial( nullptr ),
@@ -506,7 +573,7 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 
 	this->info[Cursor] = true;
 	this->info[Fullscreen] = false;
-	this->info[Vsync] = true;
+	this->info[Vsync] = false;
 
 	TemporaryHeap::Create();
 	ConstantBufferHeap::Create();
@@ -527,6 +594,11 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 
 Engine::~Engine()
 {
+	delete skeletonShader;
+	delete litTextureMaterial;
+	delete unlitTextureMaterial;
+	delete wireframeMaterial;
+
 	KeyBindingManager::Destroy();
 	DirectionLightManager::Destroy();
 	ActorManager::Destroy();
@@ -536,17 +608,27 @@ Engine::~Engine()
 
 	Mem::destroyHeap( this->managerHeap );
 
-	ModelHeap::Create();
+	ModelHeap::Destroy();
 	EventHeap::Destroy();
 	AssetHeap::Destroy();
 	AnimHeap::Destroy();
 	TemporaryHeap::Destroy();
 	ConstantBufferHeap::Destroy();
 
+	this->annotation->Release();
 	this->depthStencil->Release();
 	this->depthStencilView->Release();
 	this->renderTarget->Release();
 	this->swapChain->Release();
 	this->deviceContext->Release();
+
+#ifdef _DEBUG
+	this->debugInterface->ReportLiveDeviceObjects( D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL );
+	this->debugInterface->Release();
+
+	this->lowLevelDebugInterface->ReportLiveObjects( DXGI_DEBUG_DXGI, DXGI_DEBUG_RLO_ALL );
+	this->lowLevelDebugInterface->Release();
+#endif
+	
 	this->device->Release();
 }

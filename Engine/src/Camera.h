@@ -128,6 +128,8 @@ private:
 	float near_distance;
 	float far_distance;
 
-	ID3D11Buffer* viewBuffer;
-	ID3D11Buffer* projectionBuffer;
+	bool hasChangedSinceLastDraw;
+
+	ID3D11Buffer* viewProjBuffer;
+	ID3D11Buffer* invProjBuffer;
 };

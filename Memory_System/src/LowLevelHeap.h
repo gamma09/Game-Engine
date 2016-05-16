@@ -59,6 +59,7 @@ public:
 #ifdef _DEBUG
 	unsigned int CountAllocations() const;
 	void CheckValidity() const;
+	bool ContainsUsedBlock( LowLevelUsedBlock* block ) const;
 #endif
 
 private:

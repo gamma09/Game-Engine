@@ -7,9 +7,9 @@ using namespace std;
 
 struct BoneFrame
 {
-	Vect scale;
 	Quat rotation;
 	Vect translation;
+	Vect scale;
 };
 
 struct Frame

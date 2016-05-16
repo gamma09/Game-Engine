@@ -10,40 +10,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "DirectXAssert.h"
-
-
-//---------------------------------------------------------------------------------------------------------
-// Internal methods
-//---------------------------------------------------------------------------------------------------------
-
-static char* Load_File( const char* fileName, unsigned long& size )
-{
-	GameAssert( fileName != 0 );
-
-	FileHandle file;
-	FileError status;
-
-	status = File::open( file, fileName, FILE_READ );
-	GameAssert( status == FILE_SUCCESS );
-
-	// Read file size
-	status = File::size( file, size );
-	GameAssert( status == FILE_SUCCESS );
-
-	char* data = new( TemporaryHeap::Instance(), ALIGN_4 ) char[size + 1];
-
-	// Read from file
-	status = File::read( file, data, size );
-	GameAssert( status == FILE_SUCCESS );
-
-	data[size] = 0;
-
-	// Close file
-	status = File::close( file );
-	GameAssert( status == FILE_SUCCESS );
-
-	return data;
-}
+#include "FileLoader.h"
 
 
 
@@ -57,33 +24,23 @@ Material::Material()
 }
 
 void Material::Destroy()
-{
-	if( this->inputLayout != nullptr )
+{	
+	if( this->inputLayout )
 	{
 		this->inputLayout->Release();
 	}
 
-	if( this->pixelShader != nullptr )
+	if( this->rasterizer )
 	{
-		this->pixelShader->Release();
+		this->rasterizer->Release();
 	}
-
-	if( this->pixelShaderBuffers != nullptr )
-	{
-		for( unsigned int i = 0; i < this->pixelShaderBufferCount; i++ )
-		{
-			this->pixelShaderBuffers[i]->Release();
-		}
-
-		delete this->pixelShaderBuffers;
-	}
-
-	if( this->vertexShader != nullptr )
+	
+	if( this->vertexShader )
 	{
 		this->vertexShader->Release();
 	}
 	
-	if( this->extraVertexShaderBuffers != nullptr )
+	if( this->extraVertexShaderBuffers )
 	{
 		for( unsigned int i = 0; i < this->vertexShaderBufferCount; i++ )
 		{
@@ -92,8 +49,23 @@ void Material::Destroy()
 
 		delete this->extraVertexShaderBuffers;
 	}
+
+	if( this->pixelShader )
+	{
+		this->pixelShader->Release();
+	}
+
+	if( this->pixelShaderBuffers )
+	{
+		for( unsigned int i = 0; i < this->pixelShaderBufferCount; i++ )
+		{
+			this->pixelShaderBuffers[i]->Release();
+		}
+
+		delete this->pixelShaderBuffers;
+	}
 	
-	if( this->pixelShaderSamplers != nullptr )
+	if( this->pixelShaderSamplers )
 	{
 		for( unsigned int i = 0; i < this->pixelShaderSamplerCount; i++ )
 		{
@@ -126,7 +98,7 @@ Material::Material( const char* shaderFileBase, ID3D11Device* device )
 	strcat_s( file, ".vs.cso" );
 
 	unsigned long size;
-	char* vertexShaderData = Load_File( file, size );
+	char* vertexShaderData = FileLoader::Load_File( file, size );
 	GameCheckFatalDx(  device->CreateVertexShader( vertexShaderData, size, nullptr, &this->vertexShader ), "Could not load compiled vertex shader." );
 
 	SetupInputLayout( device, vertexShaderData, size );
@@ -135,12 +107,12 @@ Material::Material( const char* shaderFileBase, ID3D11Device* device )
 	strcpy_s( file, shaderFileBase );
 	strcat_s( file, ".ps.cso" );
 
-	char* pixelShaderData = Load_File( file, size );
+	char* pixelShaderData = FileLoader::Load_File( file, size );
 	GameCheckFatalDx(  device->CreatePixelShader( pixelShaderData, size, nullptr, &this->pixelShader ), "Could not load compiled pixel shader." );
 	delete pixelShaderData;
 }
 
-#define INPUT_LAYOUT_DESC_COUNT 11
+#define INPUT_LAYOUT_DESC_COUNT 5
 void Material::SetupInputLayout( ID3D11Device* device, const char* vertexShaderData, unsigned long dataSize )
 {
 	D3D11_INPUT_ELEMENT_DESC layout[INPUT_LAYOUT_DESC_COUNT] =
@@ -148,14 +120,8 @@ void Material::SetupInputLayout( ID3D11Device* device, const char* vertexShaderD
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 1, DXGI_FORMAT_R32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 2, DXGI_FORMAT_R32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDWEIGHT", 3, DXGI_FORMAT_R32_FLOAT, 0, 52, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDICES", 0, DXGI_FORMAT_R32_UINT, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDICES", 1, DXGI_FORMAT_R32_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDICES", 2, DXGI_FORMAT_R32_UINT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "BLENDINDICES", 3, DXGI_FORMAT_R32_UINT, 0, 68, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 56, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		
 	};
 
@@ -170,11 +136,9 @@ void Material::Draw( Camera* camera, const DirectionLight* light, ID3D11DeviceCo
 		context->VSSetShader( this->vertexShader, nullptr, 0 );
 		context->PSSetShader( this->pixelShader, nullptr, 0 );
 
-		camera->Update_Buffers( context );
-
 		this->PrepareBuffers( context, light );
-		context->VSSetConstantBuffers( 5, this->vertexShaderBufferCount, this->extraVertexShaderBuffers );
-		context->PSSetConstantBuffers( 5, this->pixelShaderBufferCount, this->pixelShaderBuffers );
+		context->VSSetConstantBuffers( 2, this->vertexShaderBufferCount, this->extraVertexShaderBuffers );
+		context->PSSetConstantBuffers( 2, this->pixelShaderBufferCount, this->pixelShaderBuffers );
 		context->PSSetSamplers( 0, this->pixelShaderSamplerCount, this->pixelShaderSamplers );
 
 		context->RSSetState( this->rasterizer );

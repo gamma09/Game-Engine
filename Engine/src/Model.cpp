@@ -1,4 +1,5 @@
 #include <d3d11_1.h>
+#include <DebuggerSetup.h>
 
 #include "Model.h"
 #include "ModelBase.h"
@@ -8,6 +9,7 @@
 #include "Animation.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "SharedShaderDefines.h"
 
 Model::Model( ID3D11Device* device, const Material* inMaterial, ModelBase* baseModel )
 	: ModelBaseInstance( baseModel ),
@@ -17,53 +19,51 @@ Model::Model( ID3D11Device* device, const Material* inMaterial, ModelBase* baseM
 	currentAnimDuration( 0 ),
 	currentAnimStartFrame( 0 ),
 	maxSize( 1.0f ),
-	materialsHead( nullptr )
+	materialsHead( nullptr ),
+	animationTime( 0 )
 {
 	this->Add_Material( inMaterial );
 
-	this->boneMatricesAllocationPointer = newArray( Matrix, this->baseModel->Get_Bone_Count() + 1, AnimHeap::Instance(), ALIGN_16 );
+	D3D11_BUFFER_DESC modelBufferDesc ={ sizeof( Matrix ) + 4 * sizeof( float ), D3D11_USAGE_DEFAULT, D3D11_BIND_CONSTANT_BUFFER, 0, 0, 0 };
+	GameCheckFatalDx( device->CreateBuffer( &modelBufferDesc, nullptr, &this->modelBuffer ), "Could not create model's world/interpolation time buffer." );
 
-	// Adjust bone matrices so that boneMatrices[-1] is valid -> the matrix for bone -1 is the Identity matrix
-	this->boneMatrices = this->boneMatricesAllocationPointer + 1;
-	this->boneMatrices[-1].set( IDENTITY );
-
-	this->Start_Animation( 0, 0 );
-	this->Update_Animation( 0 );
-	this->Stop_Animation();
-	
-	D3D11_BUFFER_DESC bd =
+	D3D11_BUFFER_DESC boneMatricesBufferDesc =
 	{
-		sizeof(Matrix),
+		sizeof( Matrix ) * MAX_BONES,
 		D3D11_USAGE_DEFAULT,
-		D3D11_BIND_CONSTANT_BUFFER,
+		D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE,
 		0,
-		0,
-		0
+		D3D11_RESOURCE_MISC_BUFFER_STRUCTURED,
+		sizeof( Matrix )
 	};
 
-	GameCheckFatalDx( device->CreateBuffer( &bd, NULL, &this->worldBuffer ), "Cannot create world buffer." );
+	GameCheckFatalDx( device->CreateBuffer( &boneMatricesBufferDesc, nullptr, &this->boneMatricesBuffer ), "Could not create buffer to pass model's bones from CS to VS." );
 
-	D3D11_BUFFER_DESC bd2 =
-	{
-		sizeof( Matrix ) * this->baseModel->Get_Bone_Count(),
-		D3D11_USAGE_DEFAULT,
-		D3D11_BIND_CONSTANT_BUFFER,
-		0,
-		0,
-		0
-	};
+	D3D11_UNORDERED_ACCESS_VIEW_DESC boneMatricesUAVDesc;
+	boneMatricesUAVDesc.Format = DXGI_FORMAT_UNKNOWN;
+	boneMatricesUAVDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+	boneMatricesUAVDesc.Buffer.FirstElement = 0;
+	boneMatricesUAVDesc.Buffer.NumElements = MAX_BONES;
+	boneMatricesUAVDesc.Buffer.Flags = 0;
 
-	GameCheckFatalDx( device->CreateBuffer( &bd2, NULL, &this->bonesBuffer ), "Cannot create bones buffer." );
+	GameCheckFatalDx( device->CreateUnorderedAccessView( this->boneMatricesBuffer, &boneMatricesUAVDesc, &this->boneMatricesUAV ), "Couldn't create UAV for bone matrices buffer." );
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC boneMatricesSRVDesc;
+	boneMatricesSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+	boneMatricesSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	boneMatricesSRVDesc.BufferEx.FirstElement = 0;
+	boneMatricesSRVDesc.BufferEx.NumElements = MAX_BONES;
+	boneMatricesSRVDesc.BufferEx.Flags = 0;
+
+	GameCheckFatalDx( device->CreateShaderResourceView( this->boneMatricesBuffer, &boneMatricesSRVDesc, &this->boneMatricesSRV ), "Couldn't create SRV for bone matrices buffer." );
 }
 
 Model::~Model()
 {
-	this->worldBuffer->Release();
-	this->bonesBuffer->Release();
-
-	delete this->boneMatricesAllocationPointer;
-	this->boneMatrices = nullptr;
-	this->boneMatricesAllocationPointer = nullptr;
+	this->modelBuffer->Release();
+	this->boneMatricesBuffer->Release();
+	this->boneMatricesSRV->Release();
+	this->boneMatricesUAV->Release();
 
 	this->baseModel->Remove_Reference();
 	this->baseModel = nullptr;
@@ -78,6 +78,7 @@ void Model::Start_Animation( const uint32_t time, const uint32_t animationID )
 	this->currentAnimStartFrame = time;
 	this->currentAnim = animationID;
 	this->currentAnimDuration = this->baseModel->Get_Animation( animationID ).Get_Animation_Length();
+	this->animationTime = 0;
 }
 
 void Model::Update_Animation( const uint32_t time )
@@ -91,16 +92,7 @@ void Model::Update_Animation( const uint32_t time )
 			this->currentAnimStartFrame += this->currentAnimDuration;
 		}
 
-		const uint32_t boneCount = this->baseModel->Get_Bone_Count();
-
-		for( unsigned int i = 0; i < boneCount; i++ )
-		{
-			int parentIndex = this->baseModel->Get_Parent_Bone_Of_Bone( i );
-			GameAssert( -1 <= parentIndex && parentIndex < static_cast<int>( i ) );
-
-			this->boneMatrices[i] = this->baseModel->Get_Bone_Transform( this->currentAnim, i, delta ) * this->boneMatrices[parentIndex];
-			GameAssert( this->boneMatrices[i][m15] > 0.99f || this->boneMatrices[i][m15] < 1.01f );
-		}
+		this->animationTime = delta;
 	}
 }
 
@@ -110,37 +102,54 @@ bool Model::Should_Be_Drawn( const Material* material, const Camera* camera ) co
 		camera->Should_Be_Drawn( Vect() * this->baseModel->Get_Bounding_Matrix() * this->world, this->maxSize * this->baseModel->Get_Bounding_Radius() );
 }
 
-#define WORLD_MATRIX_BUFFER_INDEX 3
-#define BONE_MATRICES_BUFFER_INDEX 4
-#define TEXTURE_VIEW_RESOURCE_INDEX 0
+static ID3D11ShaderResourceView* NULL_SRV[1] ={ nullptr };
 
 void Model::Draw( ID3D11DeviceContext* context, unsigned int triangleIndexCount, ID3DUserDefinedAnnotation* annotation ) const
 {
 	annotation->BeginEvent( L"Model::Draw()" );
 	{
-		Matrix* mtxData = newArray( Matrix, this->baseModel->Get_Bone_Count(), TemporaryHeap::Instance(), ALIGN_16 );
-		memcpy( mtxData, this->boneMatrices, this->baseModel->Get_Bone_Count() * sizeof( Matrix ) );
-		
-		GameAssert( mtxData[1][m15] > 0.99f && mtxData[1][m15] < 1.01f );
-		context->UpdateSubresource( this->bonesBuffer, 0, nullptr, mtxData, 0, 0 );
-
-		delete mtxData;
-
-		/*D3D11_MAPPED_SUBRESOURCE mappedModelBuffer;
-		GameCheckFatalDx( context->Map( this->modelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedModelBuffer ), "Could not map model buffer." );
-		memcpy( mappedModelBuffer.pData, &this->world, sizeof( Matrix ) );
-		memcpy( reinterpret_cast<char*>( mappedModelBuffer.pData ) + sizeof( Matrix ), this->boneMatrices, baseModel->Get_Bone_Count() * sizeof( Matrix ) );
-		context->Unmap( this->modelBuffer, 0 );*/
-
-		context->VSSetConstantBuffers( BONE_MATRICES_BUFFER_INDEX, 1, &this->bonesBuffer );
-
-		context->UpdateSubresource( this->worldBuffer, 0, nullptr, &this->world, 0, 0 );
-		context->VSSetConstantBuffers( WORLD_MATRIX_BUFFER_INDEX, 1, &this->worldBuffer );
-
+		context->VSSetShaderResources( VS_BONE_MATRICES_REGISTER, 1, &this->boneMatricesSRV );
 		ID3D11ShaderResourceView* textureResourceView = this->Get_Texture()->Get_Texture_Resource();
-		context->PSSetShaderResources( TEXTURE_VIEW_RESOURCE_INDEX, 1, &textureResourceView );
+		context->PSSetShaderResources( PS_DIFFUSE_TEXTURE_REGISTER, 1, &textureResourceView );
 
 		context->DrawIndexed( triangleIndexCount, 0, 0 );
+
+		context->VSSetShaderResources( VS_BONE_MATRICES_REGISTER, 1, NULL_SRV );
+	}
+	annotation->EndEvent();
+}
+
+struct ModelInfo
+{
+	Matrix worldMatrix;
+	float interpTime;
+	float padding[3];
+};
+
+static ID3D11UnorderedAccessView* NULL_UAV[1] ={ nullptr };
+
+void Model::Update_Skeleton( ID3D11DeviceContext* context, ID3DUserDefinedAnnotation* annotation ) const
+{
+	
+	annotation->BeginEvent( L"Model::Update_Skeleton()" );
+	{
+		if( this->currentAnim != -1 )
+		{
+			const Animation& currentAnimation = this->baseModel->Get_Animation( this->currentAnim );
+
+			ModelInfo info;
+			info.worldMatrix = this->world;
+			info.interpTime = currentAnimation.Activate_Key_Frame_SRVs( context, this->animationTime );
+			context->UpdateSubresource( this->modelBuffer, 0, nullptr, &info, 0, 0 );
+			context->CSSetConstantBuffers( CS_MODEL_DATA_REGISTER, 1, &this->modelBuffer );
+			
+			context->CSSetUnorderedAccessViews( CS_OUTPUT_BONES_REGISTER, 1, &this->boneMatricesUAV, nullptr );
+
+			context->Dispatch( 1, 1, 1 );
+
+			// Unbind the UAV so that the corresponding SRV can be bound when we start drawing
+			context->CSSetUnorderedAccessViews( CS_OUTPUT_BONES_REGISTER, 1, NULL_UAV, nullptr );
+		}
 	}
 	annotation->EndEvent();
 }

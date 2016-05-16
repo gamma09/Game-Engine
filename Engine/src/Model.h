@@ -2,7 +2,6 @@
 
 #include <MathEngine.h>
 
-#include "HierarchyElement.h"
 #include "ModelBase.h"
 
 class Material;
@@ -10,6 +9,8 @@ class Texture;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3DUserDefinedAnnotation;
+struct ID3D11ShaderResourceView;
+struct ID3D11UnorderedAccessView;
 
 struct MaterialLink
 {
@@ -35,7 +36,6 @@ public:
 	inline void Set_Max_Size( float inMaxSize ) { this->maxSize = inMaxSize; }
 	
 	inline const ModelBase* Get_Base_Model()    const { return this->baseModel; }
-	inline const Matrix*    Get_Bone_Matrices() const { return this->boneMatrices; }
 
 	void Start_Animation( uint32_t time, uint32_t animationID );
 	void Update_Animation( uint32_t time );
@@ -45,6 +45,7 @@ public:
 
 	virtual bool Should_Be_Drawn( const Material* material, const Camera* camera ) const override;
 	virtual void Draw( ID3D11DeviceContext* context, unsigned int triangleIndexCount, ID3DUserDefinedAnnotation* annotation ) const override;
+	virtual void Update_Skeleton( ID3D11DeviceContext* context, ID3DUserDefinedAnnotation* annotation ) const override;
 	
 	void Add_Material( const Material* material );
 	bool Has_Material( const Material* material ) const;
@@ -65,19 +66,22 @@ private:
 	Matrix world;
 	float maxSize;
 
-	// There are n+1 bone matrices, where boneMatrices[-1] is valid
-	Matrix* boneMatrices;
-	ID3D11Buffer* worldBuffer;
-	ID3D11Buffer* bonesBuffer;
+	ID3D11Buffer* modelBuffer;
+
+	ID3D11Buffer* boneMatricesBuffer;
+	// Used as output from compute shader
+	ID3D11UnorderedAccessView* boneMatricesUAV;
+	// Used as input to the vertex shader
+	ID3D11ShaderResourceView* boneMatricesSRV;
+
 	uint32_t activeTexture;
 
+	
 	uint32_t currentAnimStartFrame;
 	uint32_t currentAnimDuration;
 	int32_t currentAnim;
-	
-	
-	Matrix* boneMatricesAllocationPointer;
 
+	uint32_t animationTime;
 
 	// ModelBase is in charge of managi
 	friend class ModelBase;

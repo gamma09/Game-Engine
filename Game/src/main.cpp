@@ -4,7 +4,8 @@ int CALLBACK WinMain(HINSTANCE , HINSTANCE ,  LPSTR , int)
 {                                                   
 
 	Game *pGame = new Game("Game", 800,600);                                 
-	pGame->run();                                  
+	pGame->run();
+	delete pGame;
 
 	return 0;                                       
 }

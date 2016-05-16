@@ -3,7 +3,11 @@
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
 #include <Windows.h>
-#include <d3d11_1.h>
+#ifdef _DEBUG
+#include <dxgi1_3.h>
+#include <dxgidebug.h>
+#endif
+#include <d3d11_2.h>
 #include <thread>
 #include <stdio.h>
 #include <string.h>
@@ -19,6 +23,7 @@
 #include "YieldMutex.h"
 #include "SceneAsset.h"
 #include "UpdateEventManager.h"
+#include "CalculateSkeletonShader.h"
 
 class Heap;
 class DirectionLight;
@@ -43,6 +48,11 @@ public:
 private:
 	void CreateEngineWindow();
 	void SetupDirect3D();
+	void CreateSwapChain( IDXGIFactory1* dxgiFactory1 );
+	void SetupDirectXDebugging();
+	void SetupRenderView();
+	void CreateViewport();
+	void SetupCursor();
 
 	static void UpdateThreadEntry( Engine* engine );
 	static LRESULT CALLBACK WindowCallback( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
@@ -72,6 +82,7 @@ protected:
 	DirectionLight* light;
 
 	// TODO move materials to scene
+	CalculateSkeletonShader* skeletonShader;
 	LitTextureMaterial* litTextureMaterial;
 	UnlitTextureMaterial* unlitTextureMaterial;
 	WireframeMaterial* wireframeMaterial;
@@ -87,6 +98,11 @@ protected:
 
 	HWND hWindow;
 	AppInfo info;
+
+#ifdef _DEBUG
+	ID3D11Debug* debugInterface;
+	IDXGIDebug* lowLevelDebugInterface;
+#endif
 
 private:
 	bool isOpen;
