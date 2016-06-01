@@ -24,7 +24,7 @@ void print_usage( const char* fullPath, bool displayFullHelp )
 		filename = lastSlash + 1;
 
 	fprintf( stderr, "USAGE:\n" );
-	fprintf( stderr, "   %s path\\to\\file.fbx [-include texture.tga]\n", filename );
+	fprintf( stderr, "   %s path\\to\\file.fbx [-include texture.tga] [-set VAR=VALUE [-set VAR=VALUE ...]]\n", filename );
 	fprintf( stderr, "\n" );
 
 	if( !displayFullHelp )
@@ -48,6 +48,11 @@ void print_usage( const char* fullPath, bool displayFullHelp )
 		fprintf( stderr, "                            fbx library. The texture file must be in the same\n" );
 		fprintf( stderr, "                            directory as the FBX file.\n" );
 		fprintf( stderr, "\n" );
+		fprintf( stderr, "     -set VAR=VALUE   Optional. This can be used to set cutoff values for\n" );
+		fprintf( stderr, "                      animation compression. This switch can be used multiple\n" );
+		fprintf( stderr, "                      times for different cutoffs. Valid VAR names (and their\n" );
+		fprintf( stderr, "                      associated default values) are listed in the remarks section.\n" );
+		fprintf( stderr, "\n" );
 		fprintf( stderr, "\n" );
 		fprintf( stderr, "DESCRIPTION\n" );
 		fprintf( stderr, "     This command will read the specified FBX asset file and bake it (as well as\n" );
@@ -62,6 +67,17 @@ void print_usage( const char* fullPath, bool displayFullHelp )
 		fprintf( stderr, "to 19 characters if the title is longer. If the FBX file has no title in the\n" );
 		fprintf( stderr, "meta data, then the package name will be the FBX's filename instead, minus the\n" );
 		fprintf( stderr, "extension.\n" );
+		fprintf( stderr, "\n" );
+		fprintf( stderr, "      Here is a table of valid environment variable names for VAR and their\n" );
+		fprintf( stderr, "default values if the switch is left absent:\n" );
+		fprintf( stderr, "\n" );
+		fprintf( stderr, "           VAR             | Default VALUE\n" );
+		fprintf( stderr, "  KF_DROP_TOLERANCE_TRANS  |  0.1\n" );
+		fprintf( stderr, "  KF_DROP_TOLERANCE_SCALE  |  0.01\n" );
+		fprintf( stderr, "  KF_DROP_TOLERANCE_DEGRS* |  2.0 (degrees)\n" );
+		fprintf( stderr, "  KF_DROP_TOLERANCE_RADNS* |  0.0349 (radians)\n" );
+		fprintf( stderr, "\n" );
+		fprintf( stderr, " * KF_DROP_TOLERANCE_DEGRS and KF_DROP_TOLERANCE_RADNS are mutually exclusive.\n" );
 	}
 }
 

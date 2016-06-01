@@ -2,7 +2,7 @@
 /*                                                                           */
 /* File: QuatApp.cpp                                                         */
 /*                                                                           */
-/* Quaternioin Application Class                                             */
+/* Quaternion Application Class                                              */
 /*                                                                           */
 /*****************************************************************************/
 
@@ -11,7 +11,7 @@
 #include <math.h>
 #include <GameAssert.h>
 
-void QuatApp::Slerp( Quat& result, const Quat& source, const Quat& target, const float t )
+Quat QuatApp::Slerp( const Quat& source, const Quat& target, const float t )
 {
 	float tmp = source.dot( target );
 	Quat tar;
@@ -34,12 +34,12 @@ void QuatApp::Slerp( Quat& result, const Quat& source, const Quat& target, const
 	const float angle = acosf( tmp );
 	if( angle == 0.0f )
 	{
-		result = source;
+		return source;
 	}
 	else
 	{
 		const float sn = sinf( angle );
-		result = source * sinf( ( 1 - t ) * angle ) / sn + tar * sinf( t * angle ) / sn;
+		return source * sinf( ( 1 - t ) * angle ) / sn + tar * sinf( t * angle ) / sn;
 	}
 }
 

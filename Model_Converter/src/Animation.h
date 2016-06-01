@@ -18,8 +18,12 @@ public:
 
 	const char* Get_Name() const;
 	const vector<Frame>& Get_Animation_Frames();
+	void Compress();
+	unsigned int Get_Number_Of_Frames_Dropped() const;
 
 private:
 	vector<Frame> frames;
 	string name;
+
+	unsigned int framesDropped;
 };

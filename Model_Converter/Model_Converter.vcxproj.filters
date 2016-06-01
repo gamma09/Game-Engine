@@ -843,6 +843,9 @@
     <ClInclude Include="src\FBXImporter.h">
       <Filter>FBX</Filter>
     </ClInclude>
+    <ClInclude Include="src\ConverterConfig.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\fbx\lib\libfbxsdk_d32.lib">

@@ -48,6 +48,7 @@ public:
 	void Get_Bounding_Sphere( float& radius, float& centerX, float& centerY, float& centerZ ) const;
 
 	void Normalize_Influences();
+	void Compress_Animations();
 
 private:
 
@@ -60,5 +61,4 @@ private:
 	vector<Texture> textureList;
 	vector<Animation> anims;
 	vector<Bone> bones;
-
 };

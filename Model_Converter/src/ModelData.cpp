@@ -2,6 +2,7 @@
 
 #include <MathEngine.h>
 #include <climits>
+#include <Logger.h>
 
 #include "DebugPrint.h"
 
@@ -271,8 +272,23 @@ void ModelData::Get_Bounding_Sphere( float& radius, float& centerX, float& cente
 
 void ModelData::Normalize_Influences()
 {
-	for( Vertex v : this->vertexList )
+	for( Vertex& v : this->vertexList )
 	{
 		v.Normalize_Bone_Influences();
 	}
+}
+
+void ModelData::Compress_Animations()
+{
+	unsigned int keyFramesDropped = 0;
+
+	for( Animation& anim : this->anims )
+	{
+		anim.Compress();
+
+		keyFramesDropped += anim.Get_Number_Of_Frames_Dropped();
+	}
+
+	Logger::Log_Info( "--- Animation Compression Statistics ---" );
+	Logger::Log_Info( "Key Frames Dropped: %u", keyFramesDropped );
 }

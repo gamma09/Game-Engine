@@ -58,7 +58,7 @@ void LoadScene( FbxManager* pManager, FbxDocument* pScene, const string& path, c
 		if( lImporter->GetStatus().GetCode() == FbxStatus::eInvalidFileVersion )
 		{
 			fprintf( stderr, "FBX file format version for this FBX SDK is %d.%d.%d\n", lSDKMajor, lSDKMinor, lSDKRevision );
-			fprintf( stderr, "FBX file format version for file '%s' is %d.%d.%d\n\n", filePath, lFileMajor, lFileMinor, lFileRevision );
+			fprintf( stderr, "FBX file format version for file '%s' is %d.%d.%d\n\n", filePath.c_str(), lFileMajor, lFileMinor, lFileRevision );
 		}
 
 		exit( 1 );
@@ -91,7 +91,7 @@ void LoadScene( FbxManager* pManager, FbxDocument* pScene, const string& path, c
 		char lPassword[1024];
 		lPassword[0] = '\0';
 
-		scanf_s( "%s", lPassword );
+		scanf_s( "%s", lPassword, _countof( lPassword ) );
 
 		FbxString lString( lPassword );
 

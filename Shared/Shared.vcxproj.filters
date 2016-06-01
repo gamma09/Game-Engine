@@ -24,12 +24,18 @@
     <ClInclude Include="src\ReferencedObject.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\CommandLine.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Execute.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ReferencedObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CommandLine.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

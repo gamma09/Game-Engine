@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ChunkHeader.h" />
+    <ClInclude Include="src\CommandLine.h" />
     <ClInclude Include="src\DebuggerSetup.h" />
     <ClInclude Include="src\Execute.h" />
     <ClInclude Include="src\GameAssert.h" />
@@ -19,6 +20,7 @@
     <ClInclude Include="src\ReferencedObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CommandLine.cpp" />
     <ClCompile Include="src\Execute.cpp" />
     <ClCompile Include="src\ReferencedObject.cpp" />
   </ItemGroup>

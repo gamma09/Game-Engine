@@ -61,6 +61,7 @@ void FBXImporter::Import( const string& path, const string& filename )
 	this->ImportSkin();
 
 	this->modelData.Normalize_Influences();
+	this->modelData.Compress_Animations();
 }
 
 void FBXImporter::ImportMesh()

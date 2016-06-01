@@ -334,6 +334,7 @@
     <ClInclude Include="libs\fbx\include\fbxsdk\utils\fbxusernotification.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Bone.h" />
+    <ClInclude Include="src\ConverterConfig.h" />
     <ClInclude Include="src\DebugPrint.h" />
     <ClInclude Include="src\Execute.h" />
     <ClInclude Include="src\ErrorFormatter.h" />

@@ -347,6 +347,12 @@ float Quat::getAngle() const
 	return 2.0f * acosf( this->qw );
 }
 
+float Quat::getAngleTo( const Quat& b ) const
+{
+	Quat inverse = this->getInv();
+	return ( inverse * b ).getAngle();
+}
+
 void Quat::getAxis( Vect& out ) const
 {
 	out = Vect( this->m, 1.0f );

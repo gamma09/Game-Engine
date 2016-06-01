@@ -76,6 +76,7 @@ public:
 	void getAxis( Vect& out ) const; // same as getVect?
 
 	float getAngle() const;
+	float getAngleTo( const Quat& b ) const;
 
 	Quat multByElement( const Quat& q ) const;
 

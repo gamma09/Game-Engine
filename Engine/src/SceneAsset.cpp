@@ -134,12 +134,12 @@ ActorAsset* SceneAsset::AddActor( ID3D11Device* device, const ModelAsset& model,
 
 void SceneAsset::RemoveActor( const ActorAsset& actor )
 {
-	ActorAsset* curr = nullptr;
+	ActorAsset* curr;
 	{
 		YieldMutex::Lock lock = this->LockScene();
 
 		ActorAsset* prev = nullptr;
-		ActorAsset* curr = this->actorsHead;
+		curr = this->actorsHead;
 		while( curr != nullptr )
 		{
 			if( *curr == actor )
