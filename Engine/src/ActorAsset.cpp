@@ -59,12 +59,8 @@ ActorAsset::ActorAsset( ID3D11Device* device, const char* name, const ModelAsset
 	this->actor->Add_Reference();
 
 	this->actor->position.set( this->x, this->y, this->z );
-	this->actor->sx = this->sx;
-	this->actor->sy = this->sy;
-	this->actor->sz = this->sz;
-	this->actor->rx = this->rx;
-	this->actor->ry = this->ry;
-	this->actor->rz = this->rz;
+	this->actor->scale.set( this->sx, this->sy, this->sz );
+	this->actor->rotation.set( this->rx, this->ry, this->rz );
 }
 
 Actor* ActorAsset::GetActor() const

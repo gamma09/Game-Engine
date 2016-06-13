@@ -5,32 +5,26 @@
 #include "Actor.h"
 
 
-ActorManager* ActorManager::instance;
+ActorManager* ActorManager::instance = nullptr;
 
 ActorManager* ActorManager::Instance()
 {
-	GameAssert( instance != 0 );
-
+	GameAssert( instance );
 	return instance;
 }
 
 void ActorManager::Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize )
 {
-	managerHeap;
-
 	GameAssert( instance == 0 );
-
 	instance = new( managerHeap, ALIGN_4 ) ActorManager( initialReserve, refillSize );
 }
 
 void ActorManager::Destroy()
 {
-	GameAssert( instance != 0 );
-
-	instance->Destroy_Objects();
-	
+	GameAssert( instance );
+	instance->PreDestroy();
 	delete instance;
-	instance = 0;
+	instance = nullptr;
 }
 
 Actor* ActorManager::Add( ID3D11Device* device, const Material* material, ModelBase* modelBase, UpdateStrategy* updateStrategy )
@@ -57,13 +51,11 @@ ActorManager::ActorManager( uint32_t initialReserve, uint32_t refillSize )
 {
 	// Hey, might as well allocate a whole page of memory...
 	// DO NOT CHANGE TO FIX SIZE HEAP! Actor needs to be 16-byte aligned...
-	Mem::createVariableBlockHeap( this->heap, 4096 );
-
+	Mem::createVariableBlockHeap( this->heap, 4096, "Actors" );
 	this->Init( initialReserve );
 }
 
 ActorManager::~ActorManager()
 {
-	Destroy_Objects();
 	Mem::destroyHeap( heap );
 }

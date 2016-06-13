@@ -4,46 +4,39 @@
 #include "ModelBaseManager.h"
 #include "ModelBase.h"
 
-ModelBaseManager* ModelBaseManager::instance;
-
+ModelBaseManager* ModelBaseManager::instance = nullptr;
 
 #define MAX_MODEL_BASES_CREATED 128
 
-
-
 ModelBaseManager* ModelBaseManager::Instance()
 {
-	GameAssert( ModelBaseManager::instance != 0 );
-
+	GameAssert( ModelBaseManager::instance );
 	return instance;
 }
 
 void ModelBaseManager::Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize )
 {
-	managerHeap;
-
 	GameAssert( instance == 0 );
-
 	instance = new( managerHeap, ALIGN_4 ) ModelBaseManager( initialReserve, refillSize );
 }
 
 void ModelBaseManager::Destroy()
 {
-	GameAssert( instance != 0 );
+	GameAssert( instance );
+	instance->PreDestroy();
 	delete instance;
-	ModelBaseManager::instance = 0;
+	ModelBaseManager::instance = nullptr;
 }
 
 ModelBaseManager::ModelBaseManager( uint32_t initialReserve, uint32_t refillSize )
 	: Manager( refillSize )
 {
-	Mem::createVariableBlockHeap( this->heap, MAX_MODEL_BASES_CREATED * sizeof( ModelBase ) );
+	Mem::createVariableBlockHeap( this->heap, MAX_MODEL_BASES_CREATED * sizeof( ModelBase ), "ModelBases" );
 	this->Init( initialReserve );
 }
 
 ModelBaseManager::~ModelBaseManager()
 {
-	Destroy_Objects();
 	Mem::destroyHeap( heap );
 }
 

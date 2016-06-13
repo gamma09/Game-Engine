@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <utility>
 #include <d3d11_1.h>
+#include <thread>
+#include <atomic>
+#include <Mutex.h>
 
 #include "DirectXAssert.h"
 #include "MemorySetup.h"
@@ -38,9 +41,10 @@ ModelBase::ModelBase()
 	anims( nullptr ),
 	textureCount( 0 ),
 	textureHead( nullptr ),
-	instancesHead( nullptr )
+	instancesHead( nullptr ),
+	modelBaseLock( new( MiscHeap::Instance(), ALIGN_4 ) Mutex() )
 {
-	// Do nothing
+	this->modelBaseLock->LockMutex( std::memory_order_seq_cst );
 }
 
 ModelBase::~ModelBase()
@@ -267,9 +271,23 @@ void ModelBase::Read_Textures( ID3D11Device* device, const Header& header, unsig
 
 void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 {
+	static unsigned int NEXT_GENERATED_ID_NUMBER = 0;
+
 	unsigned char* modelName = nullptr;
 	int modelNameSize;
 	GameVerify( read_asset( archiveFile, MANIFEST_TYPE, "manifest", modelName, modelNameSize, TemporaryHeap::Instance() ) );
+
+	if( strlen( reinterpret_cast<char*>( modelName ) ) == 0 )
+	{
+		unsigned int idNum = NEXT_GENERATED_ID_NUMBER++;
+		char idStr[16];
+		sprintf_s( idStr, "ModelBase %u", idNum );
+		this->SetID( idStr );
+	}
+	else
+	{
+		this->SetID( reinterpret_cast<char*>( modelName ) );
+	}
 
 	unsigned char* modelData = nullptr;
 	int modelSize;
@@ -298,10 +316,14 @@ void ModelBase::Set( ID3D11Device* device, const char* const archiveFile )
 	
 	// read textures (textureCount, textureHead)
 	Read_Textures( device, header, modelData, archiveFile );
+
+	this->modelBaseLock->UnlockMutex();
 }
 
 void ModelBase::Reset()
 {
+	this->modelBaseLock->LockMutex( std::memory_order_seq_cst );
+
 	ManagedObject::Reset();
 	GameAssert( this->Get_Reference_Count() == 0 );
 
@@ -341,6 +363,8 @@ void ModelBase::Free_Me()
 
 const Texture* ModelBase::Get_Texture( const uint32_t textureID ) const
 {
+	Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 	if( textureID >= this->textureCount )
 	{
 		return TextureManager::Instance()->Default_Texture();
@@ -372,6 +396,13 @@ void ModelBase::Update_Model_Skeletons( ID3D11DeviceContext* context, ID3DUserDe
 
 	annotation->BeginEvent( L"ModelBase::Update_Model_Skeletons()" );
 	{
+		if( strcmp( this->ID, "ModelBase 1" ) == 0 )
+		{
+			int a = 3;
+			a++;
+		}
+		Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 		context->CSSetConstantBuffers( CS_HIERARCHY_REGISTER, 1, &this->boneHierarchyBuffer );
 		context->CSSetConstantBuffers( CS_BIND_POSE_REGISTER, 1, &this->bindPoseBuffer );
 		for( ModelBaseInstance* model = this->instancesHead; model; model = model->next )
@@ -393,6 +424,8 @@ void ModelBase::Draw( ID3D11DeviceContext* context, const Material* material, co
 
 	annotation->BeginEvent( L"ModelBase::Draw()" );
 	{
+		Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 		context->IASetVertexBuffers( 0, 1, &this->verticesBuffer, &VERTEX_SIZE, &VERTEX_BUFFER_OFFSET );
 		context->IASetIndexBuffer( this->indicesBuffer, DXGI_FORMAT_R32_UINT, 0 );
 		context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
@@ -410,6 +443,8 @@ void ModelBase::Draw( ID3D11DeviceContext* context, const Material* material, co
 
 const Animation& ModelBase::Get_Animation( const uint32_t animID ) const
 {
+	Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 	GameAssert( animID < this->animCount );
 
 	return this->anims[animID];
@@ -417,6 +452,8 @@ const Animation& ModelBase::Get_Animation( const uint32_t animID ) const
 
 Model* ModelBase::Create_Instance( ID3D11Device* device, const Material* material )
 {
+	Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 	Model* model = new( ModelHeap::Instance(), ALIGN_16 ) Model( device, material, this );
 	model->next = this->instancesHead;
 	if( this->instancesHead )
@@ -431,6 +468,8 @@ Model* ModelBase::Create_Instance( ID3D11Device* device, const Material* materia
 
 void ModelBase::Delete_Instance( ModelBaseInstance* instance )
 {
+	Mutex::Lock lock( *this->modelBaseLock, std::memory_order_acquire );
+
 	if( instance->prev )
 	{
 		instance->prev->next = instance->next;

@@ -7,31 +7,26 @@
 
 #define MAX_TEXTURES_CREATED 128
 
-
-TextureManager* TextureManager::instance;
+TextureManager* TextureManager::instance = nullptr;
 
 TextureManager* TextureManager::Instance()
 {
-	GameAssert( instance != 0 );
-
+	GameAssert( instance );
 	return instance;
 }
 
 void TextureManager::Create( Heap* managerHeap, const uint32_t initialReserve, const uint32_t refillSize )
 {
-	managerHeap;
-
 	GameAssert( instance == 0 );
-
 	instance = new( managerHeap, ALIGN_4 ) TextureManager( initialReserve, refillSize );
 }
 
 void TextureManager::Destroy()
 {
-	GameAssert( instance != 0 );
-
+	GameAssert( instance );
+	instance->PreDestroy();
 	delete instance;
-	instance = 0;
+	instance = nullptr;
 }
 
 Texture* TextureManager::Add( ID3D11Device* device, const char* archiveFile, const char* textureName )
@@ -43,7 +38,7 @@ Texture* TextureManager::Add( ID3D11Device* device, const char* archiveFile, con
 
 const Texture* TextureManager::Default_Texture() const
 {
-	GameAssert( this->defaultTexture != 0 );
+	GameAssert( this->defaultTexture );
 
 	return this->defaultTexture;
 }
@@ -70,13 +65,12 @@ TextureManager::TextureManager( const uint32_t initialReserve, const uint32_t re
 	: Manager( refillSize ),
 	defaultTexture( nullptr )
 {
-	Mem::createFixBlockHeap( this->heap, MAX_TEXTURES_CREATED, sizeof( Texture ) );
+	Mem::createFixBlockHeap( this->heap, MAX_TEXTURES_CREATED, sizeof( Texture ), "Textures" );
 	this->Init( initialReserve );
 }
 
 TextureManager::~TextureManager()
 {
 	delete this->defaultTexture;
-	Destroy_Objects();
 	Mem::destroyHeap( heap );
 }

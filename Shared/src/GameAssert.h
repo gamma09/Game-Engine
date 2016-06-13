@@ -4,6 +4,12 @@
 
 
 #define GameAssert(a) assert(a)
+#define GameCheckWarning( a, msg ) Debugging::WarnIf( !(a), msg )
+
+namespace Debugging
+{
+	void WarnIf( bool expr, const char* msg );
+}
 
 #if defined(_DEBUG) || defined(DEBUG)
 

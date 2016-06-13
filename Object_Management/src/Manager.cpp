@@ -1,11 +1,15 @@
 #include <GameAssert.h>
 #include <string.h>
 #include <stdio.h>
+#include <ThreadUtils.h>
 
 #include "Manager.h"
 #include "ManagedObjectCondition.h"
 #include "ManagedObject.h"
 
+Manager* Manager::managersHead = nullptr;
+Mutex Manager::managersMutex;
+std::thread* Manager::managerThread = nullptr;
 
 Manager::Iterator::Iterator(ManagedObject* head)
 	: curr(head)
@@ -62,13 +66,16 @@ const bool Manager::Iterator::Is_At_End() const
 
 
 
-Manager::Manager(uint32_t refill) :
-	refillSize(refill),
-	activeCount(0),
-	maxActiveCount(0),
-	reserveCount(0),
-	activeHead(0),
-	reserveHead(0)
+Manager::Manager( const uint32_t refill ) :
+	refillSize( refill ),
+	activeCount( 0 ),
+	maxActiveCount( 0 ),
+	reserveCount( 0 ),
+	activeHead( 0 ),
+	reserveHead( 0 ),
+	initialSize( 0 ),
+	hasCreatedInitialReserve( false ),
+	mutex()
 {
 	// must be able to grow the reserve
 	GameAssert(refill > 0);
@@ -76,20 +83,56 @@ Manager::Manager(uint32_t refill) :
 
 void Manager::Init(uint32_t initial)
 {
-	this->Fill_Reserve(initial);
+	this->initialSize = initial;
+
+	Mutex::Lock lock( Manager::managersMutex );
+	this->next = Manager::managersHead;
+	Manager::managersHead = this;
+
+	if( Manager::managerThread == nullptr )
+	{
+		Manager::managerThread = new std::thread( Manager::ManagerThreadEntry );
+	}
 }
 
 Manager::~Manager()
 {
-	// Do nothing
 }
 
+void Manager::PreDestroy()
+{
+	this->Remove_Manager();
+	this->Destroy_Objects();
+}
 
+void Manager::Remove_Manager()
+{
+	Mutex::Lock lock( Manager::managersMutex );
+	Manager* curr = Manager::managersHead;
+	Manager* prev = nullptr;
+	while( curr && curr != this )
+	{
+		prev = curr;
+		curr = curr->next;
+	}
 
+	GameAssert( curr == this );
+	if( prev == nullptr )
+	{
+		Manager::managersHead = curr->next;
+	}
+	else
+	{
+		prev->next = curr->next;
+	}
 
+	curr->next = nullptr;
+}
 
 void Manager::Destroy_Objects()
 {
+	Mutex::Lock lock( this->mutex );
+
 	while (this->activeCount > 0)
 	{
 		ManagedObject* curr = this->activeHead;
@@ -125,8 +168,13 @@ const Manager::Iterator Manager::Active_Iterator() const
 
 ManagedObject* Manager::Add_Object()
 {
-	if (this->reserveCount == 0)
-		this->Fill_Reserve(this->refillSize);
+	this->mutex.LockMutex( std::memory_order_acquire );
+	while( this->reserveCount.load( std::memory_order_acquire ) == 0 )
+	{
+		this->mutex.UnlockMutex();
+		std::this_thread::yield();
+		this->mutex.LockMutex( std::memory_order_acquire );
+	}
 
 	ManagedObject* node = this->reserveHead;
 	this->reserveHead = this->reserveHead->next;
@@ -141,6 +189,8 @@ ManagedObject* Manager::Add_Object()
 	this->activeCount++;
 	this->maxActiveCount = (this->activeCount > this->maxActiveCount) ? this->activeCount : this->maxActiveCount;
 	this->reserveCount--;
+
+	this->mutex.UnlockMutex();
 
 	node->isActive = true;
 
@@ -159,9 +209,11 @@ ManagedObject* Manager::Find_Object(const ManagedObjectCondition& condition) con
 	return 0;
 }
 
-void Manager::Remove(ManagedObject* const obj)
+void Manager::Remove( ManagedObject* const obj )
 {
-	GameAssert(obj != 0);
+	GameAssert( obj );
+
+	Mutex::Lock lock( this->mutex );
 
 	if (obj->prev == 0)
 		this->activeHead = obj->next;
@@ -182,14 +234,50 @@ void Manager::Remove(ManagedObject* const obj)
 	
 
 	
-void Manager::Fill_Reserve(const uint32_t count)
+void Manager::Check_Fill_Reserve()
 {
-	for (uint32_t i = 0; i < count; i++)
+	if( !this->hasCreatedInitialReserve )
 	{
-		ManagedObject* node = this->Make_Object();
-		node->next = this->reserveHead;
-		this->reserveHead = node;
-	}
+		Mutex::Lock lock( this->mutex );
 
-	this->reserveCount += count;
+		for( uint32_t i = 0; i < this->initialSize; i++ )
+		{
+			ManagedObject* node = this->Make_Object();
+			node->next = this->reserveHead;
+			this->reserveHead = node;
+		}
+
+		this->reserveCount += this->initialSize;
+		this->hasCreatedInitialReserve = true;
+	}
+	else if( this->reserveCount < this->refillSize )
+	{
+		Mutex::Lock lock( this->mutex );
+
+		for( uint32_t i = this->reserveCount; i < this->refillSize; i++ )
+		{
+			ManagedObject* node = this->Make_Object();
+			node->next = this->reserveHead;
+			this->reserveHead = node;
+			this->reserveCount++;
+		}
+	}
+}
+
+void Manager::ManagerThreadEntry()
+{
+	ThreadUtils::SetThreadName( "Manager Thread" );
+
+	while( Manager::managersHead )
+	{
+		{
+			Mutex::Lock lock( Manager::managersMutex );
+			for( Manager* curr = Manager::managersHead; curr != nullptr; curr = curr->next )
+			{
+				curr->Check_Fill_Reserve();
+			}
+		}
+
+		std::this_thread::yield();
+	}
 }

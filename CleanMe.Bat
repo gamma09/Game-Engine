@@ -18,14 +18,12 @@ call :SubFolderClean BrowserCLI
 
 call :SubFolderClean Editor
 call :SubFolderClean Engine
-call :SubFolderClean File_System
-call :SubFolderClean Logging_System
 call :SubFolderClean Game
 call :SubFolderClean Math_Engine
-call :SubFolderClean Memory_System
 call :SubFolderClean Model_Converter
 call :SubFolderClean Object_Management
 call :SubFolderClean PCS_Tree
+call :SubFolderClean Synchronization
 
 call :SubFolderClean Reflection_Headers
 call :SubFolderClean Reflection_Tool

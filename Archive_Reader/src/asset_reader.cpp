@@ -30,7 +30,7 @@ bool read_asset( const char * const archiveFilename, ChunkType type, const char 
 		if( chunkHdr.type == type && 0 == strcmp( chunkName, chunkHdr.chunkName ) )
 		{
 			chunkSize = chunkHdr.chunkSize;
-			chunkBuff = new( heap, ALIGN_4, __FILE__, __LINE__ ) unsigned char[chunkSize];
+			chunkBuff = newArray( unsigned char, chunkSize, heap, ALIGN_4);
 			GameVerify( FILE_SUCCESS == File::read( archive, chunkBuff, chunkSize ) );
 
 			File::close( archive );

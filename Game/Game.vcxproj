@@ -44,16 +44,16 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-	<OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
+    <OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Math_Engine\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(SolutionDir)Synchronization\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)GLEW\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Math_Engine\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)Engine\src;$(SolutionDir)Synchronization\src;$(IncludePath)</IncludePath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-	<OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
+    <OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <CustomBuildAfterTargets>PreBuildEvent</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -149,14 +149,8 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{4067ada5-f2dd-4c7a-94d9-763f0fd223a7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\File_System\File_System.vcxproj">
-      <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Math_Engine\Math_Engine.vcxproj">
       <Project>{5122b556-8547-48d7-acf6-1466c0180ff4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Memory_System\Memory_System.vcxproj">
-      <Project>{1e0c6240-1fed-472f-b8be-3d9000cd2e03}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Object_Management\Object_Management.vcxproj">
       <Project>{540ccf66-b6e2-44e9-aa68-5c8ea19db298}</Project>
@@ -169,6 +163,9 @@ MKDIR "$(ProjectDir)GeneratedFiles"</Command>
     </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{af0d953c-be31-4f51-96bf-6649c455a2be}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Synchronization\Synchronization.vcxproj">
+      <Project>{5436dab4-04bc-42ec-891d-78b75bf6f3c0}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Time\Time.vcxproj">
       <Project>{f980f363-fcc0-44d2-ae62-83bf4476c968}</Project>

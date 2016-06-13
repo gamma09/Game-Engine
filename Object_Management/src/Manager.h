@@ -1,6 +1,9 @@
 #pragma once
 
 #include <stdint.h>
+#include <atomic>
+#include <thread>
+#include <Mutex.h>
 
 class ManagedObject;
 class ManagedObjectCondition;
@@ -34,7 +37,7 @@ public:
 	virtual ~Manager();
 
 
-	void Destroy_Objects();
+	void PreDestroy();
 	void Print_Statistics(const char* preamble = "") const;
 
 	const Iterator Active_Iterator() const;
@@ -64,16 +67,29 @@ private:
 	Manager(const Manager& manager);
 	Manager& operator=(const Manager& manager);
 		
-	void Fill_Reserve(const uint32_t numToAllocate);
+	void Check_Fill_Reserve();
+	void Destroy_Objects();
+	void Remove_Manager();
+
+	static void ManagerThreadEntry();
 
 private:
+	bool hasCreatedInitialReserve;
+	uint32_t initialSize;
 	uint32_t refillSize;
 
 	uint32_t activeCount;
 	uint32_t maxActiveCount;
 
-	uint32_t reserveCount;
+	Mutex mutex;
+	std::atomic<uint32_t> reserveCount;
 
 	ManagedObject* activeHead;
 	ManagedObject* reserveHead;
+
+	Manager* next;
+
+	static Manager* managersHead;
+	static Mutex managersMutex;
+	static std::thread* managerThread;
 };

@@ -72,31 +72,36 @@ void Game::LoadContent()
 
 	this->sceneAsset = new( AssetHeap::Instance(), ALIGN_4 ) SceneAsset( "Test Scene" );
 
-	ModelAsset* model = this->sceneAsset->AddModel( this->device, "../resources/soldier_animated_jump.spu" );
-	ActorAsset* actor1 = this->sceneAsset->AddActor( this->device, *model, this->unlitTextureMaterial, updater );
-	actor1->GetActor()->Get_Model().Change_Active_Texture( 1 );
-	actor1->GetActor()->Update_Model_Matrix();
-	actor1->GetActor()->Get_Model().Start_Animation( 0, 0 );
-
-	ActorAsset* actor2 = this->sceneAsset->AddActor( this->device, *model, this->unlitTextureMaterial, updater );
-	actor2->GetActor()->position[X] = -125.0f;
-	actor2->GetActor()->Get_Model().Change_Active_Texture( 1 );
-	actor2->GetActor()->Update_Model_Matrix();
-	actor2->GetActor()->Get_Model().Start_Animation( 500, 0 );
-
+	ModelAsset* model1 = this->sceneAsset->AddModel( this->device, "../resources/humanoid2.spu" );
 	ModelAsset* model2 = this->sceneAsset->AddModel( this->device, "../resources/teddy_tga.spu" );
-	ActorAsset* actor3 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
-	actor3->GetActor()->position[Y] = -175.0f;
-	actor3->GetActor()->Get_Model().Change_Active_Texture( 1 );
-	actor3->GetActor()->Update_Model_Matrix();
-	actor3->GetActor()->Get_Model().Start_Animation( 0, 0 );
+	ModelAsset* model3 = this->sceneAsset->AddModel( this->device, "../resources/2bonepolyskinnedskeleton.spu" );
 
-	ActorAsset* actor4 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
-	actor4->GetActor()->position[X] = -125.0f;
-	actor4->GetActor()->position[Y] = -175.0f;
-	actor4->GetActor()->Get_Model().Change_Active_Texture( 1 );
-	actor4->GetActor()->Update_Model_Matrix();
-	actor4->GetActor()->Get_Model().Start_Animation( 0, 1 );
+	ActorAsset* humanoid1 = this->sceneAsset->AddActor( this->device, *model1, this->wireframeMaterial, updater );
+	humanoid1->GetActor()->Get_Model().Change_Active_Texture( 0 );
+	humanoid1->GetActor()->position.set( -125.0f, 0.0f, -200.0f );
+	humanoid1->GetActor()->rotation.set( -MATH_PI2, 0.0f, 0.0f );
+	humanoid1->GetActor()->scale.set( 0.2f, 0.2f, 0.2f );
+	humanoid1->GetActor()->Update_Model_Matrix();
+	humanoid1->GetActor()->Get_Model().Start_Animation( 0, 0 );
+
+	ActorAsset* teddy1 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	teddy1->GetActor()->position.set( 0.0f, -175.0f, 0.0f );
+	teddy1->GetActor()->Get_Model().Add_Material( this->wireframeMaterial );
+	teddy1->GetActor()->Get_Model().Change_Active_Texture( 0 );
+	teddy1->GetActor()->Update_Model_Matrix();
+	teddy1->GetActor()->Get_Model().Start_Animation( 0, 0 );
+
+	ActorAsset* teddy2 = this->sceneAsset->AddActor( this->device, *model2, this->unlitTextureMaterial, updater );
+	teddy2->GetActor()->Get_Model().Change_Active_Texture( 0 );
+	teddy2->GetActor()->position.set( -125.0f, -175.0f, 0.0f );
+	teddy2->GetActor()->Update_Model_Matrix();
+	teddy2->GetActor()->Get_Model().Start_Animation( 0, 1 );
+
+	ActorAsset* twobone = this->sceneAsset->AddActor( this->device, *model3, this->unlitTextureMaterial, updater );
+	twobone->GetActor()->Get_Model().Change_Active_Texture( 0 );
+	twobone->GetActor()->position.set( 50.0f, 100.0f, -50.0f );
+	twobone->GetActor()->Update_Model_Matrix();
+	twobone->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
 	this->light = DirectionLightManager::Instance()->Add( -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f );
 	this->light->Add_Reference();

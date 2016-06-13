@@ -102,7 +102,6 @@ protected:
 
 #ifdef _DEBUG
 	ID3D11Debug* debugInterface;
-	IDXGIDebug* lowLevelDebugInterface;
 #endif
 
 private:

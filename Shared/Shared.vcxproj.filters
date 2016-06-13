@@ -4,6 +4,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{117caadf-3ee6-4f13-87f3-0b967e1e8c38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\File_System">
+      <UniqueIdentifier>{ece212dc-2a65-425f-a11c-36e8b1032c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Memory_System">
+      <UniqueIdentifier>{a863ee9b-5e6b-4302-80d7-b0ed1f366750}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ChunkHeader.h">
@@ -24,6 +30,39 @@
     <ClInclude Include="src\ReferencedObject.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Logger.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File.h">
+      <Filter>src\File_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WinFileWrapper.h">
+      <Filter>src\File_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\block.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Enums.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\heap.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LowLevelHeap.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemoryEngine.h">
+      <Filter>src\Memory_System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StringUtils.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Execute.cpp">
@@ -31,6 +70,33 @@
     </ClCompile>
     <ClCompile Include="src\ReferencedObject.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameAssert.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\File.cpp">
+      <Filter>src\File_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinFileWrapper.cpp">
+      <Filter>src\File_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\block.cpp">
+      <Filter>src\Memory_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global.cpp">
+      <Filter>src\Memory_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\heap.cpp">
+      <Filter>src\Memory_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LowLevelHeap.cpp">
+      <Filter>src\Memory_System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem.cpp">
+      <Filter>src\Memory_System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

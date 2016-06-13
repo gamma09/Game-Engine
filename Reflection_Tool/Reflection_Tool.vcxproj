@@ -41,14 +41,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
-	<OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
+    <OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)Shared\src;$(SolutionDir)File_System\src;$(SolutionDir)TinyXML\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Tools\</OutDir>
-	<OutputPath>$(SolutionDir)Tools\</OutputPath>
+    <OutputPath>$(SolutionDir)Tools\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
     <IncludePath>$(SolutionDir)Shared\src;$(SolutionDir)File_System\src;$(SolutionDir)TinyXML\src;$(IncludePath)</IncludePath>
@@ -116,9 +116,6 @@
     <ClCompile Include="src\ReflectionData.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\File_System\File_System.vcxproj">
-      <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{af0d953c-be31-4f51-96bf-6649c455a2be}</Project>
     </ProjectReference>

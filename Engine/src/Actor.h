@@ -42,18 +42,6 @@ private:
 
 public:
 	Vect position;
-
-	// rotation about the X axis
-	float rx;
-	// rotation about the Y axis
-	float ry;
-	// rotation about the Z axis
-	float rz;
-
-	// scale along X axis
-	float sx;
-	// scale along Y axis
-	float sy;
-	// scale along Z axis
-	float sz;
+	Vect scale;
+	Vect rotation;
 };

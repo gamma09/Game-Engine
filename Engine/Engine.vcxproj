@@ -185,10 +185,10 @@
     <OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Math_Engine\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(SolutionDir)Synchronization\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)File_System\src;$(SolutionDir)Math_Engine\src;$(SolutionDir)Memory_System\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Math_Engine\src;$(SolutionDir)PCS_Tree\src;$(SolutionDir)Object_Management\src;$(SolutionDir)Archive_Reader\src;$(SolutionDir)Time\src;$(SolutionDir)Shared\src;$(SolutionDir)Reflection_Headers\src;$(SolutionDir)DirectXTex\src;$(SolutionDir)Synchronization\src;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <OutputPath>$(ProjectDir)$(Configuration)\</OutputPath>
     <IntDir>$(ProjectDir)obj\$(Configuration)\</IntDir>

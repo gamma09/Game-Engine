@@ -16,6 +16,7 @@ public:
 	ManagedObject& operator=(const ManagedObject& obj);
 	virtual ~ManagedObject();
 	
+	void SetID( const char* id );
 	virtual void Reset();
 
 private:
@@ -25,7 +26,7 @@ private:
 
 #ifdef _DEBUG
 #define MAX_ID_LENGTH 16
-
+protected:
 	char ID[MAX_ID_LENGTH];
 #endif
 

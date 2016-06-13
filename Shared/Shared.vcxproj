@@ -11,16 +11,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\block.h" />
     <ClInclude Include="src\ChunkHeader.h" />
     <ClInclude Include="src\DebuggerSetup.h" />
+    <ClInclude Include="src\Enums.h" />
     <ClInclude Include="src\Execute.h" />
+    <ClInclude Include="src\File.h" />
     <ClInclude Include="src\GameAssert.h" />
+    <ClInclude Include="src\global.h" />
+    <ClInclude Include="src\heap.h" />
+    <ClInclude Include="src\Logger.h" />
+    <ClInclude Include="src\LowLevelHeap.h" />
+    <ClInclude Include="src\mem.h" />
+    <ClInclude Include="src\MemoryEngine.h" />
     <ClInclude Include="src\PackageHeader.h" />
     <ClInclude Include="src\ReferencedObject.h" />
+    <ClInclude Include="src\StringUtils.h" />
+    <ClInclude Include="src\WinFileWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\block.cpp" />
     <ClCompile Include="src\Execute.cpp" />
+    <ClCompile Include="src\File.cpp" />
+    <ClCompile Include="src\GameAssert.cpp" />
+    <ClCompile Include="src\global.cpp" />
+    <ClCompile Include="src\heap.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\LowLevelHeap.cpp" />
+    <ClCompile Include="src\mem.cpp" />
     <ClCompile Include="src\ReferencedObject.cpp" />
+    <ClCompile Include="src\WinFileWrapper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF0D953C-BE31-4F51-96BF-6649C455A2BE}</ProjectGuid>
@@ -73,6 +93,7 @@
       <OpenMPSupport>false</OpenMPSupport>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
+      <DisableSpecificWarnings>4481</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

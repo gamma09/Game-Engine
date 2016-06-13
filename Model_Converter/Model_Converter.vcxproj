@@ -347,17 +347,8 @@
     <ClInclude Include="src\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\File_System\File_System.vcxproj">
-      <Project>{5ace6300-6196-4c7d-81cb-9af09421c312}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Logging_System\Logging_System.vcxproj">
-      <Project>{8a7a52bb-27fa-4e49-93cc-b046c1b6af30}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Math_Engine\Math_Engine.vcxproj">
       <Project>{5122b556-8547-48d7-acf6-1466c0180ff4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Memory_System\Memory_System.vcxproj">
-      <Project>{1e0c6240-1fed-472f-b8be-3d9000cd2e03}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.vcxproj">
       <Project>{af0d953c-be31-4f51-96bf-6649c455a2be}</Project>

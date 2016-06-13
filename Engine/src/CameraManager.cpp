@@ -4,29 +4,26 @@
 #include "CameraManager.h"
 #include "Camera.h"
 
-CameraManager* CameraManager::instance;
+CameraManager* CameraManager::instance = nullptr;
 
 CameraManager* CameraManager::Instance()
 {
-	GameAssert( instance != 0 );
-
+	GameAssert( instance );
 	return instance;
 }
 
 void CameraManager::Create( Heap* managerHeap, uint32_t initialReserve, uint32_t refillSize )
 {
-	managerHeap;
-
 	GameAssert( instance == 0 );
-
 	instance = new( managerHeap, ALIGN_4 ) CameraManager( initialReserve, refillSize );
 }
 
 void CameraManager::Destroy()
 {
-	GameAssert( instance != 0 );
+	GameAssert( instance );
+	instance->PreDestroy();
 	delete instance;
-	instance = 0;
+	instance = nullptr;
 }
 
 Camera* const CameraManager::Add( ID3D11Device* device, const PerspectiveData& perspective, const OrientationData& orientation )
@@ -35,7 +32,9 @@ Camera* const CameraManager::Add( ID3D11Device* device, const PerspectiveData& p
 	camera->Set( device, perspective, orientation );
 
 	if( this->activeCamera == 0 )
+	{
 		this->activeCamera = camera;
+	}
 
 	return camera;
 }
@@ -62,18 +61,16 @@ void CameraManager::Delete_Object( ManagedObject* obj ) const
 }
 
 
-CameraManager::CameraManager( uint32_t initialReserve, uint32_t refillSize ) :
-Manager( refillSize ),
-activeCamera( 0 )
+CameraManager::CameraManager( uint32_t initialReserve, uint32_t refillSize )
+	: Manager( refillSize ),
+	activeCamera( 0 )
 {
 	// Hey, might as well allocate a whole page of memory...
-	Mem::createVariableBlockHeap( this->heap, 4096 );
-
+	Mem::createVariableBlockHeap( this->heap, 4096, "Cameras" );
 	this->Init( initialReserve );
 }
 
 CameraManager::~CameraManager()
 {
-	Destroy_Objects();
 	Mem::destroyHeap( heap );
 }

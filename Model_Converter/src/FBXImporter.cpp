@@ -78,6 +78,9 @@ void FBXImporter::ImportMesh()
 
 	mesh->GenerateNormals( true, false, false );
 
+	int uvCount = mesh->GetElementUVCount();
+	GameCheckWarning( uvCount == 1, "This converter only supports meshes with exactly one UV element." );
+
 	int polygonCount = mesh->GetPolygonCount();
 
 	for( int polygonIndex = 0; polygonIndex < polygonCount; polygonIndex++ )
@@ -218,31 +221,35 @@ Vertex FBXImporter::ImportVertex( FbxMesh* mesh, int polygonIndex, int vertexInd
 
 void FBXImporter::ImportVertexUV( FbxMesh* mesh, int polygonIndex, int vertexIndex, Vertex& vtx ) const
 {
-	GameCheckFatal( mesh->GetElementUVCount() == 1, "This converter only supports meshes with exactly one UV element!" );
-	FbxGeometryElementUV* leUV = mesh->GetElementUV( 0 );
-	int cpOrUVIndex;
-	if( leUV->GetMappingMode() == FbxGeometryElement::eByControlPoint )
+	if( mesh->GetElementUVCount() == 0 )
 	{
-		if( leUV->GetReferenceMode() == FbxGeometryElement::eDirect )
-		{
-			cpOrUVIndex = vtx.ControlPointIndex;
-		}
-		else // eIndexToDirect
-		{
-			cpOrUVIndex = leUV->GetIndexArray().GetAt( vtx.ControlPointIndex );
-		}
+		vtx.u = 0.0f;
+		vtx.v = 0.0f;
 	}
-	else // eByPolygonVertex
+	else
 	{
-		cpOrUVIndex = mesh->GetTextureUVIndex( polygonIndex, vertexIndex );
+		FbxGeometryElementUV* leUV = mesh->GetElementUV( 0 );
+		int cpOrUVIndex;
+		if( leUV->GetMappingMode() == FbxGeometryElement::eByControlPoint )
+		{
+			if( leUV->GetReferenceMode() == FbxGeometryElement::eDirect )
+			{
+				cpOrUVIndex = vtx.ControlPointIndex;
+			}
+			else // eIndexToDirect
+			{
+				cpOrUVIndex = leUV->GetIndexArray().GetAt( vtx.ControlPointIndex );
+			}
+		}
+		else // eByPolygonVertex
+		{
+			cpOrUVIndex = mesh->GetTextureUVIndex( polygonIndex, vertexIndex );
+		}
+
+		FbxVector2 uv = leUV->GetDirectArray().GetAt( cpOrUVIndex );
+		vtx.u = (float) ( (double*) uv )[0];
+		vtx.v = (float) ( (double*) uv )[1];
 	}
-
-	FbxVector2 uv = leUV->GetDirectArray().GetAt( cpOrUVIndex );
-	vtx.u = (float) ( (double*) uv )[0];
-	vtx.v = (float) ( (double*) uv )[1];
-
-	static int VALUE = 0;
-	VALUE++;
 
 	Logger::Log_Debug( "    UV: (%1.2f, %1.2f)", vtx.u, vtx.v );
 }

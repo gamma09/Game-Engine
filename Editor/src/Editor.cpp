@@ -74,35 +74,34 @@ void Editor::LoadContent()
 	KeyBindingManager::Instance()->Add( 0x44, new( TemporaryHeap::Instance(), ALIGN_4 ) MoveAction( this->moveableCamera, 1.0f, 0.0f, 0.0f ) );
 
 	this->sceneAsset = new( AssetHeap::Instance(), ALIGN_4 ) SceneAsset( "Test Scene" );
-	//ModelObject* model1 = new( AssetHeap::Instance(), ALIGN_4 ) ModelObject( this->browser, this->sceneAsset, "../resources/soldier_animated_jump.spu", this->device );
+	ModelObject* model1 = new( AssetHeap::Instance(), ALIGN_4 ) ModelObject( this->browser, this->sceneAsset, "../resources/humanoid2.spu", this->device );
 	ModelObject* model2 = new( AssetHeap::Instance(), ALIGN_4 ) ModelObject( this->browser, this->sceneAsset, "../resources/teddy_tga.spu", this->device );
 	ModelObject* model3 = new( AssetHeap::Instance(), ALIGN_4 ) ModelObject( this->browser, this->sceneAsset, "../resources/2bonepolyskinnedskeleton.spu", this->device );
 
-	//ActorObject* soldier2 = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->device, this->browser, this->sceneAsset, *model1->GetModelAsset(), this->unlitTextureMaterial, this->updater );
-	//soldier2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 0 );
-	//soldier2->GetActorAsset()->GetActor()->position[X] = -125.0f;
-	//soldier2->GetActorAsset()->GetActor()->Update_Model_Matrix();
-	//soldier2->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 500, 0 );
+	ActorObject* humanoid1 = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->device, this->browser, this->sceneAsset, *model1->GetModelAsset(), this->wireframeMaterial, this->updater );
+	humanoid1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 0 );
+	humanoid1->GetActorAsset()->GetActor()->position.set(-125.0f, 0.0f, -200.0f );
+	humanoid1->GetActorAsset()->GetActor()->rotation.set( -MATH_PI2, 0.0f, 0.0f );
+	humanoid1->GetActorAsset()->GetActor()->scale.set( 0.2f, 0.2f, 0.2f );
+	humanoid1->GetActorAsset()->GetActor()->Update_Model_Matrix();
+	humanoid1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 500, 0 );
 
 	ActorObject* teddy1 = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->device, this->browser, this->sceneAsset, *model2->GetModelAsset(), this->unlitTextureMaterial, this->updater );
 	teddy1->GetActorAsset()->GetActor()->Get_Model().Add_Material( this->wireframeMaterial );
 	teddy1->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 0 );
-	teddy1->GetActorAsset()->GetActor()->position[Y] = -175.0f;
+	teddy1->GetActorAsset()->GetActor()->position.set( 0.0f, -175.0f, 0.0f );
 	teddy1->GetActorAsset()->GetActor()->Update_Model_Matrix();
 	teddy1->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
 	ActorObject* twobone = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->device, this->browser, this->sceneAsset, *model3->GetModelAsset(), this->unlitTextureMaterial, this->updater );
 	twobone->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 0 );
-	twobone->GetActorAsset()->GetActor()->position[X] = 50.0f;
-	twobone->GetActorAsset()->GetActor()->position[Y] = 100.0f;
-	twobone->GetActorAsset()->GetActor()->position[Z] = -50.0f;
+	twobone->GetActorAsset()->GetActor()->position.set( 50.0f, 100.0f, -50.0f );
 	twobone->GetActorAsset()->GetActor()->Update_Model_Matrix();
 	twobone->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 0 );
 
 	ActorObject* teddy2 = new( AssetHeap::Instance(), ALIGN_4 ) ActorObject( this->device, this->browser, this->sceneAsset, *model2->GetModelAsset(), this->unlitTextureMaterial, this->updater );
 	teddy2->GetActorAsset()->GetActor()->Get_Model().Change_Active_Texture( 0 );
-	teddy2->GetActorAsset()->GetActor()->position[X] = -125.0f;
-	teddy2->GetActorAsset()->GetActor()->position[Y] = -175.0f;
+	teddy2->GetActorAsset()->GetActor()->position.set( -125.0f, -175.0f, 0.0f );
 	teddy2->GetActorAsset()->GetActor()->Update_Model_Matrix();
 	teddy2->GetActorAsset()->GetActor()->Get_Model().Start_Animation( 0, 1 );
 

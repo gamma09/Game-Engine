@@ -4,6 +4,7 @@
 #include <DebuggerSetup.h>
 #include <GameAssert.h>
 #include <mem.h>
+#include <Logger.h>
 
 #include "Camera.h"
 #include "Engine.h"
@@ -454,7 +455,6 @@ void Engine::SetupDirectXDebugging()
 
 #ifdef _DEBUG
 	GameCheckFatalDx( this->device->QueryInterface( __uuidof( ID3D11Debug ), reinterpret_cast<void**>( &this->debugInterface ) ), "Couldn't retrieve the debug layer from the Device." );
-	GameCheckFatalDx( DXGIGetDebugInterface1( 0, __uuidof( IDXGIDebug ), reinterpret_cast<void**>( &this->lowLevelDebugInterface ) ), "Couldn't retrieve the low-level debug layer." );
 #endif
 }
 
@@ -567,6 +567,9 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	updateMutex(),
 	updateEventManager()
 {
+	Logger::Start_Log( "Engine.log", false );
+	Mem::SetupMemorySystem();
+
 	this->info[Window_Width] = Width;
 	this->info[Window_Height] = Height;
 	this->info[Refresh_Rate] = 60;
@@ -581,8 +584,9 @@ Engine::Engine( const char* windowName, const int Width, const int Height )
 	AssetHeap::Create();
 	EventHeap::Create();
 	ModelHeap::Create();
+	MiscHeap::Create();
 
-	Mem::createVariableBlockHeap( this->managerHeap, 4096 );
+	Mem::createVariableBlockHeap( this->managerHeap, 4096, "Managers" );
 
 	ModelBaseManager::Create( this->managerHeap, 7, 1 );
 	CameraManager::Create( this->managerHeap, 1, 1 );
@@ -614,6 +618,7 @@ Engine::~Engine()
 	AnimHeap::Destroy();
 	TemporaryHeap::Destroy();
 	ConstantBufferHeap::Destroy();
+	MiscHeap::Destroy();
 
 	this->annotation->Release();
 	this->depthStencil->Release();
@@ -622,12 +627,12 @@ Engine::~Engine()
 	this->swapChain->Release();
 	this->deviceContext->Release();
 
+	Mem::TeardownMemorySystem();
+	Logger::Stop_Log();
+
 #ifdef _DEBUG
 	this->debugInterface->ReportLiveDeviceObjects( D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL );
 	this->debugInterface->Release();
-
-	this->lowLevelDebugInterface->ReportLiveObjects( DXGI_DEBUG_DXGI, DXGI_DEBUG_RLO_ALL );
-	this->lowLevelDebugInterface->Release();
 #endif
 	
 	this->device->Release();

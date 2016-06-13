@@ -13,6 +13,7 @@ class Material;
 class Model;
 class ModelBaseInstance;
 class ModelBaseManager;
+class Mutex;
 class Texture;
 
 struct Header;
@@ -20,9 +21,6 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11Buffer;
 struct ID3DUserDefinedAnnotation;
-
-
-
 
 
 class ModelBase : public ManagedObject, public ReferencedObject
@@ -50,9 +48,12 @@ protected:
 
 
 private:
+
 	// Bounding sphere
 	Matrix boundsMatrix;
 	float boundingRadius;
+
+	Mutex* modelBaseLock;
 
 	// Vertices
 	ID3D11Buffer* verticesBuffer;

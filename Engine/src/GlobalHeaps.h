@@ -128,3 +128,23 @@ private:
 	Heap* heap;
 	static ModelHeap* instance;
 };
+
+class MiscHeap
+{
+public:
+	static void Create();
+	static void Destroy();
+
+	static Heap* Instance();
+
+private:
+	MiscHeap();
+	~MiscHeap();
+
+	MiscHeap( const MiscHeap& ) = delete;
+	MiscHeap& operator=( const MiscHeap& ) = delete;
+
+private:
+	Heap* heap;
+	static MiscHeap* instance;
+};

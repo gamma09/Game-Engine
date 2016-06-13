@@ -23,12 +23,8 @@ void Actor::Set( ID3D11Device* device, const Material* material, ModelBase* mode
 	GameAssert( updateStrategy != 0 );
 
 	this->position.set( 0.0f, 0.0f, 0.0f );
-	this->rx = 0.0f;
-	this->ry = 0.0f;
-	this->rz = 0.0f;
-	this->sx = 1.0f;
-	this->sy = 1.0f;
-	this->sz = 1.0f;
+	this->rotation.set( 0.0f, 0.0f, 0.0f );
+	this->scale.set( 1.0f, 1.0f, 1.0f );
 	this->model = modelBase->Create_Instance( device, material );
 	this->updateStrategy = updateStrategy;
 	this->updateStrategy->Add_Reference();
@@ -68,12 +64,12 @@ Model& Actor::Get_Model()
 
 void Actor::Update_Model_Matrix()
 {
-	Matrix transform( SCALE, this->sx, this->sy, this->sz );
-	transform *= Matrix( ROT_X, this->rx );
-	transform *= Matrix( ROT_Y, this->ry );
-	transform *= Matrix( ROT_Z, this->rz );
+	Matrix transform( SCALE, this->scale );
+	transform *= Matrix( ROT_X, this->rotation[X] );
+	transform *= Matrix( ROT_Y, this->rotation[Y] );
+	transform *= Matrix( ROT_Z, this->rotation[Z] );
 	transform *= Matrix( TRANS, this->position );
 
 	this->model->Set_World( transform );
-	this->model->Set_Max_Size( max( max( this->sx, this->sy ), this->sz ) );
+	this->model->Set_Max_Size( max( max( this->scale[X], this->scale[Y] ), this->scale[Z] ) );
 }

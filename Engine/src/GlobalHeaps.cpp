@@ -35,7 +35,7 @@ Heap* TemporaryHeap::Instance()
 TemporaryHeap::TemporaryHeap()
 {
 
-	Mem::createVariableBlockHeap( this->heap, TEMPORARY_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, TEMPORARY_HEAP_SIZE, "Temporaries" );
 }
 
 TemporaryHeap::~TemporaryHeap()
@@ -72,7 +72,7 @@ Heap* ConstantBufferHeap::Instance()
 
 ConstantBufferHeap::ConstantBufferHeap()
 {
-	Mem::createVariableBlockHeap( this->heap, CONSTANT_BUFFER_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, CONSTANT_BUFFER_HEAP_SIZE, "Constant Buffers" );
 }
 
 ConstantBufferHeap::~ConstantBufferHeap()
@@ -112,7 +112,7 @@ Heap* AnimHeap::Instance()
 
 AnimHeap::AnimHeap()
 {
-	Mem::createVariableBlockHeap( this->heap, ANIM_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, ANIM_HEAP_SIZE, "Anims" );
 }
 
 AnimHeap::~AnimHeap()
@@ -152,7 +152,7 @@ Heap* AssetHeap::Instance()
 
 AssetHeap::AssetHeap()
 {
-	Mem::createVariableBlockHeap( this->heap, ASSET_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, ASSET_HEAP_SIZE, "Assets" );
 }
 
 AssetHeap::~AssetHeap()
@@ -191,7 +191,7 @@ Heap* EventHeap::Instance()
 
 EventHeap::EventHeap()
 {
-	Mem::createVariableBlockHeap( this->heap, EVENT_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, EVENT_HEAP_SIZE, "Events" );
 }
 
 EventHeap::~EventHeap()
@@ -230,10 +230,51 @@ Heap* ModelHeap::Instance()
 
 ModelHeap::ModelHeap()
 {
-	Mem::createVariableBlockHeap( this->heap, MODEL_HEAP_SIZE );
+	Mem::createVariableBlockHeap( this->heap, MODEL_HEAP_SIZE, "Models" );
 }
 
 ModelHeap::~ModelHeap()
+{
+	Mem::destroyHeap( this->heap );
+}
+
+
+
+
+
+MiscHeap* MiscHeap::instance = nullptr;
+
+void MiscHeap::Create()
+{
+	GameAssert( instance == nullptr );
+
+	instance = new MiscHeap();
+}
+
+void MiscHeap::Destroy()
+{
+	GameAssert( instance != nullptr );
+
+	delete instance;
+	instance = nullptr;
+}
+
+Heap* MiscHeap::Instance()
+{
+	GameAssert( instance != nullptr );
+
+	return instance->heap;
+}
+
+// This one will need to be big - so go 32 MB for now
+#define MISC_HEAP_SIZE 32 * 1024 * 1024
+
+MiscHeap::MiscHeap()
+{
+	Mem::createVariableBlockHeap( this->heap, MISC_HEAP_SIZE, "Misc" );
+}
+
+MiscHeap::~MiscHeap()
 {
 	Mem::destroyHeap( this->heap );
 }

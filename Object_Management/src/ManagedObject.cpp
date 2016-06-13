@@ -1,4 +1,5 @@
 #include <GameAssert.h>
+#include <StringUtils.h>
 
 #include "ManagedObject.h"
 
@@ -30,6 +31,15 @@ ManagedObject& ManagedObject::operator=(const ManagedObject& obj)
 ManagedObject::~ManagedObject()
 {
 	// Do nothing
+}
+
+void ManagedObject::SetID( const char* id )
+{
+#if defined(DEBUG) || defined(_DEBUG)
+	copy_string( this->ID, id );
+#else
+	id;
+#endif
 }
 
 void ManagedObject::Reset()
